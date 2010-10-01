@@ -1,10 +1,30 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C6CB6413-2FAB-4E83-8446-B751E4B1B7B2}"
+	ProjectSection(SolutionItems) = preProject
+		OSDevGrp.OSIntranet.DataAccess.snk = OSDevGrp.OSIntranet.DataAccess.snk
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OSDevGrp.OSIntranet.DataAccess.Contracts", "OSDevGrp.OSIntranet.DataAccess.Contracts\OSDevGrp.OSIntranet.DataAccess.Contracts.csproj", "{C4B236AB-F621-4747-84B8-E559790AD0D4}"
+EndProject
 Global
 	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 1
+		SccNumberOfProjects = 2
 		SccLocalPath0 = .
+		SccProjectUniqueName1 = OSDevGrp.OSIntranet.DataAccess.Contracts\\OSDevGrp.OSIntranet.DataAccess.Contracts.csproj
+		SccLocalPath1 = .
+		SccProjectFilePathRelativizedFromConnection1 = OSDevGrp.OSIntranet.DataAccess.Contracts\\
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C4B236AB-F621-4747-84B8-E559790AD0D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4B236AB-F621-4747-84B8-E559790AD0D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4B236AB-F621-4747-84B8-E559790AD0D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4B236AB-F621-4747-84B8-E559790AD0D4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
