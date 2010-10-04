@@ -34,7 +34,7 @@
             this.CanHandlePowerEvent = true;
             this.CanPauseAndContinue = true;
             this.CanShutdown = true;
-            this.ServiceName = "OS Intranet - DataAccess";
+            this.ServiceName = "OS Intranet - Data Access";
 
         }
 
