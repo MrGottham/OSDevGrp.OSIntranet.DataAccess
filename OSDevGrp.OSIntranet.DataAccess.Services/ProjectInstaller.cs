@@ -37,15 +37,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
         protected override void OnAfterInstall(IDictionary savedState)
         {
             base.OnAfterInstall(savedState);
-            try
-            {
-                _logRepository.InstallLog();
-            }
-            catch
-            {
-                base.Rollback(savedState);
-                throw;
-            }
+            _logRepository.InstallLog();
         }
 
         /// <summary>
@@ -54,15 +46,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
         protected override void OnAfterUninstall(IDictionary savedState)
         {
             base.OnAfterUninstall(savedState);
-            try
-            {
-                _logRepository.UninstallLog();
-            }
-            catch
-            {
-                base.Rollback(savedState);
-                throw;
-            }
+            _logRepository.UninstallLog();
         }
     }
 }

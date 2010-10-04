@@ -14,11 +14,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// </summary>
         public void InstallLog()
         {
-            if (EventLog.Exists(Properties.Resources.EventLogName))
+            while (EventLog.Exists(Properties.Resources.EventLogName))
             {
                 EventLog.Delete(Properties.Resources.EventLogName);
             }
-            if (EventLog.SourceExists(Properties.Resources.EventLogSource))
+            while (EventLog.SourceExists(Properties.Resources.EventLogSource))
             {
                 EventLog.DeleteEventSource(Properties.Resources.EventLogSource);
             }
@@ -30,11 +30,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// </summary>
         public void UninstallLog()
         {
-            if (EventLog.Exists(Properties.Resources.EventLogName))
+            while (EventLog.Exists(Properties.Resources.EventLogName))
             {
                 EventLog.Delete(Properties.Resources.EventLogName);
             }
-            if (EventLog.SourceExists(Properties.Resources.EventLogSource))
+            while (EventLog.SourceExists(Properties.Resources.EventLogSource))
             {
                 EventLog.DeleteEventSource(Properties.Resources.EventLogSource);
             }
