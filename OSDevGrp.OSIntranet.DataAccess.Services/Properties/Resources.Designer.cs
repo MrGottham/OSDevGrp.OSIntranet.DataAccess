@@ -70,6 +70,51 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 104.
+        /// </summary>
+        internal static string EventLogOnContinueExceptionId {
+            get {
+                return ResourceManager.GetString("EventLogOnContinueExceptionId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 103.
+        /// </summary>
+        internal static string EventLogOnPauseExceptionId {
+            get {
+                return ResourceManager.GetString("EventLogOnPauseExceptionId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 105.
+        /// </summary>
+        internal static string EventLogOnShutdownExceptionId {
+            get {
+                return ResourceManager.GetString("EventLogOnShutdownExceptionId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 101.
+        /// </summary>
+        internal static string EventLogOnStartExceptionId {
+            get {
+                return ResourceManager.GetString("EventLogOnStartExceptionId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 102.
+        /// </summary>
+        internal static string EventLogOnStopExceptionId {
+            get {
+                return ResourceManager.GetString("EventLogOnStopExceptionId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OSDevGrp.OSIntranet.DataAccess.CustomLog.
         /// </summary>
         internal static string EventLogSource {

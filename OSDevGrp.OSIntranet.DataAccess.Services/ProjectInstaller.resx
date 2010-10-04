@@ -117,25 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="EventLogName" xml:space="preserve">
-    <value>OS Intranet - Data Access</value>
-  </data>
-  <data name="EventLogOnContinueExceptionId" xml:space="preserve">
-    <value>104</value>
-  </data>
-  <data name="EventLogOnPauseExceptionId" xml:space="preserve">
-    <value>103</value>
-  </data>
-  <data name="EventLogOnShutdownExceptionId" xml:space="preserve">
-    <value>105</value>
-  </data>
-  <data name="EventLogOnStartExceptionId" xml:space="preserve">
-    <value>101</value>
-  </data>
-  <data name="EventLogOnStopExceptionId" xml:space="preserve">
-    <value>102</value>
-  </data>
-  <data name="EventLogSource" xml:space="preserve">
-    <value>OSDevGrp.OSIntranet.DataAccess.CustomLog</value>
-  </data>
+  <metadata name="ServiceProcessInstaller.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>150, 17</value>
+  </metadata>
+  <metadata name="ServiceInstaller.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <metadata name="$this.TrayLargeIcon" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>False</value>
+  </metadata>
 </root>

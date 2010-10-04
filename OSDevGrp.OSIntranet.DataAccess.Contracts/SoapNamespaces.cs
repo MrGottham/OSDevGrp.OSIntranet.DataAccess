@@ -11,6 +11,14 @@
         /// </summary>
         public const string DataAccessNamespace = "urn:osdevgrp:osintranet.dataaccess:1.0.0";
 
+        /// <summary>
+        /// Navn på service til adressekartoteket.
+        /// </summary>
         public const string AdresseRepositoryServiceName = "AdresseRepositoryService";
+
+        /// <summary>
+        /// Navn på service til finansstyring.
+        /// </summary>
+        public const string FinansstyringRepositoryServiceName = "FinansstyringRepositoryService";
     }
 }
