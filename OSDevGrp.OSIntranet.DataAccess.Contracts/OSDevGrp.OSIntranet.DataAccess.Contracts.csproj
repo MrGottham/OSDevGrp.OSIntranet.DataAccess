@@ -50,7 +50,8 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IAdresseRepositoryService.cs" />
-    <Compile Include="Services\IFinansstyringRepository.cs" />
+    <Compile Include="Services\IFinansstyringRepositoryService.cs" />
+    <Compile Include="Services\IRepositoryService.cs" />
     <Compile Include="SoapNamespaces.cs" />
     <Compile Include="Views\AdressegruppeView.cs" />
     <Compile Include="Views\TabelView.cs" />

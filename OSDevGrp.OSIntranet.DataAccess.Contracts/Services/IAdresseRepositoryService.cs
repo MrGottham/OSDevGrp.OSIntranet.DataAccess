@@ -8,7 +8,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
     /// Servicekontrakt til repository for adressekartoteket.
     /// </summary>
     [ServiceContract(Name = SoapNamespaces.AdresseRepositoryServiceName, Namespace = SoapNamespaces.DataAccessNamespace)]
-    public interface IAdresseRepositoryService
+    public interface IAdresseRepositoryService : IRepositoryService
     {
         /// <summary>
         /// Henter alle adressegrupper.

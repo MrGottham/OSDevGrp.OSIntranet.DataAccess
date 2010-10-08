@@ -9,7 +9,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
     /// <summary>
     /// Repository for adressekartoteket.
     /// </summary>
-    public class AdresseRepository : IAdresseRepositoryService
+    public class AdresseRepository : RepositoryBase, IAdresseRepositoryService
     {
         #region IAdresseRepositoryService Members
 

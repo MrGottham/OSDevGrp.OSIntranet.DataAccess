@@ -139,7 +139,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
             }
             catch
             {
-                _adresseRepositoryService.Close();
+                _adresseRepositoryService.Abort();
                 throw;
             }
             // WCF host til repository for finansstyring.

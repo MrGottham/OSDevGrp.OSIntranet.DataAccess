@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.ComponentModel;
 using System.Configuration.Install;
+using System.Diagnostics;
+using System.Linq;
 using OSDevGrp.OSIntranet.DataAccess.Services.Repositories;
 using OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces;
 
@@ -27,6 +29,12 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
         {
             InitializeComponent();
             _logRepository = new LogRepository();
+            // Fjern default EventLogInstaller.
+            var defaultEventLogInstaller = ServiceInstaller.Installers.OfType<EventLogInstaller>().FirstOrDefault();
+            if (defaultEventLogInstaller != null)
+            {
+                ServiceInstaller.Installers.Remove(defaultEventLogInstaller);
+            }
         }
 
         #endregion
