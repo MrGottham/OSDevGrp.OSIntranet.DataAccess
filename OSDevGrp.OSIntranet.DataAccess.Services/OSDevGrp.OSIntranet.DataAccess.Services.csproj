@@ -45,6 +45,21 @@
     <AssemblyOriginatorKeyFile>OSDevGrp.OSIntranet.DataAccess.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Castle.Core">
+      <HintPath>..\External references\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor">
+      <HintPath>..\External references\Castle.Windsor.dll</HintPath>
+    </Reference>
+    <Reference Include="OSDevGrp.OSIntranet.CommonLibrary.IoC">
+      <HintPath>..\External references\OSDevGrp.OSIntranet.CommonLibrary.IoC.dll</HintPath>
+    </Reference>
+    <Reference Include="OSDevGrp.OSIntranet.CommonLibrary.IoC.Interfaces">
+      <HintPath>..\External references\OSDevGrp.OSIntranet.CommonLibrary.IoC.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="OSDevGrp.OSIntranet.CommonLibrary.Resources">
+      <HintPath>..\External references\OSDevGrp.OSIntranet.CommonLibrary.Resources.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
