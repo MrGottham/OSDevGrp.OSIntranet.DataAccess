@@ -7,7 +7,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
     /// <summary>
     /// Logging repository.
     /// </summary>
-    internal class LogRepository : ILogRepository
+    public class LogRepository : ILogRepository
     {
         /// <summary>
         /// Installerer log repository.

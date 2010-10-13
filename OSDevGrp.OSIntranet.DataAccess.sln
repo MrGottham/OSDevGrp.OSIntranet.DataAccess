@@ -12,6 +12,25 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OSDevGrp.OSIntranet.DataAcc
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "OSDevGrp.OSIntranet.DataAccess.Setup", "OSDevGrp.OSIntranet.DataAccess.Setup\OSDevGrp.OSIntranet.DataAccess.Setup.vdproj", "{F96048AB-79E3-4211-AA7A-122FDF1D3420}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External references", "External references", "{EF9F5033-CE24-4A5F-864E-F7BDCAC510DE}"
+	ProjectSection(SolutionItems) = preProject
+		External references\Castle.Core.dll = External references\Castle.Core.dll
+		External references\Castle.Windsor.dll = External references\Castle.Windsor.dll
+		External references\OSDevGrp.OSIntranet.CommonLibrary.IoC.dll = External references\OSDevGrp.OSIntranet.CommonLibrary.IoC.dll
+		External references\OSDevGrp.OSIntranet.CommonLibrary.IoC.Interfaces.dll = External references\OSDevGrp.OSIntranet.CommonLibrary.IoC.Interfaces.dll
+		External references\OSDevGrp.OSIntranet.CommonLibrary.Resources.dll = External references\OSDevGrp.OSIntranet.CommonLibrary.Resources.dll
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "da-DK", "da-DK", "{37DD8544-3CB8-477B-B13F-A8D79194F48F}"
+	ProjectSection(SolutionItems) = preProject
+		External references\da-DK\OSDevGrp.OSIntranet.CommonLibrary.Resources.resources.dll = External references\da-DK\OSDevGrp.OSIntranet.CommonLibrary.Resources.resources.dll
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "en-US", "en-US", "{DB2B825F-433D-4E07-B60C-8B1B40A21140}"
+	ProjectSection(SolutionItems) = preProject
+		External references\en-US\OSDevGrp.OSIntranet.CommonLibrary.Resources.resources.dll = External references\en-US\OSDevGrp.OSIntranet.CommonLibrary.Resources.resources.dll
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SourceCodeControl) = preSolution
 		SccNumberOfProjects = 4
@@ -64,5 +83,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{37DD8544-3CB8-477B-B13F-A8D79194F48F} = {EF9F5033-CE24-4A5F-864E-F7BDCAC510DE}
+		{DB2B825F-433D-4E07-B60C-8B1B40A21140} = {EF9F5033-CE24-4A5F-864E-F7BDCAC510DE}
 	EndGlobalSection
 EndGlobal

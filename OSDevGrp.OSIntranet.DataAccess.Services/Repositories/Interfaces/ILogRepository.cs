@@ -5,7 +5,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
     /// <summary>
     /// Interface for logging repository.
     /// </summary>
-    internal interface ILogRepository
+    public interface ILogRepository
     {
         /// <summary>
         /// Installerer log repository.
