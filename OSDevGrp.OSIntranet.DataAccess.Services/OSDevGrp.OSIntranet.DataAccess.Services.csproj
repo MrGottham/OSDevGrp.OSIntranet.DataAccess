@@ -53,10 +53,12 @@
     <Reference Include="Castle.Windsor">
       <HintPath>..\External references\Castle.Windsor.dll</HintPath>
     </Reference>
-    <Reference Include="OSDevGrp.OSIntranet.CommonLibrary.Infrastructure">
+    <Reference Include="OSDevGrp.OSIntranet.CommonLibrary.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1719c289d1070527, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External references\OSDevGrp.OSIntranet.CommonLibrary.Infrastructure.dll</HintPath>
     </Reference>
-    <Reference Include="OSDevGrp.OSIntranet.CommonLibrary.Infrastructure.Interfaces">
+    <Reference Include="OSDevGrp.OSIntranet.CommonLibrary.Infrastructure.Interfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1719c289d1070527, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External references\OSDevGrp.OSIntranet.CommonLibrary.Infrastructure.Interfaces.dll</HintPath>
     </Reference>
     <Reference Include="OSDevGrp.OSIntranet.CommonLibrary.IoC">
@@ -102,6 +104,7 @@
     </Compile>
     <Compile Include="Implementations\AdresseRepositoryService.cs" />
     <Compile Include="Implementations\FinansstyringRepositoryService.cs" />
+    <Compile Include="QueryHandlers\AdressegruppeGetAllQueryHandler.cs" />
     <Compile Include="Repositories\Interfaces\ILogRepository.cs" />
     <Compile Include="Repositories\LogRepository.cs" />
     <Compile Include="Implementations\RepositoryServiceBase.cs" />
