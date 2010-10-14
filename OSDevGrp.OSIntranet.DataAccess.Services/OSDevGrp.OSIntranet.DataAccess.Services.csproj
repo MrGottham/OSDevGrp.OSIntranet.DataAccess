@@ -108,7 +108,7 @@
     <Compile Include="Implementations\AdresseRepositoryService.cs" />
     <Compile Include="Implementations\FinansstyringRepositoryService.cs" />
     <Compile Include="QueryHandlers\AdressegruppeGetAllQueryHandler.cs" />
-    <Compile Include="Repositories\Interfaces\AdresseRepository.cs" />
+    <Compile Include="Repositories\AdresseRepository.cs" />
     <Compile Include="Repositories\Interfaces\IAdresseRepository.cs" />
     <Compile Include="Repositories\Interfaces\IFinansstyringRepository.cs" />
     <Compile Include="Repositories\Interfaces\ILogRepository.cs" />
@@ -141,6 +141,17 @@
       <Project>{F27A4BF2-8218-472E-A41C-4FE23ACB0EDF}</Project>
       <Name>OSDevGrp.OSIntranet.DataAccess.Infrastructure.Interfaces</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="DBAX">
+      <Guid>{E7DC8F20-43EC-11D2-AAB7-00A0C9437F11}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

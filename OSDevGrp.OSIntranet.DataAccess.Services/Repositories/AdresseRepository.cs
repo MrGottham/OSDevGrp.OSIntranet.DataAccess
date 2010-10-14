@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using OSDevGrp.OSIntranet.CommonLibrary.Domain.Adressekartotek;
+using OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces;
 
-namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
+namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
 {
     /// <summary>
     /// Repository for adressekartoteket.
