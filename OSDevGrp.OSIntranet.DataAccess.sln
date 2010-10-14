@@ -22,6 +22,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External references", "Exte
 		External references\OSDevGrp.OSIntranet.CommonLibrary.IoC.dll = External references\OSDevGrp.OSIntranet.CommonLibrary.IoC.dll
 		External references\OSDevGrp.OSIntranet.CommonLibrary.IoC.Interfaces.dll = External references\OSDevGrp.OSIntranet.CommonLibrary.IoC.Interfaces.dll
 		External references\OSDevGrp.OSIntranet.CommonLibrary.Resources.dll = External references\OSDevGrp.OSIntranet.CommonLibrary.Resources.dll
+		External references\OSDevGrp.OSIntranet.CommonLibrary.Wcf.dll = External references\OSDevGrp.OSIntranet.CommonLibrary.Wcf.dll
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "da-DK", "da-DK", "{37DD8544-3CB8-477B-B13F-A8D79194F48F}"

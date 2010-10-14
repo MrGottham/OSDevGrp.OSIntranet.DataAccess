@@ -3,6 +3,7 @@ using Castle.Windsor;
 using OSDevGrp.OSIntranet.CommonLibrary.Infrastructure;
 using OSDevGrp.OSIntranet.CommonLibrary.Infrastructure.Interfaces;
 using OSDevGrp.OSIntranet.CommonLibrary.IoC.Interfaces.Windsor;
+using OSDevGrp.OSIntranet.DataAccess.Contracts.Services;
 using OSDevGrp.OSIntranet.DataAccess.Services.Repositories;
 using OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces;
 
@@ -24,6 +25,9 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
             container.Register(Component.For<ILogRepository>().ImplementedBy<LogRepository>().LifeStyle.Transient);
             container.Register(Component.For<IQueryBus>().ImplementedBy<QueryBus>().LifeStyle.Transient);
             container.Register(Component.For<ICommandBus>().ImplementedBy<CommandBus>().LifeStyle.Transient);
+
+            container.Register(AllTypes.FromAssemblyNamed("OSDevGrp.OSIntranet.DataAccess.Services")
+                .BasedOn<IRepositoryService>());
         }
 
         #endregion

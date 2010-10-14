@@ -3,8 +3,9 @@ using System.Diagnostics;
 using System.Reflection;
 using System.ServiceModel;
 using System.ServiceProcess;
+using OSDevGrp.OSIntranet.CommonLibrary.IoC;
+using OSDevGrp.OSIntranet.CommonLibrary.Wcf;
 using OSDevGrp.OSIntranet.DataAccess.Services.Implementations;
-using OSDevGrp.OSIntranet.DataAccess.Services.Repositories;
 using OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces;
 
 namespace OSDevGrp.OSIntranet.DataAccess.Services
@@ -30,7 +31,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
         public DataAccessService()
         {
             InitializeComponent();
-            _logRepository = new LogRepository();
+            var container = ContainerFactory.Create();
+            _logRepository = container.Resolve<ILogRepository>();
         }
 
         #endregion
@@ -166,7 +168,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
             {
                 if (_adresseRepositoryService != null)
                 {
-                    CloseChannel(_adresseRepositoryService);
+                    ChannelTools.CloseChannel(_adresseRepositoryService);
                 }
             }
             finally
@@ -178,33 +180,12 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
             {
                 if (_finansstyringRepositoryService != null)
                 {
-                    CloseChannel(_finansstyringRepositoryService);
+                    ChannelTools.CloseChannel(_finansstyringRepositoryService);
                 }
             }
             finally
             {
                 _finansstyringRepositoryService = null;
-            }
-        }
-
-        /// <summary>
-        /// Lukker en WCF channel.
-        /// </summary>
-        /// <param name="communicationObject">WCF channel.</param>
-        private static void CloseChannel(ICommunicationObject communicationObject)
-        {
-            if (communicationObject == null)
-            {
-                throw new ArgumentNullException("communicationObject");
-            }
-            if (communicationObject.State == CommunicationState.Created ||
-                communicationObject.State == CommunicationState.Opened)
-            {
-                communicationObject.Close();
-            }
-            else
-            {
-                communicationObject.Abort();
             }
         }
     }

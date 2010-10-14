@@ -45,6 +45,19 @@
     <Reference Include="nunit.framework">
       <HintPath>..\External references\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="OSDevGrp.OSIntranet.CommonLibrary.Infrastructure.Interfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1719c289d1070527, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External references\OSDevGrp.OSIntranet.CommonLibrary.Infrastructure.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="OSDevGrp.OSIntranet.CommonLibrary.IoC">
+      <HintPath>..\External references\OSDevGrp.OSIntranet.CommonLibrary.IoC.dll</HintPath>
+    </Reference>
+    <Reference Include="OSDevGrp.OSIntranet.CommonLibrary.IoC.Interfaces">
+      <HintPath>..\External references\OSDevGrp.OSIntranet.CommonLibrary.IoC.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="OSDevGrp.OSIntranet.CommonLibrary.Wcf">
+      <HintPath>..\External references\OSDevGrp.OSIntranet.CommonLibrary.Wcf.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.ServiceModel" />
@@ -54,6 +67,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="OSDevGrp.OSIntranet.DataAccess.snk" />
   </ItemGroup>
   <ItemGroup>
