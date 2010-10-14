@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Authentication;
 using DBAX;
 
 namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
@@ -21,13 +22,14 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
             {
                 throw new ArgumentNullException("databaseFileName");
             }
-
-            IDsiDbX dbHandle = new DsiDbXClass();
+            var dbHandle = new DsiDbX();
             if (login)
             {
-                
+                if (!dbHandle.Login(string.Empty, string.Empty))
+                {
+                    throw new AuthenticationException();
+                }
             }
-
             return dbHandle;
         }
     }
