@@ -61,6 +61,24 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 106.
+        /// </summary>
+        internal static string EventLogAdresseRepositoryService {
+            get {
+                return ResourceManager.GetString("EventLogAdresseRepositoryService", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 107.
+        /// </summary>
+        internal static string EventLogFinansstyringRepositoryService {
+            get {
+                return ResourceManager.GetString("EventLogFinansstyringRepositoryService", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OS Intranet - Data Access.
         /// </summary>
         internal static string EventLogName {

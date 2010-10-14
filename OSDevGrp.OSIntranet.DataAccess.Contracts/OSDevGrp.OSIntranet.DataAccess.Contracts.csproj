@@ -42,6 +42,9 @@
     <AssemblyOriginatorKeyFile>OSDevGrp.OSIntranet.DataAccess.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="OSDevGrp.OSIntranet.CommonLibrary.Infrastructure.Interfaces">
+      <HintPath>..\External references\OSDevGrp.OSIntranet.CommonLibrary.Infrastructure.Interfaces.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -49,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Queries\AdressegruppeGetAllQuery.cs" />
     <Compile Include="Services\IAdresseRepositoryService.cs" />
     <Compile Include="Services\IFinansstyringRepositoryService.cs" />
     <Compile Include="Services\IRepositoryService.cs" />
@@ -59,9 +63,7 @@
   <ItemGroup>
     <None Include="OSDevGrp.OSIntranet.DataAccess.snk" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Queries\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

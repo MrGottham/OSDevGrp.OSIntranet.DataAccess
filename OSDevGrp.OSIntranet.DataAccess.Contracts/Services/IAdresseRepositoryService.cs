@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ServiceModel;
+using OSDevGrp.OSIntranet.DataAccess.Contracts.Queries;
 using OSDevGrp.OSIntranet.DataAccess.Contracts.Views;
 
 namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
@@ -13,9 +14,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         /// <summary>
         /// Henter alle adressegrupper.
         /// </summary>
+        /// <param name="adressegruppeGetAllQuery">Query til forespørgelse efter alle adressegrupper.</param>
         /// <returns>Alle adressegrupper.</returns>
         [OperationContract]
         [TransactionFlow(TransactionFlowOption.Allowed)]
-        IList<AdressegruppeView> AdressegruppeGetAll();
+        IList<AdressegruppeView> AdressegruppeGetAll(AdressegruppeGetAllQuery adressegruppeGetAllQuery);
     }
 }

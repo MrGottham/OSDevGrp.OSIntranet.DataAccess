@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="EventLogAdresseRepositoryService" xml:space="preserve">
+    <value>106</value>
+  </data>
+  <data name="EventLogFinansstyringRepositoryService" xml:space="preserve">
+    <value>107</value>
+  </data>
   <data name="EventLogName" xml:space="preserve">
     <value>OS Intranet - Data Access</value>
   </data>

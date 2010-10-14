@@ -1,12 +1,13 @@
 ﻿using System.Runtime.Serialization;
+using OSDevGrp.OSIntranet.CommonLibrary.Infrastructure.Interfaces;
 
 namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Views
 {
     /// <summary>
-    /// Viewmodel for generelle tabeloplysinger.
+    /// Viewmodel for generelle tabeloplysninger.
     /// </summary>
     [DataContract(Name = "Tabel", Namespace = SoapNamespaces.DataAccessNamespace)]
-    public abstract class TabelView
+    public abstract class TabelView : IView
     {
         /// <summary>
         /// Nummer.

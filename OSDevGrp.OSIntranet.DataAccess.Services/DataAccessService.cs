@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.ServiceModel;
 using System.ServiceProcess;
+using OSDevGrp.OSIntranet.DataAccess.Services.Implementations;
 using OSDevGrp.OSIntranet.DataAccess.Services.Repositories;
 using OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces;
 
@@ -132,7 +133,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
         private void OpenHosts()
         {
             // WCF host til repository for adressekartotek.
-            _adresseRepositoryService = new ServiceHost(typeof (AdresseRepository));
+            _adresseRepositoryService = new ServiceHost(typeof (AdresseRepositoryService));
             try
             {
                 _adresseRepositoryService.Open();
@@ -143,7 +144,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
                 throw;
             }
             // WCF host til repository for finansstyring.
-            _finansstyringRepositoryService = new ServiceHost(typeof (FinansstyringRepository));
+            _finansstyringRepositoryService = new ServiceHost(typeof (FinansstyringRepositoryService));
             try
             {
                 _finansstyringRepositoryService.Open();
