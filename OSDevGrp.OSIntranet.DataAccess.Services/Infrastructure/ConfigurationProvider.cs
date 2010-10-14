@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using Castle.MicroKernel.Registration;
+﻿using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using OSDevGrp.OSIntranet.CommonLibrary.Infrastructure;
 using OSDevGrp.OSIntranet.CommonLibrary.Infrastructure.Interfaces;
@@ -27,12 +26,13 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
             container.Register(Component.For<IQueryBus>().ImplementedBy<QueryBus>().LifeStyle.Transient);
             container.Register(Component.For<ICommandBus>().ImplementedBy<CommandBus>().LifeStyle.Transient);
 
-            container.Register(AllTypes.FromAssembly(Assembly.GetExecutingAssembly())
-                                   .BasedOn(typeof (IQueryHandler<,>))
-                                   .WithService
-                                   .Base());
+            container.Register(AllTypes.FromAssemblyNamed("OSDevGrp.OSIntranet.DataAccess.Services")
+                                   .BasedOn(typeof (IRepository)).WithService.FromInterface(typeof (IRepository)));
 
-            container.Register(AllTypes.FromAssembly(Assembly.GetExecutingAssembly())
+            container.Register(AllTypes.FromAssemblyNamed("OSDevGrp.OSIntranet.DataAccess.Services")
+                                   .BasedOn(typeof (IQueryHandler)).WithService.FromInterface(typeof (IQueryHandler)));
+
+            container.Register(AllTypes.FromAssemblyNamed("OSDevGrp.OSIntranet.DataAccess.Services")
                                    .BasedOn<IRepositoryService>());
         }
 

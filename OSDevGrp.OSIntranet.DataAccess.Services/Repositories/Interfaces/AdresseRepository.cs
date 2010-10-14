@@ -4,14 +4,21 @@ using OSDevGrp.OSIntranet.CommonLibrary.Domain.Adressekartotek;
 namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
 {
     /// <summary>
-    /// Interface til repository for adressekartoteket.
+    /// Repository for adressekartoteket.
     /// </summary>
-    public interface IAdresseRepository : IRepository
+    public class AdresseRepository : IAdresseRepository
     {
+        #region IAdresseRepository Members
+
         /// <summary>
         /// Henter alle adressegrupper.
         /// </summary>
         /// <returns>Liste indeholdende alle adressegrupper.</returns>
-        IList<Adressegruppe> AdressegruppeGetAll();
+        public IList<Adressegruppe> AdressegruppeGetAll()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        #endregion
     }
 }
