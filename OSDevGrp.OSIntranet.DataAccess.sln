@@ -14,6 +14,7 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "OSDevGrp.OSIntranet.DataAcc
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External references", "External references", "{EF9F5033-CE24-4A5F-864E-F7BDCAC510DE}"
 	ProjectSection(SolutionItems) = preProject
+		External references\AutoMapper.dll = External references\AutoMapper.dll
 		External references\Castle.Core.dll = External references\Castle.Core.dll
 		External references\Castle.Windsor.dll = External references\Castle.Windsor.dll
 		External references\nunit.framework.dll = External references\nunit.framework.dll

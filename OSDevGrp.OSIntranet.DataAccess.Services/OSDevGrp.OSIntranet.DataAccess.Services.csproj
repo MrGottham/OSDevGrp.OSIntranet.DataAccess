@@ -46,6 +46,9 @@
     <AssemblyOriginatorKeyFile>OSDevGrp.OSIntranet.DataAccess.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper">
+      <HintPath>..\External references\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="Castle.Core, Version=2.5.1.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External references\Castle.Core.dll</HintPath>
@@ -94,6 +97,7 @@
       <DependentUpon>DataAccessService.cs</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\ConfigurationProvider.cs" />
+    <Compile Include="Infrastructure\ObjectMapper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProjectInstaller.cs">
       <SubType>Component</SubType>
@@ -110,6 +114,7 @@
     <Compile Include="Implementations\AdresseRepositoryService.cs" />
     <Compile Include="Implementations\FinansstyringRepositoryService.cs" />
     <Compile Include="QueryHandlers\AdressegruppeGetAllQueryHandler.cs" />
+    <Compile Include="QueryHandlers\AdressegruppeGetByNummerQueryHandler.cs" />
     <Compile Include="Repositories\AdresseRepository.cs" />
     <Compile Include="Repositories\DbAxRepositoryBase.cs" />
     <Compile Include="Repositories\Interfaces\DbAxConfiguration.cs" />

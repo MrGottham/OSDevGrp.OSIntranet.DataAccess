@@ -61,6 +61,25 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
             }
         }
 
+        /// <summary>
+        /// Henter en given adressegruppe.
+        /// </summary>
+        /// <param name="adressegruppeGetByNummerQuery">Query til forespørgelse efter en given adressegruppe.</param>
+        /// <returns>Adressegruppe.</returns>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public AdressegruppeView AdressegruppeGetByNummer(AdressegruppeGetByNummerQuery adressegruppeGetByNummerQuery)
+        {
+            try
+            {
+                return _queryBus.Query<AdressegruppeGetByNummerQuery, AdressegruppeView>(adressegruppeGetByNummerQuery);
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogAdresseRepositoryService));
+            }
+        }
+
         #endregion
     }
 }

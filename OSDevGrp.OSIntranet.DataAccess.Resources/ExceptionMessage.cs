@@ -7,6 +7,7 @@
     {
         MissingApplicationSetting,
         DataStoreLocationDoesNotExists,
-        UnableToLoginOnDbAx
+        UnableToLoginOnDbAx,
+        CantFindUniqueRecordId
     }
 }

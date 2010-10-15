@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Exceptions\DataAccessBusinessException.cs" />
     <Compile Include="Exceptions\DataAccessSystemException.cs" />
+    <Compile Include="IObjectMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
