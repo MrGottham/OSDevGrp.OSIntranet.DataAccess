@@ -125,4 +125,7 @@
     <value>'{0}' er ikke angivet under AppSettings i applikationskonfigurationsfilen.</value>
     <comment>{0} = Nøglenavn på applikationsværdien.</comment>
   </data>
+  <data name="UnableToLoginOnDbAx" xml:space="preserve">
+    <value>Kunne ikke logge ind ved brug af DBAX.</value>
+  </data>
 </root>

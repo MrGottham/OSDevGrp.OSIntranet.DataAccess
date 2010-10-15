@@ -30,7 +30,22 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <returns>Liste indeholdende alle adressegrupper.</returns>
         public IList<Adressegruppe> AdressegruppeGetAll()
         {
-            throw new System.NotImplementedException();
+            return GetTableContentFromTabel<Adressegruppe>(1030, (dbHandle, searchHandle, list) =>
+                                                                     {
+                                                                         var nummer = GetFieldValueAsInt(dbHandle,
+                                                                                                         searchHandle,
+                                                                                                         "Nummer");
+                                                                         var navn = GetFieldValueAsString(dbHandle,
+                                                                                                          searchHandle,
+                                                                                                          "Tekst");
+                                                                         var adrgrp = GetFieldValueAsInt(dbHandle,
+                                                                                                         searchHandle,
+                                                                                                         "Adressegruppe");
+                                                                         var adressegruppe = new Adressegruppe(nummer,
+                                                                                                               navn,
+                                                                                                               adrgrp);
+                                                                         list.Add(adressegruppe);
+                                                                     });
         }
 
         #endregion

@@ -125,4 +125,7 @@
     <value>'{0}' are missing in the AppSettings in the application configuration file.</value>
     <comment>{0} = Key name of application setting.</comment>
   </data>
+  <data name="UnableToLoginOnDbAx" xml:space="preserve">
+    <value>Unable to login using DBAX.</value>
+  </data>
 </root>

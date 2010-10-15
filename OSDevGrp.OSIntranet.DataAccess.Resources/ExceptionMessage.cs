@@ -6,6 +6,7 @@
     public enum ExceptionMessage
     {
         MissingApplicationSetting,
-        DataStoreLocationDoesNotExists
+        DataStoreLocationDoesNotExists,
+        UnableToLoginOnDbAx
     }
 }

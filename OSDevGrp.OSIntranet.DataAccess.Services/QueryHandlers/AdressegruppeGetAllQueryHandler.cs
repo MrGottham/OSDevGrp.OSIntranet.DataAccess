@@ -48,7 +48,6 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
             {
                 throw new ArgumentNullException("query");
             }
-
             var adressegrupper = _adresseRepository.AdressegruppeGetAll();
 
             throw new System.NotImplementedException();
