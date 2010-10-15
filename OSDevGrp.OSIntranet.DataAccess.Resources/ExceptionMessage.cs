@@ -5,5 +5,7 @@
     /// </summary>
     public enum ExceptionMessage
     {
+        MissingApplicationSetting,
+        DataStoreLocationDoesNotExists
     }
 }

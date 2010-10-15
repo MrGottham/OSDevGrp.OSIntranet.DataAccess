@@ -9,6 +9,19 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
     /// </summary>
     public class AdresseRepository : DbAxRepositoryBase, IAdresseRepository
     {
+        #region
+
+        /// <summary>
+        /// Danner repository for adressekartoteket.
+        /// </summary>
+        /// <param name="dbAxConfiguration">Konfiguration for DBAX.</param>
+        public AdresseRepository(IDbAxConfiguration dbAxConfiguration)
+            : base(dbAxConfiguration)
+        {
+        }
+
+        #endregion
+
         #region IAdresseRepository Members
 
         /// <summary>

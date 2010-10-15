@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Security.Authentication;
 using DBAX;
+using OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces;
 
 namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
 {
@@ -9,6 +10,29 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
     /// </summary>
     public abstract class DbAxRepositoryBase
     {
+        #region Private variables
+
+        private readonly IDbAxConfiguration _configuration;
+            
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Danner basisklasser for et repository, der benytter DBAX.
+        /// </summary>
+        /// <param name="configuration">Konfiguration for DBAX.</param>
+        protected DbAxRepositoryBase(IDbAxConfiguration configuration)
+        {
+            if (configuration == null)
+            {
+                throw new ArgumentNullException("configuration");
+            }
+            _configuration = configuration;
+        }
+
+        #endregion
+
         /// <summary>
         /// Åbner en databasen med DBAX.
         /// </summary>
@@ -25,7 +49,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
             var dbHandle = new DsiDbX();
             if (login)
             {
-                if (!dbHandle.Login(string.Empty, string.Empty))
+                if (!dbHandle.Login(_configuration.UserName, _configuration.Password))
                 {
                     throw new AuthenticationException();
                 }

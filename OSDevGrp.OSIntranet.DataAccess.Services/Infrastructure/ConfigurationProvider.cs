@@ -1,4 +1,5 @@
-﻿using Castle.MicroKernel.Registration;
+﻿using System;
+using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using OSDevGrp.OSIntranet.CommonLibrary.Infrastructure;
 using OSDevGrp.OSIntranet.CommonLibrary.Infrastructure.Interfaces;
@@ -22,18 +23,27 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
         /// <param name="container">Container, hvortil der skal tilføjes konfiguration.</param>
         public void AddConfiguration(IWindsorContainer container)
         {
-            container.Register(Component.For<ILogRepository>().ImplementedBy<LogRepository>().LifeStyle.Transient);
-            container.Register(Component.For<IQueryBus>().ImplementedBy<QueryBus>().LifeStyle.Transient);
-            container.Register(Component.For<ICommandBus>().ImplementedBy<CommandBus>().LifeStyle.Transient);
+            try
+            {
+                container.Register(
+                    Component.For<IDbAxConfiguration>().ImplementedBy<DbAxConfiguration>().LifeStyle.Transient);
+                container.Register(Component.For<ILogRepository>().ImplementedBy<LogRepository>().LifeStyle.Transient);
+                container.Register(Component.For<IQueryBus>().ImplementedBy<QueryBus>().LifeStyle.Transient);
+                container.Register(Component.For<ICommandBus>().ImplementedBy<CommandBus>().LifeStyle.Transient);
 
-            container.Register(AllTypes.FromAssemblyNamed("OSDevGrp.OSIntranet.DataAccess.Services")
-                                   .BasedOn(typeof (IRepository)).WithService.FromInterface(typeof (IRepository)));
+                container.Register(AllTypes.FromAssemblyNamed("OSDevGrp.OSIntranet.DataAccess.Services")
+                                       .BasedOn(typeof (IRepository)).WithService.FromInterface(typeof (IRepository)));
 
-            container.Register(AllTypes.FromAssemblyNamed("OSDevGrp.OSIntranet.DataAccess.Services")
-                                   .BasedOn(typeof (IQueryHandler)).WithService.FromInterface(typeof (IQueryHandler)));
+                container.Register(AllTypes.FromAssemblyNamed("OSDevGrp.OSIntranet.DataAccess.Services")
+                                       .BasedOn(typeof (IQueryHandler)).WithService.FromInterface(typeof (IQueryHandler)));
 
-            container.Register(AllTypes.FromAssemblyNamed("OSDevGrp.OSIntranet.DataAccess.Services")
-                                   .BasedOn<IRepositoryService>());
+                container.Register(AllTypes.FromAssemblyNamed("OSDevGrp.OSIntranet.DataAccess.Services")
+                                       .BasedOn<IRepositoryService>());
+            }
+            catch (Exception ex)
+            {
+                throw new Castle.MicroKernel.ComponentRegistrationException(ex.Message);
+            }
         }
 
         #endregion

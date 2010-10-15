@@ -78,6 +78,7 @@
       <HintPath>..\External references\OSDevGrp.OSIntranet.CommonLibrary.Wcf.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
     <Reference Include="System.Management" />
@@ -111,7 +112,9 @@
     <Compile Include="QueryHandlers\AdressegruppeGetAllQueryHandler.cs" />
     <Compile Include="Repositories\AdresseRepository.cs" />
     <Compile Include="Repositories\DbAxRepositoryBase.cs" />
+    <Compile Include="Repositories\Interfaces\DbAxConfiguration.cs" />
     <Compile Include="Repositories\Interfaces\IAdresseRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IDbAxConfiguration.cs" />
     <Compile Include="Repositories\Interfaces\IFinansstyringRepository.cs" />
     <Compile Include="Repositories\Interfaces\ILogRepository.cs" />
     <Compile Include="Repositories\Interfaces\IRepository.cs" />
@@ -142,6 +145,10 @@
     <ProjectReference Include="..\OSDevGrp.OSIntranet.DataAccess.Infrastructure.Interfaces\OSDevGrp.OSIntranet.DataAccess.Infrastructure.Interfaces.csproj">
       <Project>{F27A4BF2-8218-472E-A41C-4FE23ACB0EDF}</Project>
       <Name>OSDevGrp.OSIntranet.DataAccess.Infrastructure.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OSDevGrp.OSIntranet.DataAccess.Resources\OSDevGrp.OSIntranet.DataAccess.Resources.csproj">
+      <Project>{2F5DACED-F381-4C59-9697-42360C2E7136}</Project>
+      <Name>OSDevGrp.OSIntranet.DataAccess.Resources</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
