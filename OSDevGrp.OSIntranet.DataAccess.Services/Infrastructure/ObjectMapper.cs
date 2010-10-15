@@ -25,6 +25,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
                 .ForMember(x => x.Nummer, opt => opt.MapFrom(s => s.Nummer))
                 .ForMember(x => x.Navn, opt => opt.MapFrom(s => s.Navn))
                 .ForMember(x => x.AdressegruppeOswebdb, opt => opt.MapFrom(s => s.AdressegruppeOswebdb));
+
+            Mapper.CreateMap<Betalingsbetingelse, BetalingsbetingelseView>()
+                .ForMember(x => x.Nummer, opt => opt.MapFrom(s => s.Nummer))
+                .ForMember(x => x.Navn, opt => opt.MapFrom(s => s.Navn));
         }
 
         #endregion

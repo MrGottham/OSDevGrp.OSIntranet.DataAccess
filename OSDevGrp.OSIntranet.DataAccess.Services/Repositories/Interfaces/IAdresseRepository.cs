@@ -13,5 +13,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
         /// </summary>
         /// <returns>Liste indeholdende alle adressegrupper.</returns>
         IList<Adressegruppe> AdressegruppeGetAll();
+
+        /// <summary>
+        /// Henter alle betalingsbetingelser.
+        /// </summary>
+        /// <returns>Liste indeholdende alle betalingsbetingelser.</returns>
+        IList<Betalingsbetingelse> BetalingsbetingelserGetAll();
     }
 }

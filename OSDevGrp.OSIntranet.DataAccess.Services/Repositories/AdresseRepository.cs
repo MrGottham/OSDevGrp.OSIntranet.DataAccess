@@ -48,6 +48,24 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                                      });
         }
 
+        /// <summary>
+        /// Henter alle betalingsbetingelser.
+        /// </summary>
+        /// <returns>Liste indeholdende alle betalingsbetingelser.</returns>
+        public IList<Betalingsbetingelse> BetalingsbetingelserGetAll()
+        {
+            return GetTableContentFromTabel<Betalingsbetingelse>(1040, (dbHandle, searchHandle, list) =>
+                                                                           {
+                                                                               var nummer = GetFieldValueAsInt(
+                                                                                   dbHandle, searchHandle, "Nummer");
+                                                                               var navn = GetFieldValueAsString(
+                                                                                   dbHandle, searchHandle, "Navn");
+                                                                               var betalingsbetingelse =
+                                                                                   new Betalingsbetingelse(nummer, navn);
+                                                                               list.Add(betalingsbetingelse);
+                                                                           });
+        }
+
         #endregion
     }
 }

@@ -115,6 +115,7 @@
     <Compile Include="Implementations\FinansstyringRepositoryService.cs" />
     <Compile Include="QueryHandlers\AdressegruppeGetAllQueryHandler.cs" />
     <Compile Include="QueryHandlers\AdressegruppeGetByNummerQueryHandler.cs" />
+    <Compile Include="QueryHandlers\BetalingsbetingelseGetAllQueryHandler.cs" />
     <Compile Include="Repositories\AdresseRepository.cs" />
     <Compile Include="Repositories\DbAxRepositoryBase.cs" />
     <Compile Include="Repositories\Interfaces\DbAxConfiguration.cs" />
