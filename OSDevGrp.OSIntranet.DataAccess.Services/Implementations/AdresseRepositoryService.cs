@@ -80,6 +80,48 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
             }
         }
 
+        /// <summary>
+        /// Henter alle betalingsbetingelser.
+        /// </summary>
+        /// <param name="betalingsbetingelseGetAllQuery">Query til forespørgelse efter alle betalingsbetingelser.</param>
+        /// <returns>Alle betalingsbetingelser.</returns>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public IList<BetalingsbetingelseView> BetalingsbetingelseGetAll(BetalingsbetingelseGetAllQuery betalingsbetingelseGetAllQuery)
+        {
+            try
+            {
+                return
+                    _queryBus.Query<BetalingsbetingelseGetAllQuery, IList<BetalingsbetingelseView>>(
+                        betalingsbetingelseGetAllQuery);
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogAdresseRepositoryService));
+            }
+        }
+
+        /// <summary>
+        /// Henter en given betalingsbetingelse.
+        /// </summary>
+        /// <param name="betalingsbetingelseGetByNummerQuery">Query til forespørgelse efter en given betalingsbetingelse.</param>
+        /// <returns>Betalingsbetingelse.</returns>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public BetalingsbetingelseView BetalingsbetingelseGetByNummer(BetalingsbetingelseGetByNummerQuery betalingsbetingelseGetByNummerQuery)
+        {
+            try
+            {
+                return
+                    _queryBus.Query<BetalingsbetingelseGetByNummerQuery, BetalingsbetingelseView>(
+                        betalingsbetingelseGetByNummerQuery);
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogAdresseRepositoryService));
+            }
+        }
+
         #endregion
     }
 }
