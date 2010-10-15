@@ -63,6 +63,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_73E42DA41A5A435BB4416D5F4F9FAA4B"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_7C087C2629FE6DF8E9ABC65261A021DC"
         "OwnerKey" = "8:_FE5FCDD9376F4119B5AAC59DE4F0317C"
         "MsmSig" = "8:_UNDEFINED"
@@ -141,6 +147,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_BC78A38BEEEF4F5DB405B902A622D891"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_DB983B06300105114E97564D71CF2C2D"
         "OwnerKey" = "8:_FE5FCDD9376F4119B5AAC59DE4F0317C"
         "MsmSig" = "8:_UNDEFINED"
@@ -161,6 +173,18 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_FE5FCDD9376F4119B5AAC59DE4F0317C"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_73E42DA41A5A435BB4416D5F4F9FAA4B"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_BC78A38BEEEF4F5DB405B902A622D891"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -551,6 +575,37 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_73E42DA41A5A435BB4416D5F4F9FAA4B"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:OSDevGrp.OSIntranet.CommonLibrary.Resources.resources, Version=1.0.0.0, Culture=en-US, PublicKeyToken=1719c289d1070527, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_73E42DA41A5A435BB4416D5F4F9FAA4B"
+                    {
+                    "Name" = "8:OSDevGrp.OSIntranet.CommonLibrary.Resources.resources.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:..\\External references\\en-US\\OSDevGrp.OSIntranet.CommonLibrary.Resources.resources.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_94410064DA6B4BA1BFED46FAFCE0FB38"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_7C087C2629FE6DF8E9ABC65261A021DC"
             {
             "AssemblyRegister" = "3:1"
@@ -706,6 +761,37 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_BC78A38BEEEF4F5DB405B902A622D891"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:OSDevGrp.OSIntranet.CommonLibrary.Resources.resources, Version=1.0.0.0, Culture=da-DK, PublicKeyToken=1719c289d1070527, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_BC78A38BEEEF4F5DB405B902A622D891"
+                    {
+                    "Name" = "8:OSDevGrp.OSIntranet.CommonLibrary.Resources.resources.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:..\\External references\\da-DK\\OSDevGrp.OSIntranet.CommonLibrary.Resources.resources.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_6BFCE5B89CDD4756A86E1803CF52B92E"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_DB983B06300105114E97564D71CF2C2D"
             {
             "AssemblyRegister" = "3:1"
@@ -806,6 +892,28 @@
             "Property" = "8:TARGETDIR"
                 "Folders"
                 {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_6BFCE5B89CDD4756A86E1803CF52B92E"
+                    {
+                    "Name" = "8:da-DK"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_367B28902DF3492CAF087E6E3BCBBCB9"
+                        "Folders"
+                        {
+                        }
+                    }
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_94410064DA6B4BA1BFED46FAFCE0FB38"
+                    {
+                    "Name" = "8:en-US"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_C71EB3CDF61B4C2A80C94FE43BC241CE"
+                        "Folders"
+                        {
+                        }
+                    }
                 }
             }
         }
@@ -825,7 +933,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:OS Intranet - Data Access"
         "ProductCode" = "8:{424A3959-B799-46FB-B562-F3F3A5CC3914}"
-        "PackageCode" = "8:{C89236C0-8CF1-415C-9BC7-D48643A9A7C8}"
+        "PackageCode" = "8:{CD3BFD42-C282-48E3-93BB-6CA26F8A43AF}"
         "UpgradeCode" = "8:{DCC75A15-60B2-432F-8511-B6BD7F7364F3}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
