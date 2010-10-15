@@ -1,4 +1,5 @@
 ﻿using System;
+using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using OSDevGrp.OSIntranet.CommonLibrary.Infrastructure;
@@ -42,7 +43,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
             }
             catch (Exception ex)
             {
-                throw new Castle.MicroKernel.ComponentRegistrationException(ex.Message);
+                throw new ComponentRegistrationException(ex.Message);
             }
         }
 
