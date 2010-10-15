@@ -40,9 +40,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OSDevGrp.OSIntranet.DataAcc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OSDevGrp.OSIntranet.DataAccess.Tests", "OSDevGrp.OSIntranet.DataAccess.Tests\OSDevGrp.OSIntranet.DataAccess.Tests.csproj", "{BD32269D-9306-4410-8CC6-0B8DA37C414E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OSDevGrp.OSIntranet.DataAccess.Resources", "OSDevGrp.OSIntranet.DataAccess.Resources\OSDevGrp.OSIntranet.DataAccess.Resources.csproj", "{2F5DACED-F381-4C59-9697-42360C2E7136}"
+EndProject
 Global
 	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 6
+		SccNumberOfProjects = 7
 		SccLocalPath0 = .
 		SccProjectUniqueName1 = OSDevGrp.OSIntranet.DataAccess.Contracts\\OSDevGrp.OSIntranet.DataAccess.Contracts.csproj
 		SccLocalPath1 = .
@@ -59,6 +61,9 @@ Global
 		SccProjectUniqueName5 = OSDevGrp.OSIntranet.DataAccess.Tests\\OSDevGrp.OSIntranet.DataAccess.Tests.csproj
 		SccLocalPath5 = .
 		SccProjectFilePathRelativizedFromConnection5 = OSDevGrp.OSIntranet.DataAccess.Tests\\
+		SccProjectUniqueName6 = OSDevGrp.OSIntranet.DataAccess.Resources\\OSDevGrp.OSIntranet.DataAccess.Resources.csproj
+		SccLocalPath6 = .
+		SccProjectFilePathRelativizedFromConnection6 = OSDevGrp.OSIntranet.DataAccess.Resources\\
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -115,6 +120,16 @@ Global
 		{BD32269D-9306-4410-8CC6-0B8DA37C414E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{BD32269D-9306-4410-8CC6-0B8DA37C414E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{BD32269D-9306-4410-8CC6-0B8DA37C414E}.Release|x86.ActiveCfg = Release|Any CPU
+		{2F5DACED-F381-4C59-9697-42360C2E7136}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F5DACED-F381-4C59-9697-42360C2E7136}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F5DACED-F381-4C59-9697-42360C2E7136}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{2F5DACED-F381-4C59-9697-42360C2E7136}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{2F5DACED-F381-4C59-9697-42360C2E7136}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2F5DACED-F381-4C59-9697-42360C2E7136}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F5DACED-F381-4C59-9697-42360C2E7136}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F5DACED-F381-4C59-9697-42360C2E7136}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{2F5DACED-F381-4C59-9697-42360C2E7136}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{2F5DACED-F381-4C59-9697-42360C2E7136}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
