@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using OSDevGrp.OSIntranet.CommonLibrary.Domain.Adressekartotek;
 using OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces;
 
@@ -23,6 +24,32 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         #endregion
 
         #region IAdresseRepository Members
+
+        /// <summary>
+        /// Henter alle postnumre.
+        /// </summary>
+        /// <returns>Liste indeholdende alle postnumre.</returns>
+        public IList<Postnummer> PostnummerGetAll()
+        {
+            var dbHandle = OpenDatabase("POSTNR.DBD", false, true);
+            try
+            {
+                var searchHandle = dbHandle.CreateSearch();
+                try
+                {
+                    var postnumre = new List<Postnummer>();
+                    return postnumre;
+                }
+                finally
+                {
+                    dbHandle.DeleteSearch(searchHandle);
+                }
+            }
+            finally
+            {
+                dbHandle.CloseDatabase();
+            }
+        }
 
         /// <summary>
         /// Henter alle adressegrupper.
