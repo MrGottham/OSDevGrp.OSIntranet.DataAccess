@@ -9,7 +9,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
     /// </summary>
     public class AdresseRepository : DbAxRepositoryBase, IAdresseRepository
     {
-        #region
+        #region Constructor
 
         /// <summary>
         /// Danner repository for adressekartoteket.
@@ -59,7 +59,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                                                var nummer = GetFieldValueAsInt(
                                                                                    dbHandle, searchHandle, "Nummer");
                                                                                var navn = GetFieldValueAsString(
-                                                                                   dbHandle, searchHandle, "Navn");
+                                                                                   dbHandle, searchHandle, "Tekst");
                                                                                var betalingsbetingelse =
                                                                                    new Betalingsbetingelse(nummer, navn);
                                                                                list.Add(betalingsbetingelse);
