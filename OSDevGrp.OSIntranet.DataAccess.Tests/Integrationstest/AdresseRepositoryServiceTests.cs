@@ -16,6 +16,108 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
     public class AdresseRepositoryServiceTests
     {
         /// <summary>
+        /// Tester, at postnumre hentes.
+        /// </summary>
+        [Test]
+        public void TestAtPostnumreHentes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var query = new PostnummerGetAllQuery();
+                var postnumre = channel.PostnummerGetAll(query);
+                Assert.That(postnumre, Is.Not.Null);
+                Assert.That(postnumre.Count, Is.GreaterThan(0));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at postnumre for en landekode hentes.
+        /// </summary>
+        [Test]
+        public void TestAtPostnumreForLandekodeHentes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var query = new PostnummerGetByLandekodeQuery
+                                {
+                                    Landekode = "DK"
+                                };
+                var postnumre = channel.PostnummerGetAllByLandekode(query);
+                Assert.That(postnumre, Is.Not.Null);
+                Assert.That(postnumre.Count, Is.GreaterThan(0));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at et bynavn for et postnummer på en given landekode hentes.
+        /// </summary>
+        [Test]
+        public void TestAtBynavnForPostnummerHentes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var query = new BynavnGetByLandekodeAndPostnummerQuery
+                                {
+                                    Landekode = "DK",
+                                    Postnummer = "5700"
+                                };
+                var postnummer = channel.BynavnGetByLandekodeAndPostnummre(query);
+                Assert.That(postnummer, Is.Not.Null);
+                Assert.That(postnummer.Landekode, Is.Not.Null);
+                Assert.That(postnummer.Landekode.Length, Is.GreaterThan(0));
+                Assert.That(postnummer.Postnummer, Is.Not.Null);
+                Assert.That(postnummer.Postnummer.Length, Is.GreaterThan(0));
+                Assert.That(postnummer.Bynavn, Is.Not.Null);
+                Assert.That(postnummer.Bynavn.Length, Is.GreaterThan(0));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException, hvis postnumemr ikke findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesHvisPostnummerIkkeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var query = new BynavnGetByLandekodeAndPostnummerQuery
+                                {
+                                    Landekode = "DK",
+                                    Postnummer = "XYZ"
+                                };
+                Assert.Throws<FaultException>(() => channel.BynavnGetByLandekodeAndPostnummre(query));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
         /// Tester, at adressegrupper hentes.
         /// </summary>
         [Test]

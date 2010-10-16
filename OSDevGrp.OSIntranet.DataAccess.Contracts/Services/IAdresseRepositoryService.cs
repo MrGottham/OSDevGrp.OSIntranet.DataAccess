@@ -12,6 +12,33 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
     public interface IAdresseRepositoryService : IRepositoryService
     {
         /// <summary>
+        /// Henter alle postnumre.
+        /// </summary>
+        /// <param name="postnummerGetAllQuery">Query til forespørgelse efter alle postnumre.</param>
+        /// <returns>Alle postnumre.</returns>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        IList<PostnummerView> PostnummerGetAll(PostnummerGetAllQuery postnummerGetAllQuery);
+
+        /// <summary>
+        /// Henter alle postnumre for en given landekode.
+        /// </summary>
+        /// <param name="postnummerGetByLandekodeQuery">Query til forespørgelse efter alle postnumre for en given landekode.</param>
+        /// <returns>Alle postnumre for den givne landekode.</returns>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        IList<PostnummerView> PostnummerGetAllByLandekode(PostnummerGetByLandekodeQuery postnummerGetByLandekodeQuery);
+
+        /// <summary>
+        /// Henter bynavnet til et givent postnummer på en given landekode.
+        /// </summary>
+        /// <param name="bynavnGetByLandekodeAndPostnummerQuery">Query til forespørgelse efter bynavnet for et givent postnummer på en given landekode.</param>
+        /// <returns>Landekode, postnummer og bynavn</returns>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        PostnummerView BynavnGetByLandekodeAndPostnummre(BynavnGetByLandekodeAndPostnummerQuery bynavnGetByLandekodeAndPostnummerQuery);
+
+        /// <summary>
         /// Henter alle adressegrupper.
         /// </summary>
         /// <param name="adressegruppeGetAllQuery">Query til forespørgelse efter alle adressegrupper.</param>

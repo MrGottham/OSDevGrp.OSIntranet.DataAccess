@@ -4,26 +4,36 @@ using OSDevGrp.OSIntranet.CommonLibrary.Infrastructure.Interfaces;
 namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Views
 {
     /// <summary>
-    /// Viewobjekt for generelle tabeloplysninger.
+    /// Viewobject for et postnummer.
     /// </summary>
-    [DataContract(Name = "Tabel", Namespace = SoapNamespaces.DataAccessNamespace)]
-    public abstract class TabelView : IView
+    [DataContract(Name = "Postnummer", Namespace = SoapNamespaces.DataAccessNamespace)]
+    public class PostnummerView : IView
     {
         /// <summary>
-        /// Nummer.
+        /// Landekode.
         /// </summary>
         [DataMember(IsRequired = true)]
-        public int Nummer
+        public string Landekode
         {
             get;
             set;
         }
 
         /// <summary>
-        /// Navn.
+        /// Postnummer.
         /// </summary>
         [DataMember(IsRequired = true)]
-        public string Navn
+        public string Postnummer
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Bynavn.
+        /// </summary>
+        [DataMember(IsRequired = true)]
+        public string Bynavn
         {
             get;
             set;

@@ -43,6 +43,66 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         #region IAdresseRepositoryService Members
 
         /// <summary>
+        /// Henter alle postnumre.
+        /// </summary>
+        /// <param name="postnummerGetAllQuery">Query til forespørgelse efter alle postnumre.</param>
+        /// <returns>Alle postnumre.</returns>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public IList<PostnummerView> PostnummerGetAll(PostnummerGetAllQuery postnummerGetAllQuery)
+        {
+            try
+            {
+                return _queryBus.Query<PostnummerGetAllQuery, IList<PostnummerView>>(postnummerGetAllQuery);
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogAdresseRepositoryService));
+            }
+        }
+
+        /// <summary>
+        /// Henter alle postnumre for en given landekode.
+        /// </summary>
+        /// <param name="postnummerGetByLandekodeQuery">Query til forespørgelse efter alle postnumre for en given landekode.</param>
+        /// <returns>Alle postnumre for den givne landekode.</returns>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public IList<PostnummerView> PostnummerGetAllByLandekode(PostnummerGetByLandekodeQuery postnummerGetByLandekodeQuery)
+        {
+            try
+            {
+                return
+                    _queryBus.Query<PostnummerGetByLandekodeQuery, IList<PostnummerView>>(postnummerGetByLandekodeQuery);
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogAdresseRepositoryService));
+            }
+        }
+
+        /// <summary>
+        /// Henter bynavnet til et givent postnummer på en given landekode.
+        /// </summary>
+        /// <param name="bynavnGetByLandekodeAndPostnummerQuery">Query til forespørgelse efter bynavnet for et givent postnummer på en given landekode.</param>
+        /// <returns>Landekode, postnummer og bynavn</returns>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public PostnummerView BynavnGetByLandekodeAndPostnummre(BynavnGetByLandekodeAndPostnummerQuery bynavnGetByLandekodeAndPostnummerQuery)
+        {
+            try
+            {
+                return
+                    _queryBus.Query<BynavnGetByLandekodeAndPostnummerQuery, PostnummerView>(
+                        bynavnGetByLandekodeAndPostnummerQuery);
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogAdresseRepositoryService));
+            }
+        }
+
+        /// <summary>
         /// Henter alle adressegrupper.
         /// </summary>
         /// <param name="adressegruppeGetAllQuery">Query til forespørgelse efter alle adressegrupper.</param>
