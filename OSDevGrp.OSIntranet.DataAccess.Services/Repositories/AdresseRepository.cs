@@ -38,6 +38,13 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                 try
                 {
                     var postnumre = new List<Postnummer>();
+                    if (dbHandle.SetKey(searchHandle, "Postnummer"))
+                    {
+                        if (dbHandle.SearchFirst(searchHandle))
+                        {
+                            
+                        }
+                    }
                     return postnumre;
                 }
                 finally
