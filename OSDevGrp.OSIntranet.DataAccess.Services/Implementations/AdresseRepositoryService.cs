@@ -43,6 +43,25 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         #region IAdresseRepositoryService Members
 
         /// <summary>
+        /// Henter alle adresser til en adresseliste.
+        /// </summary>
+        /// <param name="adresselisteGetAllQuery">Query til forespørgelse efter alle adresser til en adresseliste.</param>
+        /// <returns>Alle adresser til en adresseliste.</returns>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public IList<AdresselisteView> AdresselisteGetAll(AdresselisteGetAllQuery adresselisteGetAllQuery)
+        {
+            try
+            {
+                return _queryBus.Query<AdresselisteGetAllQuery, IList<AdresselisteView>>(adresselisteGetAllQuery);
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogAdresseRepositoryService));
+            }
+        }
+
+        /// <summary>
         /// Henter alle postnumre.
         /// </summary>
         /// <param name="postnummerGetAllQuery">Query til forespørgelse efter alle postnumre.</param>

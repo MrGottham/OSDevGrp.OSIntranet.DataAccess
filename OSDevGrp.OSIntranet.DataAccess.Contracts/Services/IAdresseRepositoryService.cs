@@ -12,6 +12,15 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
     public interface IAdresseRepositoryService : IRepositoryService
     {
         /// <summary>
+        /// Henter alle adresser til en adresseliste.
+        /// </summary>
+        /// <param name="adresselisteGetAllQuery">Query til forespørgelse efter alle adresser til en adresseliste.</param>
+        /// <returns>Alle adresser til en adresseliste.</returns>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        IList<AdresselisteView> AdresselisteGetAll(AdresselisteGetAllQuery adresselisteGetAllQuery);
+
+        /// <summary>
         /// Henter alle postnumre.
         /// </summary>
         /// <param name="postnummerGetAllQuery">Query til forespørgelse efter alle postnumre.</param>

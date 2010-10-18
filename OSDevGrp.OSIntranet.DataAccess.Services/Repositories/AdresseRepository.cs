@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using OSDevGrp.OSIntranet.CommonLibrary.Domain.Adressekartotek;
 using OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces;
 
@@ -42,7 +41,15 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                     {
                         if (dbHandle.SearchFirst(searchHandle))
                         {
-                            
+                            do
+                            {
+                                var landekode = GetFieldValueAsString(dbHandle, searchHandle, "Landekode");
+                                var postnr = GetFieldValueAsString(dbHandle, searchHandle, "Postnummer");
+                                var bynavn = GetFieldValueAsString(dbHandle, searchHandle, "By");
+                                var postnummer = new Postnummer(landekode, postnr, bynavn);
+                                postnumre.Add(postnummer);
+
+                            } while (dbHandle.SearchNext(searchHandle));
                         }
                     }
                     return postnumre;

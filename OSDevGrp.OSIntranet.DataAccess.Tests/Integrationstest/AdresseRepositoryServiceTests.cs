@@ -16,6 +16,28 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
     public class AdresseRepositoryServiceTests
     {
         /// <summary>
+        /// Tester, at adresseliste hentes.
+        /// </summary>
+        [Test]
+        public void TestAtAdresselisteHentes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var query = new AdresselisteGetAllQuery();
+                var adresser = channel.AdresselisteGetAll(query);
+                Assert.That(adresser, Is.Not.Null);
+                Assert.That(adresser.Count, Is.GreaterThan(0));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
         /// Tester, at postnumre hentes.
         /// </summary>
         [Test]

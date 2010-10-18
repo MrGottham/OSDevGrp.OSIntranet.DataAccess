@@ -54,6 +54,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\AdressegruppeGetAllQuery.cs" />
     <Compile Include="Queries\AdressegruppeGetByNummerQuery.cs" />
+    <Compile Include="Queries\AdresselisteGetAllQuery.cs" />
     <Compile Include="Queries\BetalingsbetingelseGetAllQuery.cs" />
     <Compile Include="Queries\BetalingsbetingelseGetByNummerQuery.cs" />
     <Compile Include="Queries\PostnummerGetAllQuery.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="Services\IRepositoryService.cs" />
     <Compile Include="SoapNamespaces.cs" />
     <Compile Include="Views\AdressegruppeView.cs" />
+    <Compile Include="Views\AdresseListeView.cs" />
     <Compile Include="Views\BetalingsbetingelseView.cs" />
     <Compile Include="Views\PostnummerView.cs" />
     <Compile Include="Views\TabelView.cs" />

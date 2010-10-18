@@ -117,6 +117,9 @@
     <Compile Include="QueryHandlers\AdressegruppeGetByNummerQueryHandler.cs" />
     <Compile Include="QueryHandlers\BetalingsbetingelseGetAllQueryHandler.cs" />
     <Compile Include="QueryHandlers\BetalingsbetingelseGetByNummerQueryHandler.cs" />
+    <Compile Include="QueryHandlers\BynavnGetByLandekodeAndPostnummerQueryHandler.cs" />
+    <Compile Include="QueryHandlers\PostnummerGetAllQueryHandler.cs" />
+    <Compile Include="QueryHandlers\PostnummerGetByLandekodeQueryHandler.cs" />
     <Compile Include="Repositories\AdresseRepository.cs" />
     <Compile Include="Repositories\DbAxRepositoryBase.cs" />
     <Compile Include="Repositories\Interfaces\DbAxConfiguration.cs" />
