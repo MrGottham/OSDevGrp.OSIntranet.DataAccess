@@ -1,6 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using OSDevGrp.OSIntranet.CommonLibrary.Domain.Adressekartotek;
+using OSDevGrp.OSIntranet.DataAccess.Infrastructure.Interfaces.Exceptions;
+using OSDevGrp.OSIntranet.DataAccess.Resources;
 using OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces;
+using DBAX;
 
 namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
 {
@@ -23,6 +28,81 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         #endregion
 
         #region IAdresseRepository Members
+
+        /// <summary>
+        /// Henter alle adresser.
+        /// </summary>
+        /// <returns>Aller adresser.</returns>
+        public IList<AdresseBase> AdresserGetAll()
+        {
+            var dbHandle = OpenDatabase("ADRESSE.DBD", false, true);
+            try
+            {
+                var searchHandle = dbHandle.CreateSearch();
+                try
+                {
+                    var adressegrupper = AdressegruppeGetAll();
+
+                    var adresser = new List<AdresseBase>();
+                    if (dbHandle.SetKey(searchHandle, "Navn"))
+                    {
+                        var keyStr = dbHandle.KeyStrInt(1010,
+                                                        dbHandle.GetFieldLength(dbHandle.GetFieldNoByName("TabelNr")));
+                        if (dbHandle.SetKeyInterval(searchHandle, keyStr, keyStr))
+                        {
+                            if (dbHandle.SearchFirst(searchHandle))
+                            {
+                                do
+                                {
+                                    var firma = new Firma(GetFieldValueAsInt(dbHandle, searchHandle, "Ident"),
+                                                          GetFieldValueAsString(dbHandle, searchHandle, "Navn"),
+                                                          GetAdressegruppe(adressegrupper,
+                                                                           GetFieldValueAsInt(dbHandle, searchHandle,
+                                                                                              "Gruppenummer")));
+                                    InitialiserAdresseBase(firma, dbHandle, searchHandle);
+                                    var telefon1 = GetFieldValueAsString(dbHandle, searchHandle, "Telefon");
+                                    var telefon2 = GetFieldValueAsString(dbHandle, searchHandle, "Telefon2");
+                                    var telefax = GetFieldValueAsString(dbHandle, searchHandle, "Telefon3");
+                                    firma.SætTelefon(string.IsNullOrEmpty(telefon1) ? null : telefon1,
+                                                     string.IsNullOrEmpty(telefon2) ? null : telefon2,
+                                                     string.IsNullOrEmpty(telefax) ? null : telefax);
+
+
+
+
+                                    var bekendtskab = GetFieldValueAsString(dbHandle, searchHandle, "Bekendtskab");
+                                    if (!string.IsNullOrEmpty(bekendtskab))
+                                    {
+                                        firma.SætBekendtskab(bekendtskab);
+                                    }
+                                    var mailadresse = GetFieldValueAsString(dbHandle, searchHandle, "Email");
+                                    if (!string.IsNullOrEmpty(mailadresse))
+                                    {
+                                        firma.SætMailadresse(mailadresse);
+                                    }
+                                    var webadresse = GetFieldValueAsString(dbHandle, searchHandle, "Web");
+                                    if (!string.IsNullOrEmpty(webadresse))
+                                    {
+                                        firma.SætWebadresse(webadresse);
+                                    }
+                                    adresser.Add(firma);
+                                } while (dbHandle.SearchNext(searchHandle));
+                            }
+                            dbHandle.ClearKeyInterval(searchHandle);
+                        }
+                    }
+                    return adresser;
+                }
+                finally
+                {
+                    dbHandle.DeleteSearch(searchHandle);
+                }
+            }
+            finally
+            {
+                dbHandle.CloseDatabase();
+            }
+        }
 
         /// <summary>
         /// Henter alle postnumre.
@@ -105,6 +185,60 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                                                    new Betalingsbetingelse(nummer, navn);
                                                                                list.Add(betalingsbetingelse);
                                                                            });
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Finder og returnerer en given adressegruppe.
+        /// </summary>
+        /// <param name="adressegrupper">Adressegrupper.</param>
+        /// <param name="adressegruppeNummer">Unik identifikation af adressegruppen.</param>
+        /// <returns>Adressegruppe.</returns>
+        private static Adressegruppe GetAdressegruppe(IEnumerable<Adressegruppe> adressegrupper, int adressegruppeNummer)
+        {
+            if (adressegrupper == null)
+            {
+                throw new ArgumentNullException("adressegrupper");
+            }
+            try
+            {
+                return adressegrupper.Single(m => m.Nummer == adressegruppeNummer);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new DataAccessSystemException(
+                    Resource.GetExceptionMessage(ExceptionMessage.CantFindUniqueRecordId, typeof (Adressegruppe),
+                                                 adressegruppeNummer), ex);
+            }
+        }
+
+        /// <summary>
+        /// Initialiserer basisoplysinger for en adresse.
+        /// </summary>
+        /// <param name="adresse">Adresse.</param>
+        /// <param name="dbHandle">DBAX databasehandle.</param>
+        /// <param name="searchHandle">Searchhandle.</param>
+        private void InitialiserAdresseBase(AdresseBase adresse, IDsiDbX dbHandle, int searchHandle)
+        {
+            if (adresse == null)
+            {
+                throw new ArgumentNullException("adresse");
+            }
+            if (dbHandle == null)
+            {
+                throw new ArgumentNullException("dbHandle");
+            }
+            var adresse1 = GetFieldValueAsString(dbHandle, searchHandle, "Adresse1");
+            var adresse2 = GetFieldValueAsString(dbHandle, searchHandle, "Adresse2");
+            var postnummerBy = GetFieldValueAsString(dbHandle, searchHandle, "PostnummerBy");
+            adresse.SætAdresseoplysninger(string.IsNullOrEmpty(adresse1) ? null : adresse1,
+                                          string.IsNullOrEmpty(adresse2) ? null : adresse2,
+                                          string.IsNullOrEmpty(postnummerBy) ? null : postnummerBy);
+
+
         }
 
         #endregion

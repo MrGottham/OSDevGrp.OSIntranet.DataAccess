@@ -9,6 +9,12 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
     public interface IAdresseRepository : IRepository
     {
         /// <summary>
+        /// Henter alle adresser.
+        /// </summary>
+        /// <returns>Aller adresser.</returns>
+        IList<AdresseBase> AdresserGetAll();
+
+        /// <summary>
         /// Henter alle postnumre.
         /// </summary>
         /// <returns>Liste indeholdende alle postnumre.</returns>
