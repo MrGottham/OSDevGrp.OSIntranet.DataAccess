@@ -96,6 +96,7 @@
     <Compile Include="DataAccessService.Designer.cs">
       <DependentUpon>DataAccessService.cs</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\FinansstyringRepository.cs" />
     <Compile Include="Infrastructure\ConfigurationProvider.cs" />
     <Compile Include="Infrastructure\ObjectMapper.cs" />
     <Compile Include="Program.cs" />
@@ -123,7 +124,6 @@
     <Compile Include="QueryHandlers\PostnummerGetByLandekodeQueryHandler.cs" />
     <Compile Include="Repositories\AdresseRepository.cs" />
     <Compile Include="Repositories\DbAxRepositoryBase.cs" />
-    <Compile Include="Repositories\FinansstyringRepository.cs" />
     <Compile Include="Repositories\Interfaces\DbAxConfiguration.cs" />
     <Compile Include="Repositories\Interfaces\IAdresseRepository.cs" />
     <Compile Include="Repositories\Interfaces\IDbAxConfiguration.cs" />
