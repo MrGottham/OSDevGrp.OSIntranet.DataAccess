@@ -220,7 +220,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
             {
                 throw new ArgumentNullException("dbHandle");
             }
-            return null;
+            var år = GetFieldValueAsInt(dbHandle, searchHandle, "År");
+            var måned = GetFieldValueAsInt(dbHandle, searchHandle, "Måned");
+            var kredit = GetFieldValueAsDecimal(dbHandle, searchHandle, "Kredit");
+            return new Kreditoplysninger(år, måned, kredit);
         }
 
         /// <summary>
