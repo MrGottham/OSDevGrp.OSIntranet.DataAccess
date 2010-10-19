@@ -29,6 +29,16 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Views
         }
 
         /// <summary>
+        /// Adressegruppe.
+        /// </summary>
+        [DataMember(IsRequired = true)]
+        public AdressegruppeView Adressegruppe
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Adresse (linje 1).
         /// </summary>
         [DataMember(IsRequired = false)]
@@ -73,6 +83,16 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Views
         /// </summary>
         [DataMember(IsRequired = false)]
         public string Mobil
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Mailadresse.
+        /// </summary>
+        [DataMember(IsRequired = false)]
+        public string Mailadresse
         {
             get;
             set;

@@ -169,9 +169,14 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="searchHandle">Searchhandle.</param>
         /// <param name="fieldName">Feltnavn.</param>
         /// <returns>Datoværdi.</returns>
-        protected DateTime GetFieldValueAsDateTime(IDsiDbX dbHandle, int searchHandle, string fieldName)
+        protected DateTime? GetFieldValueAsDateTime(IDsiDbX dbHandle, int searchHandle, string fieldName)
         {
-            return DateTime.Parse(GetFieldValueAsString(dbHandle, searchHandle, fieldName));
+            var dateValue = GetFieldValueAsString(dbHandle, searchHandle, fieldName);
+            if (string.IsNullOrEmpty(dateValue))
+            {
+                return null;
+            }
+            return DateTime.Parse(dateValue);
         }
 
         #endregion

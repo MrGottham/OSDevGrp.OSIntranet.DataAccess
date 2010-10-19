@@ -42,7 +42,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                 try
                 {
                     var adressegrupper = AdressegruppeGetAll();
-
+                    var betalingsbetingelser = BetalingsbetingelserGetAll();
                     var adresser = new List<AdresseBase>();
                     if (dbHandle.SetKey(searchHandle, "Navn"))
                     {
@@ -59,33 +59,26 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                           GetAdressegruppe(adressegrupper,
                                                                            GetFieldValueAsInt(dbHandle, searchHandle,
                                                                                               "Gruppenummer")));
-                                    InitialiserAdresseBase(firma, dbHandle, searchHandle);
+                                    InitialiserAdresseBase(firma, dbHandle, searchHandle, betalingsbetingelser);
                                     var telefon1 = GetFieldValueAsString(dbHandle, searchHandle, "Telefon");
                                     var telefon2 = GetFieldValueAsString(dbHandle, searchHandle, "Telefon2");
                                     var telefax = GetFieldValueAsString(dbHandle, searchHandle, "Telefon3");
                                     firma.SætTelefon(string.IsNullOrEmpty(telefon1) ? null : telefon1,
                                                      string.IsNullOrEmpty(telefon2) ? null : telefon2,
                                                      string.IsNullOrEmpty(telefax) ? null : telefax);
-
-
-
-
-                                    var bekendtskab = GetFieldValueAsString(dbHandle, searchHandle, "Bekendtskab");
-                                    if (!string.IsNullOrEmpty(bekendtskab))
-                                    {
-                                        firma.SætBekendtskab(bekendtskab);
-                                    }
-                                    var mailadresse = GetFieldValueAsString(dbHandle, searchHandle, "Email");
-                                    if (!string.IsNullOrEmpty(mailadresse))
-                                    {
-                                        firma.SætMailadresse(mailadresse);
-                                    }
-                                    var webadresse = GetFieldValueAsString(dbHandle, searchHandle, "Web");
-                                    if (!string.IsNullOrEmpty(webadresse))
-                                    {
-                                        firma.SætWebadresse(webadresse);
-                                    }
                                     adresser.Add(firma);
+                                } while (dbHandle.SearchNext(searchHandle));
+                            }
+                            dbHandle.ClearKeyInterval(searchHandle);
+                        }
+                        keyStr = dbHandle.KeyStrInt(1000, dbHandle.GetFieldLength(dbHandle.GetFieldNoByName("TabelNr")));
+                        if (dbHandle.SetKeyInterval(searchHandle, keyStr, keyStr))
+                        {
+                            if (dbHandle.SearchFirst(searchHandle))
+                            {
+                                do
+                                {
+                                    
                                 } while (dbHandle.SearchNext(searchHandle));
                             }
                             dbHandle.ClearKeyInterval(searchHandle);
@@ -216,12 +209,37 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         }
 
         /// <summary>
+        /// Finder og returnerer en given betalingsbetingelse.
+        /// </summary>
+        /// <param name="betalingsbetingelser">Betalingsbetingelser.</param>
+        /// <param name="nummer">Unik identifikation af betalingsbetingelsen.</param>
+        /// <returns>Betalingsbetingelse.</returns>
+        private static Betalingsbetingelse GetBetalingsbetingelse(IEnumerable<Betalingsbetingelse> betalingsbetingelser, int nummer)
+        {
+            if (betalingsbetingelser == null)
+            {
+                throw new ArgumentNullException("betalingsbetingelser");
+            }
+            try
+            {
+                return betalingsbetingelser.Single(m => m.Nummer == nummer);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new DataAccessSystemException(
+                    Resource.GetExceptionMessage(ExceptionMessage.CantFindUniqueRecordId, typeof (Betalingsbetingelse),
+                                                 nummer), ex);
+            }
+        }
+
+        /// <summary>
         /// Initialiserer basisoplysinger for en adresse.
         /// </summary>
         /// <param name="adresse">Adresse.</param>
         /// <param name="dbHandle">DBAX databasehandle.</param>
         /// <param name="searchHandle">Searchhandle.</param>
-        private void InitialiserAdresseBase(AdresseBase adresse, IDsiDbX dbHandle, int searchHandle)
+        /// <param name="betalingsbetingelser">Betalingsbetingelser.</param>
+        private void InitialiserAdresseBase(AdresseBase adresse, IDsiDbX dbHandle, int searchHandle, IEnumerable<Betalingsbetingelse> betalingsbetingelser)
         {
             if (adresse == null)
             {
@@ -231,14 +249,36 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
             {
                 throw new ArgumentNullException("dbHandle");
             }
+            if (betalingsbetingelser == null)
+            {
+                throw new ArgumentNullException("betalingsbetingelser");
+            }
             var adresse1 = GetFieldValueAsString(dbHandle, searchHandle, "Adresse1");
             var adresse2 = GetFieldValueAsString(dbHandle, searchHandle, "Adresse2");
             var postnummerBy = GetFieldValueAsString(dbHandle, searchHandle, "PostnummerBy");
             adresse.SætAdresseoplysninger(string.IsNullOrEmpty(adresse1) ? null : adresse1,
                                           string.IsNullOrEmpty(adresse2) ? null : adresse2,
                                           string.IsNullOrEmpty(postnummerBy) ? null : postnummerBy);
-
-
+            var bekendtskab = GetFieldValueAsString(dbHandle, searchHandle, "Bekendtskab");
+            if (!string.IsNullOrEmpty(bekendtskab))
+            {
+                adresse.SætBekendtskab(bekendtskab);
+            }
+            var mailadresse = GetFieldValueAsString(dbHandle, searchHandle, "Email");
+            if (!string.IsNullOrEmpty(mailadresse))
+            {
+                adresse.SætMailadresse(mailadresse);
+            }
+            var webadresse = GetFieldValueAsString(dbHandle, searchHandle, "Web");
+            if (!string.IsNullOrEmpty(webadresse))
+            {
+                adresse.SætWebadresse(webadresse);
+            }
+            adresse.SætBetalingsbetingelse(GetBetalingsbetingelse(betalingsbetingelser,
+                                                                  GetFieldValueAsInt(dbHandle, searchHandle,
+                                                                                     "Betalingsnummer")));
+            adresse.SætUdlånsfrist(GetFieldValueAsInt(dbHandle, searchHandle, "Udlånsfrist"));
+            adresse.SætFilofaxAdresselabel((GetFieldValueAsInt(dbHandle, searchHandle, "Andet") & 1) == 1);
         }
 
         #endregion
