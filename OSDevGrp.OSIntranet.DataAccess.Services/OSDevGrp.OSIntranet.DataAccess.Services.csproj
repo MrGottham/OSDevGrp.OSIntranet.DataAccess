@@ -97,6 +97,7 @@
       <DependentUpon>DataAccessService.cs</DependentUpon>
     </Compile>
     <Compile Include="Domain\Adressereference.cs" />
+    <Compile Include="QueryHandlers\AdresseQueryHandlerBase.cs" />
     <Compile Include="Repositories\FinansstyringRepository.cs" />
     <Compile Include="Infrastructure\ConfigurationProvider.cs" />
     <Compile Include="Infrastructure\ObjectMapper.cs" />

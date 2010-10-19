@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using OSDevGrp.OSIntranet.CommonLibrary.Domain.Adressekartotek;
 
 namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
@@ -11,8 +12,15 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
         /// <summary>
         /// Henter alle adresser.
         /// </summary>
-        /// <returns>Aller adresser.</returns>
-        IList<AdresseBase> AdresserGetAll();
+        /// <returns>Alle adresser.</returns>
+        IList<AdresseBase> AdresseGetAll();
+
+        /// <summary>
+        /// Henter alle adresser.
+        /// </summary>
+        /// <param name="callback">Callbackmetode, til behandling af de enkelte adresser.</param>
+        /// <returns>Alle adresser.</returns>
+        IList<AdresseBase> AdresseGetAll(Action<AdresseBase> callback);
 
         /// <summary>
         /// Henter alle postnumre.

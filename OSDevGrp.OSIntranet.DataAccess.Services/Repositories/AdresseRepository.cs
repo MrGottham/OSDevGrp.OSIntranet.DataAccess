@@ -33,8 +33,18 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <summary>
         /// Henter alle adresser.
         /// </summary>
-        /// <returns>Aller adresser.</returns>
-        public IList<AdresseBase> AdresserGetAll()
+        /// <returns>Alle adresser.</returns>
+        public IList<AdresseBase> AdresseGetAll()
+        {
+            return AdresseGetAll(null);
+        }
+
+        /// <summary>
+        /// Henter alle adresser.
+        /// </summary>
+        /// <param name="callback">Callbackmetode, til behandling af de enkelte adresser.</param>
+        /// <returns>Alle adresser.</returns>
+        public IList<AdresseBase> AdresseGetAll(Action<AdresseBase> callback)
         {
             var dbHandle = OpenDatabase("ADRESSE.DBD", false, true);
             try
@@ -67,6 +77,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                     firma.SætTelefon(string.IsNullOrEmpty(telefon1) ? null : telefon1,
                                                      string.IsNullOrEmpty(telefon2) ? null : telefon2,
                                                      string.IsNullOrEmpty(telefax) ? null : telefax);
+                                    if (callback != null)
+                                    {
+                                        callback(firma);
+                                    }
                                     adresser.Add(firma);
                                 } while (dbHandle.SearchNext(searchHandle));
                             }
@@ -98,6 +112,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                         {
                                             firma.TilføjPerson(person);
                                         }
+                                    }
+                                    if (callback != null)
+                                    {
+                                        callback(person);
                                     }
                                     adresser.Add(person);
                                 } while (dbHandle.SearchNext(searchHandle));

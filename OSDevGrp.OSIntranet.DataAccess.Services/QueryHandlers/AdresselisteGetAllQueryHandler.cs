@@ -12,11 +12,12 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
     /// <summary>
     /// Queryhandler til håndtering af forespørgelsen: AdresselisteGetAllQuery.
     /// </summary>
-    public class AdresselisteGetAllQueryHandler : IQueryHandler<AdresselisteGetAllQuery, IList<AdresselisteView>>
+    public class AdresselisteGetAllQueryHandler : AdresseQueryHandlerBase, IQueryHandler<AdresselisteGetAllQuery, IList<AdresselisteView>>
     {
         #region Private variables
 
         private readonly IAdresseRepository _adresseRepository;
+        private readonly IFinansstyringRepository _finansstyringRepository;
         private readonly IObjectMapper _objectMapper;
 
         #endregion
@@ -27,18 +28,24 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
         /// Danner queryhandler til håndtering af forespørgelsen: AdresselisteGetAllQuery.
         /// </summary>
         /// <param name="adresseRepository">Implementering af repository til adressekartoteket.</param>
+        /// <param name="finansstyringRepository">Implementering af repository til finansstyring.</param>
         /// <param name="objectMapper">Implementering af objektmapper.</param>
-        public AdresselisteGetAllQueryHandler(IAdresseRepository adresseRepository, IObjectMapper objectMapper)
+        public AdresselisteGetAllQueryHandler(IAdresseRepository adresseRepository, IFinansstyringRepository finansstyringRepository, IObjectMapper objectMapper)
         {
             if (adresseRepository == null)
             {
                 throw new ArgumentNullException("adresseRepository");
+            }
+            if (finansstyringRepository == null)
+            {
+                throw new ArgumentNullException("finansstyringRepository");
             }
             if (objectMapper == null)
             {
                 throw new ArgumentNullException("objectMapper");
             }
             _adresseRepository = adresseRepository;
+            _finansstyringRepository = finansstyringRepository;
             _objectMapper = objectMapper;
         }
 
@@ -57,7 +64,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
             {
                 throw new ArgumentNullException("query");
             }
-            var adresser = _adresseRepository.AdresserGetAll();
+            var regnskaber = _finansstyringRepository.RegnskabGetAll();
+            var adresser = _adresseRepository.AdresseGetAll(adresse => MergeInformations(adresse, regnskaber));
             return _objectMapper.Map<IList<AdresseBase>, IList<AdresselisteView>>(adresser);
         }
 

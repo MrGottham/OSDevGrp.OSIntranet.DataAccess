@@ -351,6 +351,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                     konto.SætNote(note);
                                 }
                                 konto.Regnskab.TilføjKonto(konto);
+                                konti.Add(konto);
                             } while (dbHandle.SearchNext(searchHandle));
                         }
                     }
