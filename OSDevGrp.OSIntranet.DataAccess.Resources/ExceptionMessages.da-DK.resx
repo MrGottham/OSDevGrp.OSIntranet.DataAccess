@@ -133,7 +133,15 @@
     <value>'{0}' er ikke angivet under AppSettings i applikationskonfigurationsfilen.</value>
     <comment>{0} = Nøglenavn på applikationsværdien.</comment>
   </data>
+  <data name="UnableToCreateTypeOf" xml:space="preserve">
+    <value>Kunne ikke initiere et objekt af typen '{0}'.</value>
+    <comment>{0} = Navn på typen.</comment>
+  </data>
   <data name="UnableToLoginOnDbAx" xml:space="preserve">
     <value>Kunne ikke logge ind ved brug af DBAX.</value>
+  </data>
+  <data name="UnhandledSwichValue" xml:space="preserve">
+    <value>Uhåndteret swich værdi '{0}' for '{1}' i metode {2}'.</value>
+    <comment>{0} = Værdi, {1} = Navn for swich værdi, {2} = Metodenavn.</comment>
   </data>
 </root>

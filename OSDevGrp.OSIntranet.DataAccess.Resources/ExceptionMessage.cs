@@ -9,6 +9,8 @@
         DataStoreLocationDoesNotExists,
         UnableToLoginOnDbAx,
         CantFindUniqueRecordId, 
-        CantAutoMapType
+        CantAutoMapType,
+        UnhandledSwichValue,
+        UnableToCreateTypeOf
     }
 }
