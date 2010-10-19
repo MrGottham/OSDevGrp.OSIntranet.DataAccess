@@ -6,6 +6,7 @@ using OSDevGrp.OSIntranet.CommonLibrary.Domain.Enums;
 using OSDevGrp.OSIntranet.CommonLibrary.Domain.Finansstyring;
 using OSDevGrp.OSIntranet.DataAccess.Infrastructure.Interfaces.Exceptions;
 using OSDevGrp.OSIntranet.DataAccess.Resources;
+using OSDevGrp.OSIntranet.DataAccess.Services.Domain;
 using OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces;
 using DBAX;
 
@@ -164,25 +165,26 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                         var knt = konto;
                         // Indlæsning af kreditoplysninger.
                         GetTableContentFromKontolin(konto, 3050, dbSubHandle, "Kredit", (dbHandle, searchHandle) =>
-                        {
-                            var kreditoplysninger =
-                                CreateKreditoplysninger
-                                    (dbHandle,
-                                     searchHandle);
-                            knt.
-                                TilføjKreditoplysninger
-                                (kreditoplysninger);
-                        });
+                                                                                            {
+                                                                                                var kreditoplysninger =
+                                                                                                    CreateKreditoplysninger
+                                                                                                        (dbHandle,
+                                                                                                         searchHandle);
+                                                                                                knt.
+                                                                                                    TilføjKreditoplysninger
+                                                                                                    (kreditoplysninger);
+                                                                                            });
                         // Indlæsning af bogføringslinjer.
                         GetTableContentFromKontolin(konto, 3070, dbSubHandle, "Konto", (dbHandle, searchHandle) =>
-                        {
-                            var bogføringslinje =
-                                CreateBogføringslinje
-                                    (dbHandle,
-                                     searchHandle);
-                            knt.TilføjBogføringslinje
-                                (bogføringslinje);
-                        });
+                                                                                           {
+                                                                                               var bogføringslinje =
+                                                                                                   CreateBogføringslinje
+                                                                                                       (dbHandle,
+                                                                                                        searchHandle,
+                                                                                                        budgetkonti);
+                                                                                               knt.TilføjBogføringslinje
+                                                                                                   (bogføringslinje);
+                                                                                           });
                     }
                     foreach (var budgetkonto in budgetkonti)
                     {
@@ -190,11 +192,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                         var budgetknt = budgetkonto;
                         GetTableContentFromKontolin(budgetkonto, 3060, dbSubHandle, "Budget",
                                                     (dbHandle, searchHandle) =>
-                                                    {
-                                                        var budgetoplysninger = CreateBudgetoplysninger(dbHandle,
-                                                                                                        searchHandle);
-                                                        budgetknt.TilføjBudgetoplysninger(budgetoplysninger);
-                                                    });
+                                                        {
+                                                            var budgetoplysninger = CreateBudgetoplysninger(dbHandle,
+                                                                                                            searchHandle);
+                                                            budgetknt.TilføjBudgetoplysninger(budgetoplysninger);
+                                                        });
                     }
                 }
                 finally
@@ -238,7 +240,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
             {
                 throw new ArgumentNullException("dbHandle");
             }
-            return null;
+            var år = GetFieldValueAsInt(dbHandle, searchHandle, "År");
+            var måned = GetFieldValueAsInt(dbHandle, searchHandle, "Måned");
+            var indtægter = GetFieldValueAsDecimal(dbHandle, searchHandle, "Indtægter");
+            var udgifter = GetFieldValueAsDecimal(dbHandle, searchHandle, "Udgifter");
+            return new Budgetoplysninger(år, måned, indtægter, udgifter);
         }
 
         /// <summary>
@@ -246,14 +252,44 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// </summary>
         /// <param name="dbHandle">DBAX databasehandle.</param>
         /// <param name="searchHandle">Searchhandle.</param>
+        /// <param name="budgetkonti">Budgetkonti.</param>
         /// <returns>Bogføringslinje.</returns>
-        private Bogføringslinje CreateBogføringslinje(IDsiDbX dbHandle, int searchHandle)
+        private Bogføringslinje CreateBogføringslinje(IDsiDbX dbHandle, int searchHandle, IEnumerable<Budgetkonto> budgetkonti)
         {
             if (dbHandle == null)
             {
                 throw new ArgumentNullException("dbHandle");
             }
-            return null;
+            if (budgetkonti == null)
+            {
+                throw new ArgumentNullException("budgetkonti");
+            }
+            var løbenummer = GetFieldValueAsInt(dbHandle, searchHandle, "LøbeNr");
+            var dato = GetFieldValueAsDateTime(dbHandle, searchHandle, "Dato");
+            if (dato == null)
+            {
+                throw new DataAccessSystemException(
+                    Resource.GetExceptionMessage(ExceptionMessage.DateIsMissingOnBalanceLine, løbenummer));
+            }
+            var bilag = GetFieldValueAsString(dbHandle, searchHandle, "Bilag");
+            var tekst = GetFieldValueAsString(dbHandle, searchHandle, "Tekst");
+            var debit = GetFieldValueAsDecimal(dbHandle, searchHandle, "Debit");
+            var kredit = GetFieldValueAsDecimal(dbHandle, searchHandle, "Kredit");
+            var bogføringslinje = new Bogføringslinje(løbenummer, dato.Value, string.IsNullOrEmpty(bilag) ? null : bilag,
+                                                      string.IsNullOrEmpty(tekst) ? null : tekst, debit, kredit);
+            var budgetkontonummer = GetFieldValueAsString(dbHandle, searchHandle, "Budgetkontonummer");
+            if (!string.IsNullOrEmpty(budgetkontonummer))
+            {
+                var budgetkonto = GetBudgetkonto(budgetkonti, budgetkontonummer);
+                budgetkonto.TilføjBogføringslinje(bogføringslinje);
+            }
+            var adresseId = GetFieldValueAsInt(dbHandle, searchHandle, "Adresseident");
+            if (adresseId != 0)
+            {
+                var adressereference = new Adressereference(adresseId);
+                adressereference.TilføjBogføringslinje(bogføringslinje);
+            }
+            return bogføringslinje;
         }
 
         /// <summary>
@@ -380,6 +416,34 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
             finally
             {
                 dbHandle.DeleteSearch(searchHandle);
+            }
+        }
+
+        /// <summary>
+        /// Finder og returnerer en given budgetkonto.
+        /// </summary>
+        /// <param name="budgetkonti">Budgetkonti.</param>
+        /// <param name="budgetkontonummer">Kontonummer på budgetkontoen.</param>
+        /// <returns>Budgetkonto.</returns>
+        private static Budgetkonto GetBudgetkonto(IEnumerable<Budgetkonto> budgetkonti, string budgetkontonummer)
+        {
+            if (budgetkonti == null)
+            {
+                throw new ArgumentNullException("budgetkonti");
+            }
+            if (string.IsNullOrEmpty(budgetkontonummer))
+            {
+                throw new ArgumentNullException("budgetkontonummer");
+            }
+            try
+            {
+                return budgetkonti.Single(m => m.Kontonummer.CompareTo(budgetkontonummer) == 0);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new DataAccessSystemException(
+                    Resource.GetExceptionMessage(ExceptionMessage.CantFindUniqueRecordId, typeof (Budgetkonto),
+                                                 budgetkontonummer), ex);
             }
         }
 

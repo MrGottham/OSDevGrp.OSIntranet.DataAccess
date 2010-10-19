@@ -11,6 +11,7 @@
         CantFindUniqueRecordId, 
         CantAutoMapType,
         UnhandledSwichValue,
-        UnableToCreateTypeOf
+        UnableToCreateTypeOf,
+        DateIsMissingOnBalanceLine
     }
 }

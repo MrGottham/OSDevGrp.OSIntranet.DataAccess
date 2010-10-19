@@ -123,11 +123,15 @@
   </data>
   <data name="CantFindUniqueRecordId" xml:space="preserve">
     <value>Kan ikke finde en instans af typen '{0}' med den unikke identifikation '{1}'.</value>
-    <comment>{0} = Navn på typen, {1} = Unique identification.</comment>
+    <comment>{0} = Navn på typen, {1} = Unik identifikation.</comment>
   </data>
   <data name="DataStoreLocationDoesNotExists" xml:space="preserve">
     <value>Stien '{0}' til datafiler eksisterer ikke.</value>
     <comment>{0} = Navn på directory til datafiler.</comment>
+  </data>
+  <data name="DateIsMissingOnBalanceLine" xml:space="preserve">
+    <value>Mangler datoregistrering på bogføringslinjen med den unikke identifikation '{0}'.</value>
+    <comment>{0} = Unik identifikation.</comment>
   </data>
   <data name="MissingApplicationSetting" xml:space="preserve">
     <value>'{0}' er ikke angivet under AppSettings i applikationskonfigurationsfilen.</value>
