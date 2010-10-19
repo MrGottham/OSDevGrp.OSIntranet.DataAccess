@@ -8,6 +8,7 @@
         MissingApplicationSetting,
         DataStoreLocationDoesNotExists,
         UnableToLoginOnDbAx,
-        CantFindUniqueRecordId
+        CantFindUniqueRecordId, 
+        CantAutoMapType
     }
 }

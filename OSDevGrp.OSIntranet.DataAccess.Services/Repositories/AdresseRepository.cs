@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using OSDevGrp.OSIntranet.CommonLibrary.Domain.Adressekartotek;
+using OSDevGrp.OSIntranet.CommonLibrary.Domain.Comparers;
 using OSDevGrp.OSIntranet.DataAccess.Infrastructure.Interfaces.Exceptions;
 using OSDevGrp.OSIntranet.DataAccess.Resources;
 using OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces;
@@ -78,13 +79,34 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                             {
                                 do
                                 {
-                                    
+                                    var person = new Person(GetFieldValueAsInt(dbHandle, searchHandle, "Ident"),
+                                                            GetFieldValueAsString(dbHandle, searchHandle, "Navn"),
+                                                            GetAdressegruppe(adressegrupper,
+                                                                             GetFieldValueAsInt(dbHandle, searchHandle,
+                                                                                                "Gruppenummer")));
+                                    InitialiserAdresseBase(person, dbHandle, searchHandle, betalingsbetingelser);
+                                    var telefon = GetFieldValueAsString(dbHandle, searchHandle, "Telefon");
+                                    var mobil = GetFieldValueAsString(dbHandle, searchHandle, "Telefon2");
+                                    person.SætTelefon(string.IsNullOrEmpty(telefon) ? null : telefon,
+                                                      string.IsNullOrEmpty(mobil) ? null : mobil);
+                                    person.SætFødselsdato(GetFieldValueAsDateTime(dbHandle, searchHandle, "Fødselsdato"));
+                                    var firmanummer = GetFieldValueAsInt(dbHandle, searchHandle, "Firmaident");
+                                    if (firmanummer != 0)
+                                    {
+                                        var firma = GetFirma(adresser, firmanummer);
+                                        if (firma != null)
+                                        {
+                                            firma.TilføjPerson(person);
+                                        }
+                                    }
+                                    adresser.Add(person);
                                 } while (dbHandle.SearchNext(searchHandle));
                             }
                             dbHandle.ClearKeyInterval(searchHandle);
                         }
                     }
-                    return adresser;
+                    var comparer = new AdresseComparer();
+                    return adresser.OrderBy(m => m, comparer).ToArray();
                 }
                 finally
                 {
@@ -183,6 +205,30 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Finder og returnerer et givent firma.
+        /// </summary>
+        /// <param name="adresser">Adresser.</param>
+        /// <param name="firmanummer">Unik identifikation af firmaet.</param>
+        /// <returns>Firma</returns>
+        private static Firma GetFirma(IEnumerable<AdresseBase> adresser, int firmanummer)
+        {
+            if (adresser == null)
+            {
+                throw new ArgumentNullException("adresser");
+            }
+            try
+            {
+                return adresser.Single(m => m is Firma && m.Nummer == firmanummer) as Firma;
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new DataAccessSystemException(
+                    Resource.GetExceptionMessage(ExceptionMessage.CantFindUniqueRecordId, typeof (Firma), firmanummer),
+                    ex);
+            }
+        }
 
         /// <summary>
         /// Finder og returnerer en given adressegruppe.

@@ -117,6 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CantAutoMapType" xml:space="preserve">
+    <value>Can't automap the type '{0}'.</value>
+    <comment>{0} = Name of type.</comment>
+  </data>
   <data name="CantFindUniqueRecordId" xml:space="preserve">
     <value>Unable to find an instance of the type '{0}' with the unique identification '{1}'.</value>
     <comment>{0} = Name of type, {1} = Unique identification.</comment>

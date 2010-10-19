@@ -115,6 +115,7 @@
     <Compile Include="Implementations\FinansstyringRepositoryService.cs" />
     <Compile Include="QueryHandlers\AdressegruppeGetAllQueryHandler.cs" />
     <Compile Include="QueryHandlers\AdressegruppeGetByNummerQueryHandler.cs" />
+    <Compile Include="QueryHandlers\AdresselisteGetAllQueryHandler.cs" />
     <Compile Include="QueryHandlers\BetalingsbetingelseGetAllQueryHandler.cs" />
     <Compile Include="QueryHandlers\BetalingsbetingelseGetByNummerQueryHandler.cs" />
     <Compile Include="QueryHandlers\BynavnGetByLandekodeAndPostnummerQueryHandler.cs" />
