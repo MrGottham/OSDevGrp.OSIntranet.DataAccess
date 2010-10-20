@@ -150,7 +150,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
                 .ForMember(x => x.Budgetkontonummer,
                            opt => opt.MapFrom(s => s.Budgetkonto == null ? null : s.Budgetkonto.Kontonummer))
                 .ForMember(x => x.Debit, opt => opt.MapFrom(s => s.Debit))
-                .ForMember(x => x.Kredit, opt => opt.MapFrom(s => s.Kredit));
+                .ForMember(x => x.Kredit, opt => opt.MapFrom(s => s.Kredit))
+                .ForMember(x => x.AdresseId, opt => opt.MapFrom(s => s.Adresse == null ? 0 : s.Adresse.Nummer));
 
             Mapper.AssertConfigurationIsValid();
         }
