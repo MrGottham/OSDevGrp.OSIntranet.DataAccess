@@ -52,7 +52,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         {
             try
             {
-                throw new NotImplementedException();
+                return _queryBus.Query<PersonGetAllQuery, IList<PersonView>>(personGetAllQuery);
             }
             catch (Exception ex)
             {
@@ -71,7 +71,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         {
             try
             {
-                throw new NotImplementedException();
+                return _queryBus.Query<PersonGetByNummerQuery, PersonView>(personGetByNummerQuery);
             }
             catch (Exception ex)
             {
@@ -90,7 +90,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         {
             try
             {
-                throw new NotImplementedException();
+                return _queryBus.Query<FirmaGetAllQuery, IList<FirmaView>>(firmaGetAllQuery);
             }
             catch (Exception ex)
             {
@@ -109,7 +109,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         {
             try
             {
-                throw new NotImplementedException();
+                return _queryBus.Query<FirmaGetByNummerQuery, FirmaView>(firmaGetByNummerQuery);
             }
             catch (Exception ex)
             {

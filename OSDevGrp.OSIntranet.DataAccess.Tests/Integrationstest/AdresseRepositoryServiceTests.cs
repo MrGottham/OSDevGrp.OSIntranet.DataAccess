@@ -1,4 +1,5 @@
-﻿using System.ServiceModel;
+﻿using System;
+using System.ServiceModel;
 using OSDevGrp.OSIntranet.CommonLibrary.IoC;
 using OSDevGrp.OSIntranet.CommonLibrary.Wcf;
 using OSDevGrp.OSIntranet.CommonLibrary.Wcf.ChannelFactory;
@@ -15,6 +16,158 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
     [Category("Integrationstest")]
     public class AdresseRepositoryServiceTests
     {
+        /// <summary>
+        /// Tester, at personer hentes.
+        /// </summary>
+        [Test]
+        public void TestAtPersonerHentes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var query = new PersonGetAllQuery();
+                var personer = channel.PersonGetAll(query);
+                Assert.That(personer, Is.Not.Null);
+                Assert.That(personer.Count, Is.GreaterThan(0));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at en given person hentes.
+        /// </summary>
+        [Test]
+        public void TestAtPersonHentes()
+        {
+            var random = new Random(DateTime.Now.Second);
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var queryGetAll = new PersonGetAllQuery();
+                var personer = channel.PersonGetAll(queryGetAll);
+                Assert.That(personer, Is.Not.Null);
+                Assert.That(personer.Count, Is.GreaterThan(0));
+
+                var query = new PersonGetByNummerQuery
+                                {
+                                    Nummer = personer[random.Next(0, personer.Count - 1)].Nummer
+                                };
+                var person = channel.PersonGetByNummer(query);
+                Assert.That(person, Is.Not.Null);
+                Assert.That(person.Nummer == query.Nummer);
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException, hvis personen ikke findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesHvisPersonIkkeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var query = new PersonGetByNummerQuery
+                                {
+                                    Nummer = -1
+                                };
+                Assert.Throws<FaultException>(() => channel.PersonGetByNummer(query));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at firmaer hentes.
+        /// </summary>
+        [Test]
+        public void TestAtFirmaerHentes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var query = new FirmaGetAllQuery();
+                var firmaer = channel.FirmaGetAll(query);
+                Assert.That(firmaer, Is.Not.Null);
+                Assert.That(firmaer.Count, Is.GreaterThan(0));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at et givent firma hentes.
+        /// </summary>
+        [Test]
+        public void TestAtFirmaHentes()
+        {
+            var random = new Random(DateTime.Now.Second);
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var queryGetAll = new FirmaGetAllQuery();
+                var firmaer = channel.FirmaGetAll(queryGetAll);
+                Assert.That(firmaer, Is.Not.Null);
+                Assert.That(firmaer.Count, Is.GreaterThan(0));
+
+                var query = new FirmaGetByNummerQuery
+                                {
+                                    Nummer = firmaer[random.Next(0, firmaer.Count - 1)].Nummer
+                                };
+                var firma = channel.FirmaGetByNummer(query);
+                Assert.That(firma, Is.Not.Null);
+                Assert.That(firma.Nummer == query.Nummer);
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException, hvis firmaet ikke findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesHvisFirmaIkkeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var query = new FirmaGetByNummerQuery
+                                {
+                                    Nummer = -1
+                                };
+                Assert.Throws<FaultException>(() => channel.FirmaGetByNummer(query));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
         /// <summary>
         /// Tester, at adresseliste hentes.
         /// </summary>
