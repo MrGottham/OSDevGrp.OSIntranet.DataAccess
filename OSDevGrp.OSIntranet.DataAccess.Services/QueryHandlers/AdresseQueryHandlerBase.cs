@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using OSDevGrp.OSIntranet.CommonLibrary.Domain.Adressekartotek;
 using OSDevGrp.OSIntranet.CommonLibrary.Domain.Finansstyring;
 
@@ -26,6 +27,17 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
             if (regnskaber == null)
             {
                 throw new ArgumentNullException("regnskaber");
+            }
+            var bogføringslinjer = regnskaber
+                .SelectMany(m => m.Konti)
+                .Where(m => m is Konto)
+                .Cast<Konto>()
+                .SelectMany(m => m.Bogføringslinjer)
+                .Where(m => m.Adresse != null && m.Adresse.Nummer == adresse.Nummer)
+                .ToArray();
+            foreach (var bogføringslinje in bogføringslinjer)
+            {
+                adresse.TilføjBogføringslinje(bogføringslinje);
             }
         }
 

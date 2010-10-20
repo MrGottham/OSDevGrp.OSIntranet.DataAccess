@@ -12,6 +12,42 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
     public interface IAdresseRepositoryService : IRepositoryService
     {
         /// <summary>
+        /// Henter alle personer.
+        /// </summary>
+        /// <param name="personGetAllQuery">Query til forespørgelse efter alle personer.</param>
+        /// <returns>Alle personer.</returns>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        IList<PersonView> PersonGetAll(PersonGetAllQuery personGetAllQuery);
+
+        /// <summary>
+        /// Henter en given person.
+        /// </summary>
+        /// <param name="personGetByNummerQuery">Query til forespørgelse efter en given person.</param>
+        /// <returns>Person.</returns>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        PersonView PersonGetByNummer(PersonGetByNummerQuery personGetByNummerQuery);
+
+        /// <summary>
+        /// Henter alle firmaer.
+        /// </summary>
+        /// <param name="firmaGetAllQuery">Query til forespørgelse efter alle firmaer.</param>
+        /// <returns>Alle firmaer.</returns>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        IList<FirmaView> FirmaGetAll(FirmaGetAllQuery firmaGetAllQuery);
+
+        /// <summary>
+        /// Henter et givent firma.
+        /// </summary>
+        /// <param name="firmaGetByNummerQuery">Query til forespørgelse efter et givent firma.</param>
+        /// <returns>Firma.</returns>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        FirmaView FirmaGetByNummer(FirmaGetByNummerQuery firmaGetByNummerQuery);
+
+        /// <summary>
         /// Henter alle adresser til en adresseliste.
         /// </summary>
         /// <param name="adresselisteGetAllQuery">Query til forespørgelse efter alle adresser til en adresseliste.</param>

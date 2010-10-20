@@ -57,6 +57,10 @@
     <Compile Include="Queries\AdresselisteGetAllQuery.cs" />
     <Compile Include="Queries\BetalingsbetingelseGetAllQuery.cs" />
     <Compile Include="Queries\BetalingsbetingelseGetByNummerQuery.cs" />
+    <Compile Include="Queries\FirmaGetAllQuery.cs" />
+    <Compile Include="Queries\FirmaGetByNummerQuery.cs" />
+    <Compile Include="Queries\PersonGetAllQuery.cs" />
+    <Compile Include="Queries\PersonGetByNummerQuery.cs" />
     <Compile Include="Queries\PostnummerGetAllQuery.cs" />
     <Compile Include="Queries\BynavnGetByLandekodeAndPostnummerQuery.cs" />
     <Compile Include="Queries\PostnummerGetByLandekodeQuery.cs" />
@@ -66,7 +70,11 @@
     <Compile Include="SoapNamespaces.cs" />
     <Compile Include="Views\AdressegruppeView.cs" />
     <Compile Include="Views\AdresseListeView.cs" />
+    <Compile Include="Views\AdresseView.cs" />
     <Compile Include="Views\BetalingsbetingelseView.cs" />
+    <Compile Include="Views\BogføringslinjeView.cs" />
+    <Compile Include="Views\FirmaView.cs" />
+    <Compile Include="Views\PersonView.cs" />
     <Compile Include="Views\PostnummerView.cs" />
     <Compile Include="Views\TabelView.cs" />
   </ItemGroup>

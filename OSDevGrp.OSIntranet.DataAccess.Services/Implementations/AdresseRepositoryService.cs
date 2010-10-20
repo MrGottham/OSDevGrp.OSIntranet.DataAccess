@@ -43,6 +43,82 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         #region IAdresseRepositoryService Members
 
         /// <summary>
+        /// Henter alle personer.
+        /// </summary>
+        /// <param name="personGetAllQuery">Query til forespørgelse efter alle personer.</param>
+        /// <returns>Alle personer.</returns>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public IList<PersonView> PersonGetAll(PersonGetAllQuery personGetAllQuery)
+        {
+            try
+            {
+                throw new NotImplementedException();
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogAdresseRepositoryService));
+            }
+        }
+
+        /// <summary>
+        /// Henter en given person.
+        /// </summary>
+        /// <param name="personGetByNummerQuery">Query til forespørgelse efter en given person.</param>
+        /// <returns>Person.</returns>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public PersonView PersonGetByNummer(PersonGetByNummerQuery personGetByNummerQuery)
+        {
+            try
+            {
+                throw new NotImplementedException();
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogAdresseRepositoryService));
+            }
+        }
+
+        /// <summary>
+        /// Henter alle firmaer.
+        /// </summary>
+        /// <param name="firmaGetAllQuery">Query til forespørgelse efter alle firmaer.</param>
+        /// <returns>Alle firmaer.</returns>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public IList<FirmaView> FirmaGetAll(FirmaGetAllQuery firmaGetAllQuery)
+        {
+            try
+            {
+                throw new NotImplementedException();
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogAdresseRepositoryService));
+            }
+        }
+
+        /// <summary>
+        /// Henter et givent firma.
+        /// </summary>
+        /// <param name="firmaGetByNummerQuery">Query til forespørgelse efter et givent firma.</param>
+        /// <returns>Firma.</returns>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public FirmaView FirmaGetByNummer(FirmaGetByNummerQuery firmaGetByNummerQuery)
+        {
+            try
+            {
+                throw new NotImplementedException();
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogAdresseRepositoryService));
+            }
+        }
+
+        /// <summary>
         /// Henter alle adresser til en adresseliste.
         /// </summary>
         /// <param name="adresselisteGetAllQuery">Query til forespørgelse efter alle adresser til en adresseliste.</param>
