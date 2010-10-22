@@ -1,5 +1,4 @@
-﻿using System;
-using System.ServiceModel;
+﻿using System.ServiceModel;
 using OSDevGrp.OSIntranet.CommonLibrary.IoC;
 using OSDevGrp.OSIntranet.CommonLibrary.Wcf;
 using OSDevGrp.OSIntranet.CommonLibrary.Wcf.ChannelFactory;
@@ -94,7 +93,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
             var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
             try
             {
-                var query = new BudgetkontogruppeGetByNummerQuery()
+                var query = new BudgetkontogruppeGetByNummerQuery
                                 {
                                     Nummer = -1
                                 };
@@ -105,6 +104,5 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                 ChannelTools.CloseChannel(channel);
             }
         }
-
     }
 }

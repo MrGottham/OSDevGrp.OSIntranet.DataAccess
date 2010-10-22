@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using OSDevGrp.OSIntranet.CommonLibrary.Domain.Adressekartotek;
 using OSDevGrp.OSIntranet.CommonLibrary.Domain.Finansstyring;
+using OSDevGrp.OSIntranet.DataAccess.Services.Domain;
 
 namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
 {
@@ -33,7 +34,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
                 .Where(m => m is Konto)
                 .Cast<Konto>()
                 .SelectMany(m => m.Bogføringslinjer)
-                .Where(m => m.Adresse != null && m.Adresse.Nummer == adresse.Nummer)
+                .Where(m => m.Adresse != null && m.Adresse is Adressereference && m.Adresse.Nummer == adresse.Nummer)
                 .ToArray();
             foreach (var bogføringslinje in bogføringslinjer)
             {
