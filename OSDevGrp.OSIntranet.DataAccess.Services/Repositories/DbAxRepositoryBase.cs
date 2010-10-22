@@ -40,10 +40,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
             }
             _dbAxRepositoryWatcher = new FileSystemWatcher(configuration.DataStoreLocation.FullName, "*.DBD")
                                          {
-                                             IncludeSubdirectories = true,
+                                             IncludeSubdirectories = false,
                                              NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size
                                          };
             _dbAxRepositoryWatcher.Changed += DbAxRepositoryChanged;
+            _dbAxRepositoryWatcher.EnableRaisingEvents = true;
         }
 
         #endregion

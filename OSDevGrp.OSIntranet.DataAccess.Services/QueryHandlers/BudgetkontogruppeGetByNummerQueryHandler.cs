@@ -63,7 +63,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
             try
             {
                 budgetkontogruppe = _finansstyringRepository.BudgetkontogrupperGetAll()
-                    .SingleOrDefault(m => m.Nummer == query.Nummer);
+                    .Single(m => m.Nummer == query.Nummer);
             }
             catch (InvalidOperationException ex)
             {
