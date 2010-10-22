@@ -40,10 +40,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Views
         }
 
         /// <summary>
-        /// Firma.
+        /// Unik identifikation af firmaet, som personen er tilknyttet.
         /// </summary>
         [DataMember(IsRequired = false)]
-        public FirmaView Firma
+        public int FirmaNummer
         {
             get;
             set;

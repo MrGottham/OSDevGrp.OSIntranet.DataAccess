@@ -80,7 +80,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
                 .ForMember(x => x.Betalingsbetingelse, opt => opt.MapFrom(s => s.Betalingsbetingelse))
                 .ForMember(x => x.Udlånsfrist, opt => opt.MapFrom(s => s.Udlånsfrist))
                 .ForMember(x => x.FilofaxAdresselabel, opt => opt.MapFrom(s => s.FilofaxAdresselabel))
-                .ForMember(x => x.Firma, opt => opt.MapFrom(s => s.Firma))
+                .ForMember(x => x.FirmaNummer, opt => opt.MapFrom(s => s.Firma == null ? 0 : s.Firma.Nummer))
                 .ForMember(x => x.Bogføringslinjer, opt => opt.MapFrom(s => s.Bogføringslinjer));
 
             Mapper.CreateMap<Person, AdresselisteView>()
