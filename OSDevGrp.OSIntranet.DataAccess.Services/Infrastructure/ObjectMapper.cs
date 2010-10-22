@@ -153,6 +153,15 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
                 .ForMember(x => x.Kredit, opt => opt.MapFrom(s => s.Kredit))
                 .ForMember(x => x.AdresseId, opt => opt.MapFrom(s => s.Adresse == null ? 0 : s.Adresse.Nummer));
 
+            Mapper.CreateMap<Kontogruppe, KontogruppeView>()
+                .ForMember(x => x.Nummer, opt => opt.MapFrom(s => s.Nummer))
+                .ForMember(x => x.Navn, opt => opt.MapFrom(s => s.Navn))
+                .ForMember(x => x.KontogruppeType, opt => opt.MapFrom(s => s.KontogruppeType));
+
+            Mapper.CreateMap<Budgetkontogruppe, BudgetkontogruppeView>()
+                .ForMember(x => x.Nummer, opt => opt.MapFrom(s => s.Nummer))
+                .ForMember(x => x.Navn, opt => opt.MapFrom(s => s.Navn));
+
             Mapper.AssertConfigurationIsValid();
         }
 

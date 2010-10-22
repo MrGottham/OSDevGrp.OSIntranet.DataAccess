@@ -17,6 +17,14 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
     /// </summary>
     public class FinansstyringRepository : DbAxRepositoryBase, IFinansstyringRepository
     {
+        #region Private variables
+
+        private static readonly IList<Regnskab> RegnskabCache = new List<Regnskab>();
+        private static readonly IList<Kontogruppe> KontogruppeCache = new List<Kontogruppe>();
+        private static readonly IList<Budgetkontogruppe> BudgetkontogruppeCache = new List<Budgetkontogruppe>();
+
+        #endregion
+
         #region Constructor
 
         /// <summary>
@@ -38,16 +46,37 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <returns>Liste indeholdende regnskaber inklusiv konti, budgetkonti m.m.</returns>
         public IList<Regnskab> RegnskabGetAll()
         {
-            var kontogrupper = KontogruppeGetAll();
-            var budgetkontogrupper = BudgetkontogrupperGetAll();
-            return GetTableContentFromTabel<Regnskab>(3000, (dbHandle, searchHandle, list) =>
+            if (RegnskabCache.Count > 0)
             {
-                var nummer = GetFieldValueAsInt(dbHandle, searchHandle, "Nummer");
-                var navn = GetFieldValueAsString(dbHandle, searchHandle, "Tekst");
-                var regnskab = new Regnskab(nummer, navn);
-                IndlæsRegnskab(regnskab, kontogrupper, budgetkontogrupper);
-                list.Add(regnskab);
-            });
+                return RegnskabCache;
+            }
+            lock (RegnskabCache)
+            {
+                var kontogrupper = KontogruppeGetAll();
+                var budgetkontogrupper = BudgetkontogrupperGetAll();
+                var regnskaber = GetTableContentFromTabel<Regnskab>(3000, (dbHandle, searchHandle, list) =>
+                                                                              {
+                                                                                  var nummer =
+                                                                                      GetFieldValueAsInt(dbHandle,
+                                                                                                         searchHandle,
+                                                                                                         "Nummer");
+                                                                                  var navn =
+                                                                                      GetFieldValueAsString(dbHandle,
+                                                                                                            searchHandle,
+                                                                                                            "Tekst");
+                                                                                  var regnskab = new Regnskab(nummer,
+                                                                                                              navn);
+                                                                                  IndlæsRegnskab(regnskab, kontogrupper,
+                                                                                                 budgetkontogrupper);
+                                                                                  list.Add(regnskab);
+                                                                              });
+                RegnskabCache.Clear();
+                foreach (var regnskab in regnskaber)
+                {
+                    RegnskabCache.Add(regnskab);
+                }
+            }
+            return RegnskabCache;
         }
 
         /// <summary>
@@ -56,47 +85,67 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <returns>Liste indeholdende alle kontogrupper.</returns>
         public IList<Kontogruppe> KontogruppeGetAll()
         {
-            return GetTableContentFromTabel<Kontogruppe>(3030, (dbHandle, searchHandle, list) =>
+            if (KontogruppeCache.Count > 0)
             {
-                var nummer = GetFieldValueAsInt(dbHandle,
-                                                searchHandle,
-                                                "Nummer");
-                var navn = GetFieldValueAsString(dbHandle,
-                                                 searchHandle,
-                                                 "Tekst");
-                var type = GetFieldValueAsInt(dbHandle,
-                                              searchHandle,
-                                              "Type");
-                Kontogruppe kontogruppe;
-                switch (type)
+                return KontogruppeCache;
+            }
+            lock (KontogruppeCache)
+            {
+                var kontogrupper = GetTableContentFromTabel<Kontogruppe>(3030, (dbHandle, searchHandle, list) =>
+                                                                                   {
+                                                                                       var nummer =
+                                                                                           GetFieldValueAsInt(dbHandle,
+                                                                                                              searchHandle,
+                                                                                                              "Nummer");
+                                                                                       var navn =
+                                                                                           GetFieldValueAsString(
+                                                                                               dbHandle, searchHandle,
+                                                                                               "Tekst");
+                                                                                       var type =
+                                                                                           GetFieldValueAsInt(dbHandle,
+                                                                                                              searchHandle,
+                                                                                                              "Type");
+                                                                                       Kontogruppe kontogruppe;
+                                                                                       switch (type)
+                                                                                       {
+                                                                                           case 1:
+                                                                                               kontogruppe =
+                                                                                                   new Kontogruppe(
+                                                                                                       nummer, navn,
+                                                                                                       KontogruppeType.
+                                                                                                           Aktiver);
+                                                                                               break;
+
+                                                                                           case 2:
+                                                                                               kontogruppe =
+                                                                                                   new Kontogruppe(
+                                                                                                       nummer, navn,
+                                                                                                       KontogruppeType.
+                                                                                                           Passiver);
+                                                                                               break;
+
+                                                                                           default:
+                                                                                               throw new DataAccessSystemException
+                                                                                                   (Resource.
+                                                                                                        GetExceptionMessage
+                                                                                                        (ExceptionMessage
+                                                                                                             .
+                                                                                                             UnhandledSwichValue,
+                                                                                                         type,
+                                                                                                         "Kontogruppetype",
+                                                                                                         MethodBase.
+                                                                                                             GetCurrentMethod
+                                                                                                             ().Name));
+                                                                                       }
+                                                                                       list.Add(kontogruppe);
+                                                                                   });
+                KontogruppeCache.Clear();
+                foreach (var kontogruppe in kontogrupper)
                 {
-                    case 1:
-                        kontogruppe = new Kontogruppe(nummer,
-                                                      navn,
-                                                      KontogruppeType
-                                                          .
-                                                          Aktiver);
-                        break;
-
-                    case 2:
-                        kontogruppe = new Kontogruppe(nummer,
-                                                      navn,
-                                                      KontogruppeType
-                                                          .
-                                                          Passiver);
-                        break;
-
-                    default:
-                        throw new DataAccessSystemException(
-                            Resource.GetExceptionMessage(
-                                ExceptionMessage.
-                                    UnhandledSwichValue, type,
-                                "Kontogruppetype",
-                                MethodBase.GetCurrentMethod().
-                                    Name));
+                    KontogruppeCache.Add(kontogruppe);
                 }
-                list.Add(kontogruppe);
-            });
+            }
+            return KontogruppeCache;
         }
 
         /// <summary>
@@ -105,23 +154,76 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <returns>Liste indeholdende alle budgetkontogrupper.</returns>
         public IList<Budgetkontogruppe> BudgetkontogrupperGetAll()
         {
-            return GetTableContentFromTabel<Budgetkontogruppe>(3040, (dbHandle, searchHandle, list) =>
+            if (BudgetkontogruppeCache.Count > 0)
             {
-                var nummer = GetFieldValueAsInt(dbHandle,
-                                                searchHandle,
-                                                "Nummer");
-                var navn = GetFieldValueAsString(dbHandle,
-                                                 searchHandle,
-                                                 "Tekst");
-                var budgetkontogruppe =
-                    new Budgetkontogruppe(nummer, navn);
-                list.Add(budgetkontogruppe);
-            });
+                return BudgetkontogruppeCache;
+            }
+            lock (BudgetkontogruppeCache)
+            {
+                var budgetkontogrupper = GetTableContentFromTabel<Budgetkontogruppe>(3040,
+                                                                                     (dbHandle, searchHandle, list) =>
+                                                                                         {
+                                                                                             var nummer =
+                                                                                                 GetFieldValueAsInt(
+                                                                                                     dbHandle,
+                                                                                                     searchHandle,
+                                                                                                     "Nummer");
+                                                                                             var navn =
+                                                                                                 GetFieldValueAsString(
+                                                                                                     dbHandle,
+                                                                                                     searchHandle,
+                                                                                                     "Tekst");
+                                                                                             var budgetkontogruppe =
+                                                                                                 new Budgetkontogruppe(
+                                                                                                     nummer, navn);
+                                                                                             list.Add(budgetkontogruppe);
+                    
+                                                                                         });
+                BudgetkontogruppeCache.Clear();
+                foreach (var budgetkontogruppe in budgetkontogrupper)
+                {
+                    BudgetkontogruppeCache.Add(budgetkontogruppe);
+                }
+            }
+            return BudgetkontogruppeCache;
         }
 
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Metode, der kan kaldes når et DBAX repository opdateres.
+        /// </summary>
+        /// <param name="fileName">Navn på database i DBAX repositoryet, som er opdateret.</param>
+        internal static void DbAxRepositoryChanged(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName))
+            {
+                throw new ArgumentNullException("filename");
+            }
+            switch (fileName.Trim().ToUpper())
+            {
+                case "KONTO.DBD":
+                case "KONTOLIN.DBD":
+                    lock (RegnskabCache)
+                    {
+                        RegnskabCache.Clear();
+                    }
+                    break;
+
+                case "TABEL.DBD":
+                    lock (KontogruppeCache)
+                    {
+                        KontogruppeCache.Clear();
+                    }
+                    lock (BudgetkontogruppeCache)
+                    {
+                        BudgetkontogruppeCache.Clear();
+                    }
+                    break;
+            }
+        }
 
         /// <summary>
         /// Indlæser konti, kreditoplysninger, budgetkonti, budgetoplysninger og bogføringslinjer for et regnskab.

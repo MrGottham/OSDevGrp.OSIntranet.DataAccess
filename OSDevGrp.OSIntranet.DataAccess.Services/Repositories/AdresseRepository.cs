@@ -15,6 +15,15 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
     /// </summary>
     public class AdresseRepository : DbAxRepositoryBase, IAdresseRepository
     {
+        #region Private variables
+
+        private static readonly IList<AdresseBase> AdresseCache = new List<AdresseBase>();
+        private static readonly IList<Postnummer> PostnummerCache = new List<Postnummer>();
+        private static readonly IList<Adressegruppe> AdressegruppeCache = new List<Adressegruppe>();
+        private static readonly IList<Betalingsbetingelse> BetalingsbetingelseCache = new List<Betalingsbetingelse>();
+
+        #endregion
+
         #region Constructor
 
         /// <summary>
@@ -46,95 +55,110 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <returns>Alle adresser.</returns>
         public IList<AdresseBase> AdresseGetAll(Action<AdresseBase> callback)
         {
-            var dbHandle = OpenDatabase("ADRESSE.DBD", false, true);
-            try
+            if (AdresseCache.Count > 0)
             {
-                var searchHandle = dbHandle.CreateSearch();
+                return AdresseCache;
+            }
+            lock (AdresseCache)
+            {
+                var dbHandle = OpenDatabase("ADRESSE.DBD", false, true);
                 try
                 {
-                    var adressegrupper = AdressegruppeGetAll();
-                    var betalingsbetingelser = BetalingsbetingelserGetAll();
-                    var adresser = new List<AdresseBase>();
-                    if (dbHandle.SetKey(searchHandle, "Navn"))
+                    var searchHandle = dbHandle.CreateSearch();
+                    try
                     {
-                        var keyStr = dbHandle.KeyStrInt(1010,
-                                                        dbHandle.GetFieldLength(dbHandle.GetFieldNoByName("TabelNr")));
-                        if (dbHandle.SetKeyInterval(searchHandle, keyStr, keyStr))
+                        var adressegrupper = AdressegruppeGetAll();
+                        var betalingsbetingelser = BetalingsbetingelserGetAll();
+                        var adresser = new List<AdresseBase>();
+                        if (dbHandle.SetKey(searchHandle, "Navn"))
                         {
-                            if (dbHandle.SearchFirst(searchHandle))
+                            var keyStr = dbHandle.KeyStrInt(1010,
+                                                            dbHandle.GetFieldLength(dbHandle.GetFieldNoByName("TabelNr")));
+                            if (dbHandle.SetKeyInterval(searchHandle, keyStr, keyStr))
                             {
-                                do
+                                if (dbHandle.SearchFirst(searchHandle))
                                 {
-                                    var firma = new Firma(GetFieldValueAsInt(dbHandle, searchHandle, "Ident"),
-                                                          GetFieldValueAsString(dbHandle, searchHandle, "Navn"),
-                                                          GetAdressegruppe(adressegrupper,
-                                                                           GetFieldValueAsInt(dbHandle, searchHandle,
-                                                                                              "Gruppenummer")));
-                                    InitialiserAdresseBase(firma, dbHandle, searchHandle, betalingsbetingelser);
-                                    var telefon1 = GetFieldValueAsString(dbHandle, searchHandle, "Telefon");
-                                    var telefon2 = GetFieldValueAsString(dbHandle, searchHandle, "Telefon2");
-                                    var telefax = GetFieldValueAsString(dbHandle, searchHandle, "Telefon3");
-                                    firma.SætTelefon(string.IsNullOrEmpty(telefon1) ? null : telefon1,
-                                                     string.IsNullOrEmpty(telefon2) ? null : telefon2,
-                                                     string.IsNullOrEmpty(telefax) ? null : telefax);
-                                    if (callback != null)
+                                    do
                                     {
-                                        callback(firma);
-                                    }
-                                    adresser.Add(firma);
-                                } while (dbHandle.SearchNext(searchHandle));
-                            }
-                            dbHandle.ClearKeyInterval(searchHandle);
-                        }
-                        keyStr = dbHandle.KeyStrInt(1000, dbHandle.GetFieldLength(dbHandle.GetFieldNoByName("TabelNr")));
-                        if (dbHandle.SetKeyInterval(searchHandle, keyStr, keyStr))
-                        {
-                            if (dbHandle.SearchFirst(searchHandle))
-                            {
-                                do
-                                {
-                                    var person = new Person(GetFieldValueAsInt(dbHandle, searchHandle, "Ident"),
-                                                            GetFieldValueAsString(dbHandle, searchHandle, "Navn"),
-                                                            GetAdressegruppe(adressegrupper,
-                                                                             GetFieldValueAsInt(dbHandle, searchHandle,
-                                                                                                "Gruppenummer")));
-                                    InitialiserAdresseBase(person, dbHandle, searchHandle, betalingsbetingelser);
-                                    var telefon = GetFieldValueAsString(dbHandle, searchHandle, "Telefon");
-                                    var mobil = GetFieldValueAsString(dbHandle, searchHandle, "Telefon2");
-                                    person.SætTelefon(string.IsNullOrEmpty(telefon) ? null : telefon,
-                                                      string.IsNullOrEmpty(mobil) ? null : mobil);
-                                    person.SætFødselsdato(GetFieldValueAsDateTime(dbHandle, searchHandle, "Fødselsdato"));
-                                    var firmanummer = GetFieldValueAsInt(dbHandle, searchHandle, "Firmaident");
-                                    if (firmanummer != 0)
-                                    {
-                                        var firma = GetFirma(adresser, firmanummer);
-                                        if (firma != null)
+                                        var firma = new Firma(GetFieldValueAsInt(dbHandle, searchHandle, "Ident"),
+                                                              GetFieldValueAsString(dbHandle, searchHandle, "Navn"),
+                                                              GetAdressegruppe(adressegrupper,
+                                                                               GetFieldValueAsInt(dbHandle, searchHandle,
+                                                                                                  "Gruppenummer")));
+                                        InitialiserAdresseBase(firma, dbHandle, searchHandle, betalingsbetingelser);
+                                        var telefon1 = GetFieldValueAsString(dbHandle, searchHandle, "Telefon");
+                                        var telefon2 = GetFieldValueAsString(dbHandle, searchHandle, "Telefon2");
+                                        var telefax = GetFieldValueAsString(dbHandle, searchHandle, "Telefon3");
+                                        firma.SætTelefon(string.IsNullOrEmpty(telefon1) ? null : telefon1,
+                                                         string.IsNullOrEmpty(telefon2) ? null : telefon2,
+                                                         string.IsNullOrEmpty(telefax) ? null : telefax);
+                                        if (callback != null)
                                         {
-                                            firma.TilføjPerson(person);
+                                            callback(firma);
                                         }
-                                    }
-                                    if (callback != null)
-                                    {
-                                        callback(person);
-                                    }
-                                    adresser.Add(person);
-                                } while (dbHandle.SearchNext(searchHandle));
+                                        adresser.Add(firma);
+                                    } while (dbHandle.SearchNext(searchHandle));
+                                }
+                                dbHandle.ClearKeyInterval(searchHandle);
                             }
-                            dbHandle.ClearKeyInterval(searchHandle);
+                            keyStr = dbHandle.KeyStrInt(1000,
+                                                        dbHandle.GetFieldLength(dbHandle.GetFieldNoByName("TabelNr")));
+                            if (dbHandle.SetKeyInterval(searchHandle, keyStr, keyStr))
+                            {
+                                if (dbHandle.SearchFirst(searchHandle))
+                                {
+                                    do
+                                    {
+                                        var person = new Person(GetFieldValueAsInt(dbHandle, searchHandle, "Ident"),
+                                                                GetFieldValueAsString(dbHandle, searchHandle, "Navn"),
+                                                                GetAdressegruppe(adressegrupper,
+                                                                                 GetFieldValueAsInt(dbHandle,
+                                                                                                    searchHandle,
+                                                                                                    "Gruppenummer")));
+                                        InitialiserAdresseBase(person, dbHandle, searchHandle, betalingsbetingelser);
+                                        var telefon = GetFieldValueAsString(dbHandle, searchHandle, "Telefon");
+                                        var mobil = GetFieldValueAsString(dbHandle, searchHandle, "Telefon2");
+                                        person.SætTelefon(string.IsNullOrEmpty(telefon) ? null : telefon,
+                                                          string.IsNullOrEmpty(mobil) ? null : mobil);
+                                        person.SætFødselsdato(GetFieldValueAsDateTime(dbHandle, searchHandle,
+                                                                                      "Fødselsdato"));
+                                        var firmanummer = GetFieldValueAsInt(dbHandle, searchHandle, "Firmaident");
+                                        if (firmanummer != 0)
+                                        {
+                                            var firma = GetFirma(adresser, firmanummer);
+                                            if (firma != null)
+                                            {
+                                                firma.TilføjPerson(person);
+                                            }
+                                        }
+                                        if (callback != null)
+                                        {
+                                            callback(person);
+                                        }
+                                        adresser.Add(person);
+                                    } while (dbHandle.SearchNext(searchHandle));
+                                }
+                                dbHandle.ClearKeyInterval(searchHandle);
+                            }
+                        }
+                        var comparer = new AdresseComparer();
+                        AdresseCache.Clear();
+                        foreach (var adresse in adresser.OrderBy(m => m, comparer).ToArray())
+                        {
+                            AdresseCache.Add(adresse);
                         }
                     }
-                    var comparer = new AdresseComparer();
-                    return adresser.OrderBy(m => m, comparer).ToArray();
+                    finally
+                    {
+                        dbHandle.DeleteSearch(searchHandle);
+                    }
                 }
                 finally
                 {
-                    dbHandle.DeleteSearch(searchHandle);
+                    dbHandle.CloseDatabase();
                 }
             }
-            finally
-            {
-                dbHandle.CloseDatabase();
-            }
+            return AdresseCache;
         }
 
         /// <summary>
@@ -143,39 +167,52 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <returns>Liste indeholdende alle postnumre.</returns>
         public IList<Postnummer> PostnummerGetAll()
         {
-            var dbHandle = OpenDatabase("POSTNR.DBD", false, true);
-            try
+            if (PostnummerCache.Count > 0)
             {
-                var searchHandle = dbHandle.CreateSearch();
+
+                return PostnummerCache;
+            }
+            lock (PostnummerCache)
+            {
+                var dbHandle = OpenDatabase("POSTNR.DBD", false, true);
                 try
                 {
-                    var postnumre = new List<Postnummer>();
-                    if (dbHandle.SetKey(searchHandle, "Postnummer"))
+                    var searchHandle = dbHandle.CreateSearch();
+                    try
                     {
-                        if (dbHandle.SearchFirst(searchHandle))
+                        var postnumre = new List<Postnummer>();
+                        if (dbHandle.SetKey(searchHandle, "Postnummer"))
                         {
-                            do
+                            if (dbHandle.SearchFirst(searchHandle))
                             {
-                                var landekode = GetFieldValueAsString(dbHandle, searchHandle, "Landekode");
-                                var postnr = GetFieldValueAsString(dbHandle, searchHandle, "Postnummer");
-                                var bynavn = GetFieldValueAsString(dbHandle, searchHandle, "By");
-                                var postnummer = new Postnummer(landekode, postnr, bynavn);
-                                postnumre.Add(postnummer);
+                                do
+                                {
+                                    var landekode = GetFieldValueAsString(dbHandle, searchHandle, "Landekode");
+                                    var postnr = GetFieldValueAsString(dbHandle, searchHandle, "Postnummer");
+                                    var bynavn = GetFieldValueAsString(dbHandle, searchHandle, "By");
+                                    var postnummer = new Postnummer(landekode, postnr, bynavn);
+                                    postnumre.Add(postnummer);
 
-                            } while (dbHandle.SearchNext(searchHandle));
+                                } while (dbHandle.SearchNext(searchHandle));
+                            }
+                        }
+                        PostnummerCache.Clear();
+                        foreach (var postnummer in postnumre)
+                        {
+                            PostnummerCache.Add(postnummer);
                         }
                     }
-                    return postnumre;
+                    finally
+                    {
+                        dbHandle.DeleteSearch(searchHandle);
+                    }
                 }
                 finally
                 {
-                    dbHandle.DeleteSearch(searchHandle);
+                    dbHandle.CloseDatabase();
                 }
             }
-            finally
-            {
-                dbHandle.CloseDatabase();
-            }
+            return PostnummerCache;
         }
 
         /// <summary>
@@ -184,22 +221,42 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <returns>Liste indeholdende alle adressegrupper.</returns>
         public IList<Adressegruppe> AdressegruppeGetAll()
         {
-            return GetTableContentFromTabel<Adressegruppe>(1030, (dbHandle, searchHandle, list) =>
-                                                                     {
-                                                                         var nummer = GetFieldValueAsInt(dbHandle,
-                                                                                                         searchHandle,
-                                                                                                         "Nummer");
-                                                                         var navn = GetFieldValueAsString(dbHandle,
-                                                                                                          searchHandle,
-                                                                                                          "Tekst");
-                                                                         var adrgrp = GetFieldValueAsInt(dbHandle,
-                                                                                                         searchHandle,
-                                                                                                         "Adressegruppe");
-                                                                         var adressegruppe = new Adressegruppe(nummer,
-                                                                                                               navn,
-                                                                                                               adrgrp);
-                                                                         list.Add(adressegruppe);
-                                                                     });
+            if (AdressegruppeCache.Count > 0)
+            {
+                return AdressegruppeCache;
+            }
+            lock (AdressegruppeCache)
+            {
+                var adressegrupper = GetTableContentFromTabel<Adressegruppe>(1030, (dbHandle, searchHandle, list) =>
+                                                                                       {
+                                                                                           var nummer =
+                                                                                               GetFieldValueAsInt(
+                                                                                                   dbHandle,
+                                                                                                   searchHandle,
+                                                                                                   "Nummer");
+                                                                                           var navn =
+                                                                                               GetFieldValueAsString(
+                                                                                                   dbHandle,
+                                                                                                   searchHandle,
+                                                                                                   "Tekst");
+                                                                                           var adrgrp =
+                                                                                               GetFieldValueAsInt(
+                                                                                                   dbHandle,
+                                                                                                   searchHandle,
+                                                                                                   "Adressegruppe");
+                                                                                           var adressegruppe =
+                                                                                               new Adressegruppe(nummer,
+                                                                                                                 navn,
+                                                                                                                 adrgrp);
+                                                                                           list.Add(adressegruppe);
+                                                                                       });
+                AdressegruppeCache.Clear();
+                foreach(var adressegruppe in adressegrupper)
+                {
+                    AdressegruppeCache.Add(adressegruppe);
+                }
+            }
+            return AdressegruppeCache;
         }
 
         /// <summary>
@@ -208,21 +265,84 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <returns>Liste indeholdende alle betalingsbetingelser.</returns>
         public IList<Betalingsbetingelse> BetalingsbetingelserGetAll()
         {
-            return GetTableContentFromTabel<Betalingsbetingelse>(1040, (dbHandle, searchHandle, list) =>
-                                                                           {
-                                                                               var nummer = GetFieldValueAsInt(
-                                                                                   dbHandle, searchHandle, "Nummer");
-                                                                               var navn = GetFieldValueAsString(
-                                                                                   dbHandle, searchHandle, "Tekst");
-                                                                               var betalingsbetingelse =
-                                                                                   new Betalingsbetingelse(nummer, navn);
-                                                                               list.Add(betalingsbetingelse);
-                                                                           });
+            if (BetalingsbetingelseCache.Count > 0)
+            {
+                return BetalingsbetingelseCache;
+            }
+            lock (BetalingsbetingelseCache)
+            {
+                var betalingsbetingelser = GetTableContentFromTabel<Betalingsbetingelse>(1040,
+                                                                                         (dbHandle, searchHandle, list)
+                                                                                         =>
+                                                                                             {
+                                                                                                 var nummer = GetFieldValueAsInt
+                                                                                                     (
+                                                                                                         dbHandle,
+                                                                                                         searchHandle,
+                                                                                                         "Nummer");
+                                                                                                 var navn = GetFieldValueAsString
+                                                                                                     (
+                                                                                                         dbHandle,
+                                                                                                         searchHandle,
+                                                                                                         "Tekst");
+                                                                                                 var betalingsbetingelse
+                                                                                                     =
+                                                                                                     new Betalingsbetingelse
+                                                                                                         (nummer,
+                                                                                                          navn);
+                                                                                                 list.Add(
+                                                                                                     betalingsbetingelse);
+                                                                                             });
+                foreach (var betalingsbetingelse in betalingsbetingelser)
+                {
+                    BetalingsbetingelseCache.Add(betalingsbetingelse);
+                }
+            }
+            return BetalingsbetingelseCache;
         }
 
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Metode, der kan kaldes når et DBAX repository opdateres.
+        /// </summary>
+        /// <param name="fileName">Navn på database i DBAX repositoryet, som er opdateret.</param>
+        internal static void DbAxRepositoryChanged(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName))
+            {
+                throw new ArgumentNullException("filename");
+            }
+            switch (fileName.Trim().ToUpper())
+            {
+                case "ADRESSE.DBD":
+                    lock (AdresseCache)
+                    {
+                        AdressegruppeCache.Clear();
+                    }
+                    break;
+
+                case "POSTNR.DBD":
+                    lock (PostnummerCache)
+                    {
+                        PostnummerCache.Clear();
+                    }
+                    break;
+
+                case "TABEL.DBD":
+                    lock (AdressegruppeCache)
+                    {
+                        AdressegruppeCache.Clear();
+                    }
+                    lock (BetalingsbetingelseCache)
+                    {
+                        BetalingsbetingelseCache.Clear();
+                    }
+                    break;
+            }
+        }
 
         /// <summary>
         /// Finder og returnerer et givent firma.
