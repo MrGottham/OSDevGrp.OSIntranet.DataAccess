@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using System.ServiceModel;
 using System.ServiceProcess;
@@ -20,6 +22,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
         private ServiceHost _adresseRepositoryService;
         private ServiceHost _finansstyringRepositoryService;
         private readonly ILogRepository _logRepository;
+        private readonly FileSystemWatcher _dbAxRepositoryWatcher;
+        private readonly IList<IDbAxRepositoryCacher> _dbAxRepositoryCachers;
 
         #endregion
 
@@ -33,6 +37,15 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
             InitializeComponent();
             var container = ContainerFactory.Create();
             _logRepository = container.Resolve<ILogRepository>();
+            var dbAxConfiguration = container.Resolve<IDbAxConfiguration>();
+            _dbAxRepositoryWatcher = new FileSystemWatcher(dbAxConfiguration.DataStoreLocation.FullName, "*.DBD")
+                                         {
+                                             EnableRaisingEvents = false,
+                                             IncludeSubdirectories = false,
+                                             NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size
+                                         };
+            _dbAxRepositoryWatcher.Changed += DbAxRepositoryChanged;
+            _dbAxRepositoryCachers = new List<IDbAxRepositoryCacher>(container.ResolveAll<IDbAxRepositoryCacher>());
         }
 
         #endregion
@@ -41,6 +54,9 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
         {
             try
             {
+                // Enable DBAX repository watcher.
+                StartDbAxRepositoryWatcher();
+                // Open hosts.
                 OpenHosts();
             }
             catch (Exception ex)
@@ -50,7 +66,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
                                           int.Parse(Properties.Resources.EventLogOnStartExceptionId));
                 try
                 {
+                    // Close hosts.
                     CloseHosts();
+                    // Diable DBAX repository watcher.
+                    StopDbAxRepositoryWatcher();
                 }
                 catch (Exception closeHostException)
                 {
@@ -66,7 +85,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
         {
             try
             {
+                // Close hosts.
                 CloseHosts();
+                // Diable DBAX repository watcher.
+                StopDbAxRepositoryWatcher();
             }
             catch (Exception ex)
             {
@@ -80,6 +102,9 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
         {
             try
             {
+                // Enable DBAX repository watcher.
+                StartDbAxRepositoryWatcher();
+                // Open hosts.
                 OpenHosts();
             }
             catch (Exception ex)
@@ -89,7 +114,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
                                           int.Parse(Properties.Resources.EventLogOnContinueExceptionId));
                 try
                 {
+                    // Close hosts.
                     CloseHosts();
+                    // Diable DBAX repository watcher.
+                    StopDbAxRepositoryWatcher();
                 }
                 catch (Exception closeHostException)
                 {
@@ -105,7 +133,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
         {
             try
             {
+                // Close hosts.
                 CloseHosts();
+                // Diable DBAX repository watcher.
+                StopDbAxRepositoryWatcher();
             }
             catch (Exception ex)
             {
@@ -119,7 +150,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
         {
             try
             {
+                // Close hosts.
                 CloseHosts();
+                // Diable DBAX repository watcher.
+                StopDbAxRepositoryWatcher();
+                _dbAxRepositoryWatcher.Dispose();
             }
             catch (Exception ex)
             {
@@ -127,6 +162,35 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
                                           EventLogEntryType.Error,
                                           int.Parse(Properties.Resources.EventLogOnShutdownExceptionId));
             }
+        }
+
+        /// <summary>
+        /// Sletter cache for DBAX repositories.
+        /// </summary>
+        private void ClearDbAxRepositoryCache()
+        {
+            foreach (var dbAxRepositoryCacher in _dbAxRepositoryCachers)
+            {
+                dbAxRepositoryCacher.ClearCache();
+            }
+        }
+
+        /// <summary>
+        /// Starter overvågning af DBAX repositories.
+        /// </summary>
+        private void StartDbAxRepositoryWatcher()
+        {
+            ClearDbAxRepositoryCache();
+            _dbAxRepositoryWatcher.EnableRaisingEvents = true;
+        }
+
+        /// <summary>
+        /// Stopper overvågning af DBAX repositories.
+        /// </summary>
+        private void StopDbAxRepositoryWatcher()
+        {
+            _dbAxRepositoryWatcher.EnableRaisingEvents = false;
+            ClearDbAxRepositoryCache();
         }
 
         /// <summary>
@@ -186,6 +250,36 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
             finally
             {
                 _finansstyringRepositoryService = null;
+            }
+        }
+
+        /// <summary>
+        /// Håndtering af ændringer i DBAX repositories.
+        /// </summary>
+        private void DbAxRepositoryChanged(object sender, FileSystemEventArgs e)
+        {
+            if (e == null)
+            {
+                return;
+            }
+            if (e.ChangeType != WatcherChangeTypes.Changed)
+            {
+                return;
+            }
+            if (string.IsNullOrEmpty(e.Name))
+            {
+                return;
+            }
+            try
+            {
+                foreach (var dbAxRepositoryCacher in _dbAxRepositoryCachers)
+                {
+                    dbAxRepositoryCacher.HandleRepositoryChange(e.Name);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
             }
         }
     }

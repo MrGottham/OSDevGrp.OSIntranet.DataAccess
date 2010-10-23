@@ -137,6 +137,7 @@
     <Compile Include="Repositories\Interfaces\DbAxConfiguration.cs" />
     <Compile Include="Repositories\Interfaces\IAdresseRepository.cs" />
     <Compile Include="Repositories\Interfaces\IDbAxConfiguration.cs" />
+    <Compile Include="Repositories\Interfaces\IDbAxRepositoryCacher.cs" />
     <Compile Include="Repositories\Interfaces\IFinansstyringRepository.cs" />
     <Compile Include="Repositories\Interfaces\ILogRepository.cs" />
     <Compile Include="Repositories\Interfaces\IRepository.cs" />

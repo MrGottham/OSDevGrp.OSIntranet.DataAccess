@@ -17,7 +17,6 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         #region Private variables
 
         private readonly IDbAxConfiguration _configuration;
-        private static FileSystemWatcher _dbAxRepositoryWatcher;
             
         #endregion
 
@@ -34,17 +33,6 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                 throw new ArgumentNullException("configuration");
             }
             _configuration = configuration;
-            if (_dbAxRepositoryWatcher != null)
-            {
-                return;
-            }
-            _dbAxRepositoryWatcher = new FileSystemWatcher(configuration.DataStoreLocation.FullName, "*.DBD")
-                                         {
-                                             IncludeSubdirectories = false,
-                                             NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size
-                                         };
-            _dbAxRepositoryWatcher.Changed += DbAxRepositoryChanged;
-            _dbAxRepositoryWatcher.EnableRaisingEvents = true;
         }
 
         #endregion
@@ -198,7 +186,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <summary>
         /// Metode, der kaldes når et DBAX repository opdateres.
         /// </summary>
-        private static void DbAxRepositoryChanged(object sender, FileSystemEventArgs e)
+        internal static void DbAxRepositoryChanged(object sender, FileSystemEventArgs e)
         {
             if (e == null)
             {
