@@ -180,30 +180,5 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         }
 
         #endregion
-
-        #region Private methods
-
-        /// <summary>
-        /// Metode, der kaldes når et DBAX repository opdateres.
-        /// </summary>
-        internal static void DbAxRepositoryChanged(object sender, FileSystemEventArgs e)
-        {
-            if (e == null)
-            {
-                return;
-            }
-            if (e.ChangeType != WatcherChangeTypes.Changed)
-            {
-                return;
-            }
-            if (string.IsNullOrEmpty(e.Name))
-            {
-                return;
-            }
-            AdresseRepository.DbAxRepositoryChanged(e.Name);
-            FinansstyringRepository.DbAxRepositoryChanged(e.Name);
-        }
-
-        #endregion
     }
 }

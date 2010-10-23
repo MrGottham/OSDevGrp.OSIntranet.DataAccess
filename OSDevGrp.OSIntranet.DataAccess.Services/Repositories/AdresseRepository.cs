@@ -13,7 +13,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
     /// <summary>
     /// Repository for adressekartoteket.
     /// </summary>
-    public class AdresseRepository : DbAxRepositoryBase, IAdresseRepository
+    public class AdresseRepository : DbAxRepositoryBase, IAdresseRepository, IDbAxRepositoryCacher
     {
         #region Private variables
 
@@ -303,19 +303,42 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
 
         #endregion
 
-        #region Methods
+        #region IDbAxRepositoryCacher Members
 
         /// <summary>
-        /// Metode, der kan kaldes når et DBAX repository opdateres.
+        /// Sletter cache.
         /// </summary>
-        /// <param name="fileName">Navn på database i DBAX repositoryet, som er opdateret.</param>
-        internal static void DbAxRepositoryChanged(string fileName)
+        public void ClearCache()
         {
-            if (string.IsNullOrEmpty(fileName))
+            lock (AdresseCache)
             {
-                throw new ArgumentNullException("filename");
+                AdressegruppeCache.Clear();
             }
-            switch (fileName.Trim().ToUpper())
+            lock (PostnummerCache)
+            {
+                PostnummerCache.Clear();
+            }
+            lock (AdressegruppeCache)
+            {
+                AdressegruppeCache.Clear();
+            }
+            lock (BetalingsbetingelseCache)
+            {
+                BetalingsbetingelseCache.Clear();
+            }
+        }
+
+        /// <summary>
+        /// Håndtering af ændring i et DBAX repository.
+        /// </summary>
+        /// <param name="databaseFileName">Navn på databasen, der er ændret.</param>
+        public void HandleRepositoryChange(string databaseFileName)
+        {
+            if (string.IsNullOrEmpty(databaseFileName))
+            {
+                throw new ArgumentNullException("databaseFileName");
+            }
+            switch (databaseFileName.Trim().ToUpper())
             {
                 case "ADRESSE.DBD":
                     lock (AdresseCache)
@@ -343,6 +366,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                     break;
             }
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Finder og returnerer et givent firma.

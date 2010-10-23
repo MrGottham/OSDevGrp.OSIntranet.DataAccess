@@ -120,6 +120,9 @@
   <data name="EventLogAdresseRepositoryService" xml:space="preserve">
     <value>106</value>
   </data>
+  <data name="EventLogDbAxRepositoryWatcherId" xml:space="preserve">
+    <value>108</value>
+  </data>
   <data name="EventLogFinansstyringRepositoryService" xml:space="preserve">
     <value>107</value>
   </data>

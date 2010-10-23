@@ -277,9 +277,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
                     dbAxRepositoryCacher.HandleRepositoryChange(e.Name);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                _logRepository.WriteToLog(string.Format("{0}: {1}", MethodBase.GetCurrentMethod().Name, ex.Message),
+                                          EventLogEntryType.Error,
+                                          int.Parse(Properties.Resources.EventLogDbAxRepositoryWatcherId));
             }
         }
     }

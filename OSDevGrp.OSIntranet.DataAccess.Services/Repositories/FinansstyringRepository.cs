@@ -15,7 +15,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
     /// <summary>
     /// Repository for finansstyring.
     /// </summary>
-    public class FinansstyringRepository : DbAxRepositoryBase, IFinansstyringRepository
+    public class FinansstyringRepository : DbAxRepositoryBase, IFinansstyringRepository, IDbAxRepositoryCacher
     {
         #region Private variables
 
@@ -190,19 +190,38 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
 
         #endregion
 
-        #region Methods
+        #region IDbAxRepositoryCacher Members
 
         /// <summary>
-        /// Metode, der kan kaldes når et DBAX repository opdateres.
+        /// Sletter cache.
         /// </summary>
-        /// <param name="fileName">Navn på database i DBAX repositoryet, som er opdateret.</param>
-        internal static void DbAxRepositoryChanged(string fileName)
+        public void ClearCache()
         {
-            if (string.IsNullOrEmpty(fileName))
+            lock (RegnskabCache)
             {
-                throw new ArgumentNullException("filename");
+                RegnskabCache.Clear();
             }
-            switch (fileName.Trim().ToUpper())
+            lock (KontogruppeCache)
+            {
+                KontogruppeCache.Clear();
+            }
+            lock (BudgetkontogruppeCache)
+            {
+                BudgetkontogruppeCache.Clear();
+            }
+        }
+
+        /// <summary>
+        /// Håndtering af ændring i et DBAX repository.
+        /// </summary>
+        /// <param name="databaseFileName">Navn på databasen, der er ændret.</param>
+        public void HandleRepositoryChange(string databaseFileName)
+        {
+            if (string.IsNullOrEmpty(databaseFileName))
+            {
+                throw new ArgumentNullException("databaseFileName");
+            }
+            switch (databaseFileName.Trim().ToUpper())
             {
                 case "KONTO.DBD":
                 case "KONTOLIN.DBD":
@@ -224,6 +243,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                     break;
             }
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Indlæser konti, kreditoplysninger, budgetkonti, budgetoplysninger og bogføringslinjer for et regnskab.

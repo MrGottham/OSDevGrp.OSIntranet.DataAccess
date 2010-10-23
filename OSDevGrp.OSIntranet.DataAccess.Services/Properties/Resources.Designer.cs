@@ -70,6 +70,15 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 108.
+        /// </summary>
+        internal static string EventLogDbAxRepositoryWatcherId {
+            get {
+                return ResourceManager.GetString("EventLogDbAxRepositoryWatcherId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 107.
         /// </summary>
         internal static string EventLogFinansstyringRepositoryService {
