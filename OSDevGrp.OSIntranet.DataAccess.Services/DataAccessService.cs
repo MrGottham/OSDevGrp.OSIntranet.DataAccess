@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.ServiceModel;
 using System.ServiceProcess;
@@ -19,11 +20,12 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
     {
         #region Private variables
 
+        private readonly ILogRepository _logRepository;
+        private readonly IDbAxConfiguration _dbAxConfiguration;
+        private readonly IList<IDbAxRepositoryCacher> _dbAxRepositoryCachers;
+        private readonly IList<FileSystemWatcher> _dbAxRepositoryWatchers;
         private ServiceHost _adresseRepositoryService;
         private ServiceHost _finansstyringRepositoryService;
-        private readonly ILogRepository _logRepository;
-        private readonly FileSystemWatcher _dbAxRepositoryWatcher;
-        private readonly IList<IDbAxRepositoryCacher> _dbAxRepositoryCachers;
 
         #endregion
 
@@ -37,15 +39,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
             InitializeComponent();
             var container = ContainerFactory.Create();
             _logRepository = container.Resolve<ILogRepository>();
-            var dbAxConfiguration = container.Resolve<IDbAxConfiguration>();
-            _dbAxRepositoryWatcher = new FileSystemWatcher(dbAxConfiguration.DataStoreLocation.FullName, "*.DBD")
-                                         {
-                                             EnableRaisingEvents = false,
-                                             IncludeSubdirectories = false,
-                                             NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size
-                                         };
-            _dbAxRepositoryWatcher.Changed += DbAxRepositoryChanged;
-            _dbAxRepositoryCachers = new List<IDbAxRepositoryCacher>(container.ResolveAll<IDbAxRepositoryCacher>());
+            _dbAxConfiguration = container.Resolve<IDbAxConfiguration>();
+            _dbAxRepositoryCachers =
+                new List<IDbAxRepositoryCacher>(container.ResolveAll<IRepository>().OfType<IDbAxRepositoryCacher>());
+            _dbAxRepositoryWatchers = new List<FileSystemWatcher>();
         }
 
         #endregion
@@ -154,7 +151,6 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
                 CloseHosts();
                 // Diable DBAX repository watcher.
                 StopDbAxRepositoryWatcher();
-                _dbAxRepositoryWatcher.Dispose();
             }
             catch (Exception ex)
             {
@@ -181,7 +177,34 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
         private void StartDbAxRepositoryWatcher()
         {
             ClearDbAxRepositoryCache();
-            _dbAxRepositoryWatcher.EnableRaisingEvents = true;
+            // Start overvågning af lokationen, hvor DBAX filer er gemt.
+            var dbAxRepositoryWatcher = new FileSystemWatcher(_dbAxConfiguration.DataStoreLocation.FullName, "*.DBD")
+                                            {
+                                                EnableRaisingEvents = false,
+                                                IncludeSubdirectories = false,
+                                                NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size
+                                            };
+            dbAxRepositoryWatcher.Changed += DbAxRepositoryChanged;
+            dbAxRepositoryWatcher.EnableRaisingEvents = true;
+            _dbAxRepositoryWatchers.Add(dbAxRepositoryWatcher);
+            // Start overvågning af Offline DBAX Files.
+            var offlinePath =
+                new DirectoryInfo(string.Format("{0}{1}CSC",
+                                                Environment.GetFolderPath(Environment.SpecialFolder.Windows),
+                                                Path.DirectorySeparatorChar));
+            if (!offlinePath.Exists)
+            {
+                return;
+            }
+            var offlineDbAxRepositoryWatcher = new FileSystemWatcher(offlinePath.FullName, "*.DBD")
+                                                   {
+                                                       EnableRaisingEvents = false,
+                                                       IncludeSubdirectories = true,
+                                                       NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size
+                                                   };
+            offlineDbAxRepositoryWatcher.Changed += DbAxRepositoryChanged;
+            offlineDbAxRepositoryWatcher.EnableRaisingEvents = true;
+            _dbAxRepositoryWatchers.Add(offlineDbAxRepositoryWatcher);
         }
 
         /// <summary>
@@ -189,7 +212,13 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
         /// </summary>
         private void StopDbAxRepositoryWatcher()
         {
-            _dbAxRepositoryWatcher.EnableRaisingEvents = false;
+            while (_dbAxRepositoryWatchers.Count > 0)
+            {
+                var dbAxRepositoryWatcher = _dbAxRepositoryWatchers[0];
+                dbAxRepositoryWatcher.EnableRaisingEvents = false;
+                dbAxRepositoryWatcher.Dispose();
+                _dbAxRepositoryWatchers.Remove(dbAxRepositoryWatcher);
+            }
             ClearDbAxRepositoryCache();
         }
 
@@ -266,15 +295,16 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
             {
                 return;
             }
-            if (string.IsNullOrEmpty(e.Name))
+            if (string.IsNullOrEmpty(e.FullPath))
             {
                 return;
             }
             try
             {
+                var databaseFileName = Path.GetFileName(e.FullPath);
                 foreach (var dbAxRepositoryCacher in _dbAxRepositoryCachers)
                 {
-                    dbAxRepositoryCacher.HandleRepositoryChange(e.Name);
+                    dbAxRepositoryCacher.HandleRepositoryChange(databaseFileName);
                 }
             }
             catch (Exception ex)

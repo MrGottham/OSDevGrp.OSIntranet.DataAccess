@@ -33,9 +33,6 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
                                    .BasedOn(typeof (IRepository)).WithService.FromInterface(typeof (IRepository)));
 
             container.Register(AllTypes.FromAssemblyNamed("OSDevGrp.OSIntranet.DataAccess.Services")
-                                   .BasedOn(typeof (IDbAxRepositoryCacher)).WithService.FromInterface(typeof (IDbAxRepositoryCacher)));
-
-            container.Register(AllTypes.FromAssemblyNamed("OSDevGrp.OSIntranet.DataAccess.Services")
                                    .BasedOn(typeof (IQueryHandler)).WithService.FromInterface(typeof (IQueryHandler)));
 
             container.Register(AllTypes.FromAssemblyNamed("OSDevGrp.OSIntranet.DataAccess.Services")

@@ -312,7 +312,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         {
             lock (AdresseCache)
             {
-                AdressegruppeCache.Clear();
+                AdresseCache.Clear();
             }
             lock (PostnummerCache)
             {
@@ -343,7 +343,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                 case "ADRESSE.DBD":
                     lock (AdresseCache)
                     {
-                        AdressegruppeCache.Clear();
+                        AdresseCache.Clear();
                     }
                     break;
 
