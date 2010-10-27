@@ -58,6 +58,7 @@
     <Compile Include="Queries\AdresselisteGetAllQuery.cs" />
     <Compile Include="Queries\BetalingsbetingelseGetAllQuery.cs" />
     <Compile Include="Queries\BetalingsbetingelseGetByNummerQuery.cs" />
+    <Compile Include="Queries\BogføringslinjeGetByRegnskabQuery.cs" />
     <Compile Include="Queries\BudgetkontogruppeGetAllQuery.cs" />
     <Compile Include="Queries\BudgetkontogruppeGetByNummerQuery.cs" />
     <Compile Include="Queries\FirmaGetAllQuery.cs" />

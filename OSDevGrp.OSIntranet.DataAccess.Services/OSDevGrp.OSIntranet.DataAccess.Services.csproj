@@ -98,6 +98,7 @@
     </Compile>
     <Compile Include="Domain\Adressereference.cs" />
     <Compile Include="QueryHandlers\AdresseQueryHandlerBase.cs" />
+    <Compile Include="QueryHandlers\BogføringslinjeGetByRegnskabQueryHandler.cs" />
     <Compile Include="QueryHandlers\BudgetkontogruppeGetAllQueryHandler.cs" />
     <Compile Include="QueryHandlers\BudgetkontogruppeGetByNummerQueryHandler.cs" />
     <Compile Include="QueryHandlers\FirmaGetAllQueryHandler.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="QueryHandlers\KontogruppeGetByNummerQueryHandler.cs" />
     <Compile Include="QueryHandlers\PersonGetAllQueryHandler.cs" />
     <Compile Include="QueryHandlers\PersonGetByNummerQueryHandler.cs" />
+    <Compile Include="QueryHandlers\RegnskabQueryHandleBase.cs" />
     <Compile Include="Repositories\FinansstyringRepository.cs" />
     <Compile Include="Infrastructure\ConfigurationProvider.cs" />
     <Compile Include="Infrastructure\ObjectMapper.cs" />

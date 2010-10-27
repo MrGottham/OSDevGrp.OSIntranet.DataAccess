@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using OSDevGrp.OSIntranet.CommonLibrary.Domain.Finansstyring;
 
 namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
@@ -13,6 +14,13 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
         /// </summary>
         /// <returns>Liste indeholdende regnskaber inklusiv konti, budgetkonti m.m.</returns>
         IList<Regnskab> RegnskabGetAll();
+
+        /// <summary>
+        /// Henter alle regnskaber inklusiv konti, budgetkonti m.m.
+        /// </summary>
+        /// <param name="callback">Callbackmetode, til behandling af de enkelte regnskaber.</param>
+        /// <returns>Liste indeholdende regnskaber inklusiv konti, budgetkonti m.m.</returns>
+        IList<Regnskab> RegnskabGetAll(Action<Regnskab> callback);
 
         /// <summary>
         /// Henter alle kontogrupper.

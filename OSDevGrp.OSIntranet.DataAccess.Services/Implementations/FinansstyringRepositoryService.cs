@@ -43,6 +43,27 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         #region IFinansstyringRepositoryService Members
 
         /// <summary>
+        /// Henter alle bogføringslinjer for et givent regnskab.
+        /// </summary>
+        /// <param name="bogføringslinjeGetByRegnskabQuery">Forespørgelse til at hente alle bogføringslinjer for et givent regnskab.</param>
+        /// <returns>Alle bogføringslinjer for regnskabet.</returns>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public IList<BogføringslinjeView> BogføringslinjeGetByRegnskab(BogføringslinjeGetByRegnskabQuery bogføringslinjeGetByRegnskabQuery)
+        {
+            try
+            {
+                return
+                    _queryBus.Query<BogføringslinjeGetByRegnskabQuery, IList<BogføringslinjeView>>(
+                        bogføringslinjeGetByRegnskabQuery);
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogFinansstyringRepositoryService));
+            }
+        }
+
+        /// <summary>
         /// Henter alle kontogrupper.
         /// </summary>
         /// <param name="kontogruppeGetAllQuery">Forespørgelse til at hente alle kontogrupper.</param>

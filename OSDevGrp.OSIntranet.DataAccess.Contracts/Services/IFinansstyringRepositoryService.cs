@@ -12,6 +12,15 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
     public interface IFinansstyringRepositoryService : IRepositoryService
     {
         /// <summary>
+        /// Henter alle bogføringslinjer for et givent regnskab.
+        /// </summary>
+        /// <param name="bogføringslinjeGetByRegnskabQuery">Forespørgelse til at hente alle bogføringslinjer for et givent regnskab.</param>
+        /// <returns>Alle bogføringslinjer for regnskabet.</returns>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        IList<BogføringslinjeView> BogføringslinjeGetByRegnskab(BogføringslinjeGetByRegnskabQuery bogføringslinjeGetByRegnskabQuery);
+
+        /// <summary>
         /// Henter alle kontogrupper.
         /// </summary>
         /// <param name="kontogruppeGetAllQuery">Forespørgelse til at hente alle kontogrupper.</param>

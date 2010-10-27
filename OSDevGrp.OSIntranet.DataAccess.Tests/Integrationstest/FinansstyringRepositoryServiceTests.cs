@@ -15,6 +15,56 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
     [Category("Integrationstest")]
     public class FinansstyringRepositoryServiceTests
     {
+        private const int RegnskabsnummerTilTest = 1;
+
+        /// <summary>
+        /// Tester, at bogføringslinjer for et givent regnskab hentes.
+        /// </summary>
+        [Test]
+        public void TestAtBogføringslinjerHentes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var query = new BogføringslinjeGetByRegnskabQuery
+                                {
+                                    Regnskabsnummer = RegnskabsnummerTilTest
+                                };
+                var bogføringslinjer = channel.BogføringslinjeGetByRegnskab(query);
+                Assert.That(bogføringslinjer, Is.Not.Null);
+                Assert.That(bogføringslinjer.Count, Is.GreaterThan(0));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes FaultException(s), hvis regnskab ikke findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesHvisRegnskabIkkeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var bogføringslinjeQuery = new BogføringslinjeGetByRegnskabQuery
+                                               {
+                                                   Regnskabsnummer = -1
+                                               };
+                Assert.Throws<FaultException>(() => channel.BogføringslinjeGetByRegnskab(bogføringslinjeQuery));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
         /// <summary>
         /// Tester, at kontogrupper hentes.
         /// </summary>

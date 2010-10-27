@@ -46,6 +46,16 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <returns>Liste indeholdende regnskaber inklusiv konti, budgetkonti m.m.</returns>
         public IList<Regnskab> RegnskabGetAll()
         {
+            return RegnskabGetAll(null);
+        }
+
+        /// <summary>
+        /// Henter alle regnskaber inklusiv konti, budgetkonti m.m.
+        /// </summary>
+        /// <param name="callback">Callbackmetode, til behandling af de enkelte regnskaber.</param>
+        /// <returns>Liste indeholdende regnskaber inklusiv konti, budgetkonti m.m.</returns>
+        public IList<Regnskab> RegnskabGetAll(Action<Regnskab> callback)
+        {
             if (RegnskabCache.Count > 0)
             {
                 return RegnskabCache;
@@ -68,6 +78,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                                                                               navn);
                                                                                   IndlæsRegnskab(regnskab, kontogrupper,
                                                                                                  budgetkontogrupper);
+                                                                                  if (callback != null)
+                                                                                  {
+                                                                                      callback(regnskab);
+                                                                                  }
                                                                                   list.Add(regnskab);
                                                                               });
                 RegnskabCache.Clear();
