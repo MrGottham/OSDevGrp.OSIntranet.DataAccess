@@ -54,6 +54,6 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         /// <returns>Gruppe for budgetkonti.</returns>
         [OperationContract]
         [TransactionFlow(TransactionFlowOption.Allowed)]
-        BudgetkontogruppeView BudgetkontoGetByNummer(BudgetkontogruppeGetByNummerQuery budgetkontogruppeGetByNummerQuery);
+        BudgetkontogruppeView BudgetkontogruppeGetByNummer(BudgetkontogruppeGetByNummerQuery budgetkontogruppeGetByNummerQuery);
     }
 }

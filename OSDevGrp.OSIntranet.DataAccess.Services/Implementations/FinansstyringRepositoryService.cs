@@ -128,7 +128,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         /// <param name="budgetkontogruppeGetByNummerQuery">Forespørgelse til at en given gruppe for budgetkonti.</param>
         /// <returns>Gruppe for budgetkonti.</returns>
         [OperationBehavior(TransactionScopeRequired = false)]
-        public BudgetkontogruppeView BudgetkontoGetByNummer(BudgetkontogruppeGetByNummerQuery budgetkontogruppeGetByNummerQuery)
+        public BudgetkontogruppeView BudgetkontogruppeGetByNummer(BudgetkontogruppeGetByNummerQuery budgetkontogruppeGetByNummerQuery)
         {
             try
             {
