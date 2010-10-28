@@ -11,16 +11,6 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Views
     public class BogføringslinjeView : IView
     {
         /// <summary>
-        /// Regnskabsnummer.
-        /// </summary>
-        [DataMember(IsRequired = true)]
-        public int Regnskabsnummer
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
         /// Unik identifikation af bogføringslinjen.
         /// </summary>
         [DataMember(IsRequired = true)]
@@ -51,10 +41,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Views
         }
 
         /// <summary>
-        /// Kontonummer.
+        /// Konto.
         /// </summary>
         [DataMember(IsRequired = true)]
-        public string Kontonummer
+        public KontoListeView Konto
         {
             get;
             set;
@@ -71,10 +61,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Views
         }
 
         /// <summary>
-        /// Kontonummer for budgetkonto.
+        /// Budgetkonto.
         /// </summary>
         [DataMember(IsRequired = false)]
-        public string Budgetkontonummer
+        public BudgetkontoListeView Budgetkontor
         {
             get;
             set;

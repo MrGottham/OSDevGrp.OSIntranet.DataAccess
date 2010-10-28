@@ -59,10 +59,12 @@
     <Compile Include="Queries\BetalingsbetingelseGetAllQuery.cs" />
     <Compile Include="Queries\BetalingsbetingelseGetByNummerQuery.cs" />
     <Compile Include="Queries\BogføringslinjeGetByRegnskabQuery.cs" />
+    <Compile Include="Queries\BudgetkontoGetByRegnskabQuery.cs" />
     <Compile Include="Queries\BudgetkontogruppeGetAllQuery.cs" />
     <Compile Include="Queries\BudgetkontogruppeGetByNummerQuery.cs" />
     <Compile Include="Queries\FirmaGetAllQuery.cs" />
     <Compile Include="Queries\FirmaGetByNummerQuery.cs" />
+    <Compile Include="Queries\KontoGetByRegnskabQuery.cs" />
     <Compile Include="Queries\KontogruppeGetAllQuery.cs" />
     <Compile Include="Queries\KontogruppeGetByNummerQuery.cs" />
     <Compile Include="Queries\PersonGetAllQuery.cs" />
@@ -80,10 +82,14 @@
     <Compile Include="Views\BetalingsbetingelseView.cs" />
     <Compile Include="Views\BogføringslinjeView.cs" />
     <Compile Include="Views\BudgetkontogruppeView.cs" />
+    <Compile Include="Views\BudgetkontoListeView.cs" />
     <Compile Include="Views\FirmaView.cs" />
     <Compile Include="Views\KontogruppeView.cs" />
+    <Compile Include="Views\KontoListeView.cs" />
+    <Compile Include="Views\KontoListeViewBase.cs" />
     <Compile Include="Views\PersonView.cs" />
     <Compile Include="Views\PostnummerView.cs" />
+    <Compile Include="Views\RegnskabListeView.cs" />
     <Compile Include="Views\TabelView.cs" />
   </ItemGroup>
   <ItemGroup>

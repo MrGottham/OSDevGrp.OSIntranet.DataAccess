@@ -138,17 +138,33 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
                 .ForMember(x => x.Nummer, opt => opt.MapFrom(s => s.Nummer))
                 .ForMember(x => x.Navn, opt => opt.MapFrom(s => s.Navn));
 
+            Mapper.CreateMap<Regnskab, RegnskabListeView>()
+                .ForMember(x => x.Nummer, opt => opt.MapFrom(s => s.Nummer))
+                .ForMember(x => x.Navn, opt => opt.MapFrom(s => s.Navn));
+
+            Mapper.CreateMap<Konto, KontoListeView>()
+                .ForMember(x => x.Regnskab, opt => opt.MapFrom(s => s.Regnskab))
+                .ForMember(x => x.Kontonummer, opt => opt.MapFrom(s => s.Kontonummer))
+                .ForMember(x => x.Kontonavn, opt => opt.MapFrom(s => s.Kontonavn))
+                .ForMember(x => x.Beskrivelse, opt => opt.MapFrom(s => s.Beskrivelse))
+                .ForMember(x => x.Note, opt => opt.MapFrom(s => s.Note))
+                .ForMember(x => x.Kontogruppe, opt => opt.MapFrom(s => s.Kontogruppe));
+
+            Mapper.CreateMap<Budgetkonto, BudgetkontoListeView>()
+                .ForMember(x => x.Regnskab, opt => opt.MapFrom(s => s.Regnskab))
+                .ForMember(x => x.Kontonummer, opt => opt.MapFrom(s => s.Kontonummer))
+                .ForMember(x => x.Kontonavn, opt => opt.MapFrom(s => s.Kontonavn))
+                .ForMember(x => x.Beskrivelse, opt => opt.MapFrom(s => s.Beskrivelse))
+                .ForMember(x => x.Note, opt => opt.MapFrom(s => s.Note))
+                .ForMember(x => x.Budgetkontogruppe, opt => opt.MapFrom(s => s.Budgetkontogruppe));
+
             Mapper.CreateMap<Bogføringslinje, BogføringslinjeView>()
-                .ForMember(x => x.Regnskabsnummer,
-                           opt =>
-                           opt.MapFrom(s => s.Konto == null ? 0 : s.Konto.Regnskab == null ? 0 : s.Konto.Regnskab.Nummer))
                 .ForMember(x => x.Løbenummer, opt => opt.MapFrom(s => s.Løbenummer))
                 .ForMember(x => x.Dato, opt => opt.MapFrom(s => s.Dato))
                 .ForMember(x => x.Bilag, opt => opt.MapFrom(s => s.Bilag))
-                .ForMember(x => x.Kontonummer, opt => opt.MapFrom(s => s.Konto == null ? null : s.Konto.Kontonummer))
+                .ForMember(x => x.Konto, opt => opt.MapFrom(s => s.Konto))
                 .ForMember(x => x.Tekst, opt => opt.MapFrom(s => s.Tekst))
-                .ForMember(x => x.Budgetkontonummer,
-                           opt => opt.MapFrom(s => s.Budgetkonto == null ? null : s.Budgetkonto.Kontonummer))
+                .ForMember(x => x.Budgetkontor, opt => opt.MapFrom(s => s.Budgetkonto))
                 .ForMember(x => x.Debit, opt => opt.MapFrom(s => s.Debit))
                 .ForMember(x => x.Kredit, opt => opt.MapFrom(s => s.Kredit))
                 .ForMember(x => x.AdresseId, opt => opt.MapFrom(s => s.Adresse == null ? 0 : s.Adresse.Nummer));
