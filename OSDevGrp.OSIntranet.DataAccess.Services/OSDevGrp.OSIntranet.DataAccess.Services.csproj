@@ -111,6 +111,8 @@
     <Compile Include="QueryHandlers\KontogruppeGetByNummerQueryHandler.cs" />
     <Compile Include="QueryHandlers\PersonGetAllQueryHandler.cs" />
     <Compile Include="QueryHandlers\PersonGetByNummerQueryHandler.cs" />
+    <Compile Include="QueryHandlers\RegnskabGetAllQueryHandler.cs" />
+    <Compile Include="QueryHandlers\RegnskabGetByNummerQueryHandler.cs" />
     <Compile Include="QueryHandlers\RegnskabQueryHandleBase.cs" />
     <Compile Include="Repositories\FinansstyringRepository.cs" />
     <Compile Include="Infrastructure\ConfigurationProvider.cs" />
