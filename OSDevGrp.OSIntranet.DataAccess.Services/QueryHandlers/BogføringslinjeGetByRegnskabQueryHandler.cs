@@ -57,6 +57,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
 
         #region IQueryHandler<BogføringslinjeGetByRegnskabQuery,IList<BogføringslinjeView>> Members
 
+        /// <summary>
+        /// Udfører forespørgelse.
+        /// </summary>
+        /// <param name="query">Forespørgelse efter alle bogføringslinjer i et givent regnskab.</param>
+        /// <returns>Alle bogføringslinjer i et givent regnskab.</returns>
         public IList<BogføringslinjeView> Query(BogføringslinjeGetByRegnskabQuery query)
         {
             if (query == null)
