@@ -27,6 +27,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
             Mapper.CreateMap<AdresseBase, PersonView>()
                 .ConvertUsing(s =>
                                   {
+                                      if (s == null)
+                                      {
+                                          return null;
+                                      }
                                       var mapper = new ObjectMapper();
                                       if (s is Person)
                                       {
@@ -39,6 +43,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
             Mapper.CreateMap<AdresseBase, FirmaView>()
                 .ConvertUsing(s =>
                                   {
+                                      if (s == null)
+                                      {
+                                          return null;
+                                      }
                                       var mapper = new ObjectMapper();
                                       if (s is Firma)
                                       {
@@ -51,6 +59,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
             Mapper.CreateMap<AdresseBase, AdresselisteView>()
                 .ConvertUsing(s =>
                                   {
+                                      if (s == null)
+                                      {
+                                          return null;
+                                      }
                                       var mapper = new ObjectMapper();
                                       if (s is Person)
                                       {
@@ -67,6 +79,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
             Mapper.CreateMap<AdresseBase, AdressereferenceView>()
                 .ConvertUsing(s =>
                                   {
+                                      if (s == null)
+                                      {
+                                          return null;
+                                      }
                                       var mapper = new ObjectMapper();
                                       if (s is Person)
                                       {

@@ -14,7 +14,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
     /// <summary>
     /// Queryhandler til håndtering af forespørgelsen: BudgetkontoGetByRegnskabAndKontonummerQuery.
     /// </summary>
-    class BudgetkontoGetByRegnskabAndKontonummerQueryHandler : RegnskabQueryHandleBase, IQueryHandler<BudgetkontoGetByRegnskabAndKontonummerQuery, BudgetkontoView>
+    public class BudgetkontoGetByRegnskabAndKontonummerQueryHandler : RegnskabQueryHandleBase, IQueryHandler<BudgetkontoGetByRegnskabAndKontonummerQuery, BudgetkontoView>
     {
         #region Private variables
 
