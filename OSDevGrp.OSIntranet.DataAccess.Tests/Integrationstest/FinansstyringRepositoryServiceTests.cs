@@ -1,4 +1,5 @@
-﻿using System.ServiceModel;
+﻿using System;
+using System.ServiceModel;
 using OSDevGrp.OSIntranet.CommonLibrary.IoC;
 using OSDevGrp.OSIntranet.CommonLibrary.Wcf;
 using OSDevGrp.OSIntranet.CommonLibrary.Wcf.ChannelFactory;
@@ -29,19 +30,31 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
             try
             {
                 var kontiQuery = new KontoGetByRegnskabQuery
-                {
-                    Regnskabsnummer = -1
-                };
+                                     {
+                                         Regnskabsnummer = -1
+                                     };
                 Assert.Throws<FaultException>(() => channel.KontoGetByRegnskab(kontiQuery));
+                var kontoQuery = new KontoGetByRegnskabAndKontonummerQuery
+                                     {
+                                         Regnskabsnummer = -1,
+                                         Kontonummer = "XYZ"
+                                     };
+                Assert.Throws<FaultException>(() => channel.KontoGetByRegnskabAndKontonummer(kontoQuery));
                 var budgetkontiQuery = new BudgetkontoGetByRegnskabQuery
-                {
-                    Regnskabsnummer = -1
-                };
+                                           {
+                                               Regnskabsnummer = -1
+                                           };
                 Assert.Throws<FaultException>(() => channel.BudgetkontoGetByRegnskab(budgetkontiQuery));
+                var budgetkontoQuery = new BudgetkontoGetByRegnskabAndKontonummerQuery
+                                           {
+                                               Regnskabsnummer = -1,
+                                               Kontonummer = "XYZ"
+                                           };
+                Assert.Throws<FaultException>(() => channel.BudgetkontoGetByRegnskabAndKontonummer(budgetkontoQuery));
                 var bogføringslinjeQuery = new BogføringslinjeGetByRegnskabQuery
-                {
-                    Regnskabsnummer = -1
-                };
+                                               {
+                                                   Regnskabsnummer = -1
+                                               };
                 Assert.Throws<FaultException>(() => channel.BogføringslinjeGetByRegnskab(bogføringslinjeQuery));
             }
             finally
@@ -76,6 +89,70 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
         }
 
         /// <summary>
+        /// Tester, at en konto hentes i et givent regnskab.
+        /// </summary>
+        [Test]
+        public void TestAtKontoHentes()
+        {
+            var random = new Random(DateTime.Now.Second);
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                // Hent liste af konti i regnskabet.
+                var kontiQuery = new KontoGetByRegnskabQuery
+                                     {
+                                         Regnskabsnummer = RegnskabsnummerTilTest
+                                     };
+                var konti = channel.KontoGetByRegnskab(kontiQuery);
+                Assert.That(konti, Is.Not.Null);
+                Assert.That(konti.Count, Is.GreaterThan(0));
+                // Hent en given konto i regnskabet.
+                var no = random.Next(0, konti.Count - 1);
+                var query = new KontoGetByRegnskabAndKontonummerQuery
+                                {
+                                    Regnskabsnummer = RegnskabsnummerTilTest,
+                                    Kontonummer = konti[no].Kontonummer
+                                };
+                var konto = channel.KontoGetByRegnskabAndKontonummer(query);
+                Assert.That(konto, Is.Not.Null);
+                Assert.That(konto.Regnskab, Is.Not.Null);
+                Assert.That(konto.Regnskab.Nummer, Is.EqualTo(query.Regnskabsnummer));
+                Assert.That(konto.Kontonummer, Is.Not.Null);
+                Assert.That(konto.Kontonummer, Is.EqualTo(query.Kontonummer));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes FaultException, hvis konto ikke findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesHvisKontoIkkeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var query = new KontoGetByRegnskabAndKontonummerQuery
+                                {
+                                    Regnskabsnummer = RegnskabsnummerTilTest,
+                                    Kontonummer = "XYZ"
+                                };
+                Assert.Throws<FaultException>(() => channel.KontoGetByRegnskabAndKontonummer(query));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
         /// Tester, at budgetkonti hentes for et givent regnskab.
         /// </summary>
         [Test]
@@ -93,6 +170,70 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                 var budgetkonti = channel.BudgetkontoGetByRegnskab(query);
                 Assert.That(budgetkonti, Is.Not.Null);
                 Assert.That(budgetkonti.Count, Is.GreaterThan(0));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at en budgetkonto hentes i et givent regnskab.
+        /// </summary>
+        [Test]
+        public void TestAtBudgetkontoHentes()
+        {
+            var random = new Random(DateTime.Now.Second);
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                // Hent liste af konti i regnskabet.
+                var budgetkontiQuery = new BudgetkontoGetByRegnskabQuery
+                                           {
+                                               Regnskabsnummer = RegnskabsnummerTilTest
+                                           };
+                var budgetkonti = channel.BudgetkontoGetByRegnskab(budgetkontiQuery);
+                Assert.That(budgetkonti, Is.Not.Null);
+                Assert.That(budgetkonti.Count, Is.GreaterThan(0));
+                // Hent en given konto i regnskabet.
+                var no = random.Next(0, budgetkonti.Count - 1);
+                var query = new BudgetkontoGetByRegnskabAndKontonummerQuery
+                                {
+                                    Regnskabsnummer = RegnskabsnummerTilTest,
+                                    Kontonummer = budgetkonti[no].Kontonummer
+                                };
+                var budgetkonto = channel.BudgetkontoGetByRegnskabAndKontonummer(query);
+                Assert.That(budgetkonto, Is.Not.Null);
+                Assert.That(budgetkonto.Regnskab, Is.Not.Null);
+                Assert.That(budgetkonto.Regnskab.Nummer, Is.EqualTo(query.Regnskabsnummer));
+                Assert.That(budgetkonto.Kontonummer, Is.Not.Null);
+                Assert.That(budgetkonto.Kontonummer, Is.EqualTo(query.Kontonummer));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes FaultException, hvis budgetkonto ikke findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesHvisBudgetkontoIkkeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var query = new BudgetkontoGetByRegnskabAndKontonummerQuery
+                                {
+                                    Regnskabsnummer = RegnskabsnummerTilTest,
+                                    Kontonummer = "XYZ"
+                                };
+                Assert.Throws<FaultException>(() => channel.BudgetkontoGetByRegnskabAndKontonummer(query));
             }
             finally
             {

@@ -62,6 +62,27 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         }
 
         /// <summary>
+        /// Henter en given konto i et givent regnskab.
+        /// </summary>
+        /// <param name="kontoGetByRegnskabAndKontonummerQuery">Forespørgelse til at hente en given konto i et givent regnskab.</param>
+        /// <returns>Konto.</returns>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public KontoView KontoGetByRegnskabAndKontonummer(KontoGetByRegnskabAndKontonummerQuery kontoGetByRegnskabAndKontonummerQuery)
+        {
+            try
+            {
+                return
+                    _queryBus.Query<KontoGetByRegnskabAndKontonummerQuery, KontoView>(
+                        kontoGetByRegnskabAndKontonummerQuery);
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogFinansstyringRepositoryService));
+            }
+        }
+
+        /// <summary>
         /// Henter alle budgetkonti i et givent regnskab.
         /// </summary>
         /// <param name="budgetkontoGetByRegnskabQuery">Forespørgelse til at hente alle budgetkonti i et givent regnskab.</param>
@@ -74,6 +95,27 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
                 return
                     _queryBus.Query<BudgetkontoGetByRegnskabQuery, IList<BudgetkontoListeView>>(
                         budgetkontoGetByRegnskabQuery);
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogFinansstyringRepositoryService));
+            }
+        }
+
+        /// <summary>
+        /// Henter en given budgetkonto i et givent regnskab.
+        /// </summary>
+        /// <param name="budgetkontoGetByRegnskabAndKontonummerQuery">Forespørgelse til at hente en given budgetkonto i et givent regnskab.</param>
+        /// <returns>Budgetkonto.</returns>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public BudgetkontoView BudgetkontoGetByRegnskabAndKontonummer(BudgetkontoGetByRegnskabAndKontonummerQuery budgetkontoGetByRegnskabAndKontonummerQuery)
+        {
+            try
+            {
+                return
+                    _queryBus.Query<BudgetkontoGetByRegnskabAndKontonummerQuery, BudgetkontoView>(
+                        budgetkontoGetByRegnskabAndKontonummerQuery);
             }
             catch (Exception ex)
             {

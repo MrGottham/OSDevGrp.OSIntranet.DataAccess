@@ -21,6 +21,15 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         IList<KontoListeView> KontoGetByRegnskab(KontoGetByRegnskabQuery kontoGetByRegnskabQuery);
 
         /// <summary>
+        /// Henter en given konto i et givent regnskab.
+        /// </summary>
+        /// <param name="kontoGetByRegnskabAndKontonummerQuery">Forespørgelse til at hente en given konto i et givent regnskab.</param>
+        /// <returns>Konto.</returns>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        KontoView KontoGetByRegnskabAndKontonummer(KontoGetByRegnskabAndKontonummerQuery kontoGetByRegnskabAndKontonummerQuery);
+
+        /// <summary>
         /// Henter alle budgetkonti i et givent regnskab.
         /// </summary>
         /// <param name="budgetkontoGetByRegnskabQuery">Forespørgelse til at hente alle budgetkonti i et givent regnskab.</param>
@@ -28,6 +37,15 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         [OperationContract]
         [TransactionFlow(TransactionFlowOption.Allowed)]
         IList<BudgetkontoListeView> BudgetkontoGetByRegnskab(BudgetkontoGetByRegnskabQuery budgetkontoGetByRegnskabQuery);
+
+        /// <summary>
+        /// Henter en given budgetkonto i et givent regnskab.
+        /// </summary>
+        /// <param name="budgetkontoGetByRegnskabAndKontonummerQuery">Forespørgelse til at hente en given budgetkonto i et givent regnskab.</param>
+        /// <returns>Budgetkonto.</returns>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        BudgetkontoView BudgetkontoGetByRegnskabAndKontonummer(BudgetkontoGetByRegnskabAndKontonummerQuery budgetkontoGetByRegnskabAndKontonummerQuery);
 
         /// <summary>
         /// Henter alle bogføringslinjer for et givent regnskab.

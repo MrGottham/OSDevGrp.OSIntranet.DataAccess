@@ -166,6 +166,16 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
                 .ForMember(x => x.Nummer, opt => opt.MapFrom(s => s.Nummer))
                 .ForMember(x => x.Navn, opt => opt.MapFrom(s => s.Navn));
 
+            Mapper.CreateMap<Konto, KontoView>()
+                .ForMember(x => x.Regnskab, opt => opt.MapFrom(s => s.Regnskab))
+                .ForMember(x => x.Kontonummer, opt => opt.MapFrom(s => s.Kontonummer))
+                .ForMember(x => x.Kontonavn, opt => opt.MapFrom(s => s.Kontonavn))
+                .ForMember(x => x.Beskrivelse, opt => opt.MapFrom(s => s.Beskrivelse))
+                .ForMember(x => x.Note, opt => opt.MapFrom(s => s.Note))
+                .ForMember(x => x.Kontogruppe, opt => opt.MapFrom(s => s.Kontogruppe))
+                .ForMember(x => x.Kreditoplysninger, opt => opt.MapFrom(s => s.Kreditoplysninger))
+                .ForMember(x => x.Bogføringslinjer, opt => opt.MapFrom(s => s.Bogføringslinjer));
+
             Mapper.CreateMap<Konto, KontoListeView>()
                 .ForMember(x => x.Regnskab, opt => opt.MapFrom(s => s.Regnskab))
                 .ForMember(x => x.Kontonummer, opt => opt.MapFrom(s => s.Kontonummer))
@@ -174,6 +184,16 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
                 .ForMember(x => x.Note, opt => opt.MapFrom(s => s.Note))
                 .ForMember(x => x.Kontogruppe, opt => opt.MapFrom(s => s.Kontogruppe));
 
+            Mapper.CreateMap<Budgetkonto, BudgetkontoView>()
+                .ForMember(x => x.Regnskab, opt => opt.MapFrom(s => s.Regnskab))
+                .ForMember(x => x.Kontonummer, opt => opt.MapFrom(s => s.Kontonummer))
+                .ForMember(x => x.Kontonavn, opt => opt.MapFrom(s => s.Kontonavn))
+                .ForMember(x => x.Beskrivelse, opt => opt.MapFrom(s => s.Beskrivelse))
+                .ForMember(x => x.Note, opt => opt.MapFrom(s => s.Note))
+                .ForMember(x => x.Budgetkontogruppe, opt => opt.MapFrom(s => s.Budgetkontogruppe))
+                .ForMember(x => x.Budgetoplysninger, opt => opt.MapFrom(s => s.Budgetoplysninger))
+                .ForMember(x => x.Bogføringslinjer, opt => opt.MapFrom(s => s.Bogføringslinjer));
+
             Mapper.CreateMap<Budgetkonto, BudgetkontoListeView>()
                 .ForMember(x => x.Regnskab, opt => opt.MapFrom(s => s.Regnskab))
                 .ForMember(x => x.Kontonummer, opt => opt.MapFrom(s => s.Kontonummer))
@@ -181,6 +201,17 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
                 .ForMember(x => x.Beskrivelse, opt => opt.MapFrom(s => s.Beskrivelse))
                 .ForMember(x => x.Note, opt => opt.MapFrom(s => s.Note))
                 .ForMember(x => x.Budgetkontogruppe, opt => opt.MapFrom(s => s.Budgetkontogruppe));
+
+            Mapper.CreateMap<Kreditoplysninger, KreditoplysningerView>()
+                .ForMember(x => x.År, opt => opt.MapFrom(s => s.År))
+                .ForMember(x => x.Måned, opt => opt.MapFrom(s => s.Måned))
+                .ForMember(x => x.Kredit, opt => opt.MapFrom(s => s.Kredit));
+
+            Mapper.CreateMap<Budgetoplysninger, BudgetoplysningerView>()
+                .ForMember(x => x.År, opt => opt.MapFrom(s => s.År))
+                .ForMember(x => x.Måned, opt => opt.MapFrom(s => s.Måned))
+                .ForMember(x => x.Indtægter, opt => opt.MapFrom(s => s.Indtægter))
+                .ForMember(x => x.Udgifter, opt => opt.MapFrom(s => s.Udgifter));
 
             Mapper.CreateMap<Bogføringslinje, BogføringslinjeView>()
                 .ForMember(x => x.Løbenummer, opt => opt.MapFrom(s => s.Løbenummer))

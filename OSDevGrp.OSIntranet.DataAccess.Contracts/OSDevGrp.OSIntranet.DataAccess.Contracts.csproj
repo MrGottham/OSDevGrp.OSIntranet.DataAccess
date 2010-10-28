@@ -86,10 +86,15 @@
     <Compile Include="Views\BogføringslinjeView.cs" />
     <Compile Include="Views\BudgetkontogruppeView.cs" />
     <Compile Include="Views\BudgetkontoListeView.cs" />
+    <Compile Include="Views\BudgetkontoView.cs" />
+    <Compile Include="Views\BudgetoplysningerView.cs" />
     <Compile Include="Views\FirmaView.cs" />
     <Compile Include="Views\KontogruppeView.cs" />
     <Compile Include="Views\KontoListeView.cs" />
     <Compile Include="Views\KontoListeViewBase.cs" />
+    <Compile Include="Views\KontoView.cs" />
+    <Compile Include="Views\KreditoplysningerView.cs" />
+    <Compile Include="Views\MånedsoplysningerView.cs" />
     <Compile Include="Views\PersonView.cs" />
     <Compile Include="Views\PostnummerView.cs" />
     <Compile Include="Views\RegnskabListeView.cs" />
