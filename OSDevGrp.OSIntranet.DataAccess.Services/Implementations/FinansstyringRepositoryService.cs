@@ -43,6 +43,44 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         #region IFinansstyringRepositoryService Members
 
         /// <summary>
+        /// Henter alle regnskaber.
+        /// </summary>
+        /// <param name="regnskabGetAllQuery">Forespørgelse til at hente alle regnskaber.</param>
+        /// <returns>Alle regnskaber.</returns>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public IList<RegnskabListeView> RegnskabGetAll(RegnskabGetAllQuery regnskabGetAllQuery)
+        {
+            try
+            {
+                return _queryBus.Query<RegnskabGetAllQuery, IList<RegnskabListeView>>(regnskabGetAllQuery);
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogFinansstyringRepositoryService));
+            }
+        }
+
+        /// <summary>
+        /// Henter et givent regnskab.
+        /// </summary>
+        /// <param name="regnskabGetByNummerQuery">Forespørgelse til at hente et givent regnskab.</param>
+        /// <returns>Regnskab.</returns>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public RegnskabView RegnskabGetByNummer(RegnskabGetByNummerQuery regnskabGetByNummerQuery)
+        {
+            try
+            {
+                return _queryBus.Query<RegnskabGetByNummerQuery, RegnskabView>(regnskabGetByNummerQuery);
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogFinansstyringRepositoryService));
+            }
+        }
+
+        /// <summary>
         /// Henter alle konti i et givent regnskab.
         /// </summary>
         /// <param name="kontoGetByRegnskabQuery">Forespørgelse til at hente alle konti i et givent regnskab.</param>

@@ -74,6 +74,8 @@
     <Compile Include="Queries\PostnummerGetAllQuery.cs" />
     <Compile Include="Queries\BynavnGetByLandekodeAndPostnummerQuery.cs" />
     <Compile Include="Queries\PostnummerGetByLandekodeQuery.cs" />
+    <Compile Include="Queries\RegnskabGetAllQuery.cs" />
+    <Compile Include="Queries\RegnskabGetByNummerQuery.cs" />
     <Compile Include="Services\IAdresseRepositoryService.cs" />
     <Compile Include="Services\IFinansstyringRepositoryService.cs" />
     <Compile Include="Services\IRepositoryService.cs" />
@@ -98,6 +100,7 @@
     <Compile Include="Views\PersonView.cs" />
     <Compile Include="Views\PostnummerView.cs" />
     <Compile Include="Views\RegnskabListeView.cs" />
+    <Compile Include="Views\RegnskabView.cs" />
     <Compile Include="Views\TabelView.cs" />
   </ItemGroup>
   <ItemGroup>

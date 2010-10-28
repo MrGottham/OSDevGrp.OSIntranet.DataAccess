@@ -19,6 +19,53 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
         private const int RegnskabsnummerTilTest = 1;
 
         /// <summary>
+        /// Tester, at regnskaber hentes.
+        /// </summary>
+        [Test]
+        public void TestAtRegnskaberHentes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var query = new RegnskabGetAllQuery();
+                var regnskaber = channel.RegnskabGetAll(query);
+                Assert.That(regnskaber, Is.Not.Null);
+                Assert.That(regnskaber.Count, Is.GreaterThan(0));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at et givent regnskab hentes.
+        /// </summary>
+        [Test]
+        public void TestAtRegnskabHentes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var query = new RegnskabGetByNummerQuery
+                                {
+                                    Regnskabsnummer = RegnskabsnummerTilTest
+                                };
+                var regnskab = channel.RegnskabGetByNummer(query);
+                Assert.That(regnskab, Is.Not.Null);
+                Assert.That(regnskab.Nummer, Is.GreaterThan(query.Regnskabsnummer));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
         /// Tester, at der kastes FaultException(s), hvis regnskab ikke findes.
         /// </summary>
         [Test]
@@ -29,6 +76,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
             var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
             try
             {
+                var regnskabQuery = new RegnskabGetByNummerQuery
+                                {
+                                    Regnskabsnummer = -1
+                                };
+                Assert.Throws<FaultException>(() => channel.RegnskabGetByNummer(regnskabQuery));
                 var kontiQuery = new KontoGetByRegnskabQuery
                                      {
                                          Regnskabsnummer = -1

@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq;
+using AutoMapper;
 using OSDevGrp.OSIntranet.CommonLibrary.Domain.Adressekartotek;
 using OSDevGrp.OSIntranet.CommonLibrary.Domain.Finansstyring;
 using OSDevGrp.OSIntranet.DataAccess.Contracts.Views;
@@ -177,6 +178,12 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
             Mapper.CreateMap<Betalingsbetingelse, BetalingsbetingelseView>()
                 .ForMember(x => x.Nummer, opt => opt.MapFrom(s => s.Nummer))
                 .ForMember(x => x.Navn, opt => opt.MapFrom(s => s.Navn));
+
+            Mapper.CreateMap<Regnskab, RegnskabView>()
+                .ForMember(x => x.Nummer, opt => opt.MapFrom(s => s.Nummer))
+                .ForMember(x => x.Navn, opt => opt.MapFrom(s => s.Navn))
+                .ForMember(x => x.Konti, opt => opt.MapFrom(s => s.Konti.OfType<Konto>().ToArray()))
+                .ForMember(x => x.Budgetkonti, opt => opt.MapFrom(s => s.Konti.OfType<Budgetkonto>().ToArray()));
 
             Mapper.CreateMap<Regnskab, RegnskabListeView>()
                 .ForMember(x => x.Nummer, opt => opt.MapFrom(s => s.Nummer))
