@@ -12,6 +12,24 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
     public interface IFinansstyringRepositoryService : IRepositoryService
     {
         /// <summary>
+        /// Henter alle konti i et givent regnskab.
+        /// </summary>
+        /// <param name="kontoGetByRegnskabQuery">Forespørgelse til at hente alle konti i et givent regnskab.</param>
+        /// <returns>Alle konti i regnskabet.</returns>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        IList<KontoListeView> KontoGetByRegnskab(KontoGetByRegnskabQuery kontoGetByRegnskabQuery);
+
+        /// <summary>
+        /// Henter alle budgetkonti i et givent regnskab.
+        /// </summary>
+        /// <param name="budgetkontoGetByRegnskabQuery">Forespørgelse til at hente alle budgetkonti i et givent regnskab.</param>
+        /// <returns>Alle budgetkonti i et givent regnskab.</returns>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        IList<BudgetkontoListeView> BudgetkontoGetByRegnskab(BudgetkontoGetByRegnskabQuery budgetkontoGetByRegnskabQuery);
+
+        /// <summary>
         /// Henter alle bogføringslinjer for et givent regnskab.
         /// </summary>
         /// <param name="bogføringslinjeGetByRegnskabQuery">Forespørgelse til at hente alle bogføringslinjer for et givent regnskab.</param>

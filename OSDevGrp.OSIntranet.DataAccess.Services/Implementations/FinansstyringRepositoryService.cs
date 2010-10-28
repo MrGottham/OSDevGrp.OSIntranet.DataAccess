@@ -43,6 +43,46 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         #region IFinansstyringRepositoryService Members
 
         /// <summary>
+        /// Henter alle konti i et givent regnskab.
+        /// </summary>
+        /// <param name="kontoGetByRegnskabQuery">Forespørgelse til at hente alle konti i et givent regnskab.</param>
+        /// <returns>Alle konti i regnskabet.</returns>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public IList<KontoListeView> KontoGetByRegnskab(KontoGetByRegnskabQuery kontoGetByRegnskabQuery)
+        {
+            try
+            {
+                return _queryBus.Query<KontoGetByRegnskabQuery, IList<KontoListeView>>(kontoGetByRegnskabQuery);
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogFinansstyringRepositoryService));
+            }
+        }
+
+        /// <summary>
+        /// Henter alle budgetkonti i et givent regnskab.
+        /// </summary>
+        /// <param name="budgetkontoGetByRegnskabQuery">Forespørgelse til at hente alle budgetkonti i et givent regnskab.</param>
+        /// <returns>Alle budgetkonti i et givent regnskab.</returns>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public IList<BudgetkontoListeView> BudgetkontoGetByRegnskab(BudgetkontoGetByRegnskabQuery budgetkontoGetByRegnskabQuery)
+        {
+            try
+            {
+                return
+                    _queryBus.Query<BudgetkontoGetByRegnskabQuery, IList<BudgetkontoListeView>>(
+                        budgetkontoGetByRegnskabQuery);
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogFinansstyringRepositoryService));
+            }
+        }
+
+        /// <summary>
         /// Henter alle bogføringslinjer for et givent regnskab.
         /// </summary>
         /// <param name="bogføringslinjeGetByRegnskabQuery">Forespørgelse til at hente alle bogføringslinjer for et givent regnskab.</param>
