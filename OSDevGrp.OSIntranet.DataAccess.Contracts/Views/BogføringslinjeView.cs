@@ -91,10 +91,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Views
         }
 
         /// <summary>
-        /// Unik identifikation af adressen, hvorpå linjen er bogført.
+        /// Adressen, hvorpå linjen er bogført.
         /// </summary>
         [DataMember(IsRequired = false)]
-        public int AdresseId
+        public AdressereferenceView Adresse
         {
             get;
             set;

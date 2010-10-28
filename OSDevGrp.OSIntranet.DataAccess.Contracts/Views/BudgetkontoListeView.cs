@@ -5,7 +5,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Views
     /// <summary>
     /// Viewobjekt for en liste af budgetkonti.
     /// </summary>
-    [DataContract(Name = "BudgetkontoListeView", Namespace = SoapNamespaces.DataAccessNamespace)]
+    [DataContract(Name = "Budgetkontoliste", Namespace = SoapNamespaces.DataAccessNamespace)]
     public class BudgetkontoListeView : KontoListeViewBase
     {
         /// <summary>

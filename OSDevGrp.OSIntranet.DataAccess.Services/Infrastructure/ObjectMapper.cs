@@ -24,22 +24,6 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
         /// </summary>
         static ObjectMapper()
         {
-            Mapper.CreateMap<AdresseBase, AdresselisteView>()
-                .ConvertUsing(s =>
-                                  {
-                                      var mapper = new ObjectMapper();
-                                      if (s is Person)
-                                      {
-                                          return mapper.Map<Person, AdresselisteView>(s as Person);
-                                      }
-                                      if (s is Firma)
-                                      {
-                                          return mapper.Map<Firma, AdresselisteView>(s as Firma);
-                                      }
-                                      throw new DataAccessSystemException(
-                                          Resource.GetExceptionMessage(ExceptionMessage.CantAutoMapType, s.GetType()));
-                                  });
-
             Mapper.CreateMap<AdresseBase, PersonView>()
                 .ConvertUsing(s =>
                                   {
@@ -64,6 +48,38 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
                                           Resource.GetExceptionMessage(ExceptionMessage.CantAutoMapType, s.GetType()));
                                   });
 
+            Mapper.CreateMap<AdresseBase, AdresselisteView>()
+                .ConvertUsing(s =>
+                                  {
+                                      var mapper = new ObjectMapper();
+                                      if (s is Person)
+                                      {
+                                          return mapper.Map<Person, AdresselisteView>(s as Person);
+                                      }
+                                      if (s is Firma)
+                                      {
+                                          return mapper.Map<Firma, AdresselisteView>(s as Firma);
+                                      }
+                                      throw new DataAccessSystemException(
+                                          Resource.GetExceptionMessage(ExceptionMessage.CantAutoMapType, s.GetType()));
+                                  });
+
+            Mapper.CreateMap<AdresseBase, AdressereferenceView>()
+                .ConvertUsing(s =>
+                                  {
+                                      var mapper = new ObjectMapper();
+                                      if (s is Person)
+                                      {
+                                          return mapper.Map<Person, AdressereferenceView>(s as Person);
+                                      }
+                                      if (s is Firma)
+                                      {
+                                          return mapper.Map<Firma, AdressereferenceView>(s as Firma);
+                                      }
+                                      throw new DataAccessSystemException(
+                                          Resource.GetExceptionMessage(ExceptionMessage.CantAutoMapType, s.GetType()));
+                                  });
+
             Mapper.CreateMap<Person, PersonView>()
                 .ForMember(x => x.Nummer, opt => opt.MapFrom(s => s.Nummer))
                 .ForMember(x => x.Navn, opt => opt.MapFrom(s => s.Navn))
@@ -80,7 +96,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
                 .ForMember(x => x.Betalingsbetingelse, opt => opt.MapFrom(s => s.Betalingsbetingelse))
                 .ForMember(x => x.Udlånsfrist, opt => opt.MapFrom(s => s.Udlånsfrist))
                 .ForMember(x => x.FilofaxAdresselabel, opt => opt.MapFrom(s => s.FilofaxAdresselabel))
-                .ForMember(x => x.FirmaNummer, opt => opt.MapFrom(s => s.Firma == null ? 0 : s.Firma.Nummer))
+                .ForMember(x => x.Firma, opt => opt.MapFrom(s => s.Firma))
                 .ForMember(x => x.Bogføringslinjer, opt => opt.MapFrom(s => s.Bogføringslinjer));
 
             Mapper.CreateMap<Person, AdresselisteView>()
@@ -93,6 +109,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
                 .ForMember(x => x.Telefon, opt => opt.MapFrom(s => s.Telefon))
                 .ForMember(x => x.Mobil, opt => opt.MapFrom(s => s.Mobil))
                 .ForMember(x => x.Mailadresse, opt => opt.MapFrom(s => s.Mailadresse));
+
+            Mapper.CreateMap<Person, AdressereferenceView>()
+                .ForMember(x => x.Nummer, opt => opt.MapFrom(s => s.Nummer))
+                .ForMember(x => x.Navn, opt => opt.MapFrom(s => s.Navn));
 
             Mapper.CreateMap<Firma, FirmaView>()
                 .ForMember(x => x.Nummer, opt => opt.MapFrom(s => s.Nummer))
@@ -123,6 +143,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
                 .ForMember(x => x.Telefon, opt => opt.MapFrom(s => s.Telefon1))
                 .ForMember(x => x.Mobil, opt => opt.Ignore())
                 .ForMember(x => x.Mailadresse, opt => opt.MapFrom(s => s.Mailadresse));
+
+            Mapper.CreateMap<Firma, AdressereferenceView>()
+                .ForMember(x => x.Nummer, opt => opt.MapFrom(s => s.Nummer))
+                .ForMember(x => x.Navn, opt => opt.MapFrom(s => s.Navn));
 
             Mapper.CreateMap<Postnummer, PostnummerView>()
                 .ForMember(x => x.Landekode, opt => opt.MapFrom(s => s.Landekode))
@@ -167,7 +191,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
                 .ForMember(x => x.Budgetkontor, opt => opt.MapFrom(s => s.Budgetkonto))
                 .ForMember(x => x.Debit, opt => opt.MapFrom(s => s.Debit))
                 .ForMember(x => x.Kredit, opt => opt.MapFrom(s => s.Kredit))
-                .ForMember(x => x.AdresseId, opt => opt.MapFrom(s => s.Adresse == null ? 0 : s.Adresse.Nummer));
+                .ForMember(x => x.Adresse, opt => opt.MapFrom(s => s.Adresse));
 
             Mapper.CreateMap<Kontogruppe, KontogruppeView>()
                 .ForMember(x => x.Nummer, opt => opt.MapFrom(s => s.Nummer))

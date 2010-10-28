@@ -18,6 +18,39 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
         private const int RegnskabsnummerTilTest = 1;
 
         /// <summary>
+        /// Tester, at der kastes FaultException(s), hvis regnskab ikke findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesHvisRegnskabIkkeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var kontiQuery = new KontoGetByRegnskabQuery
+                {
+                    Regnskabsnummer = -1
+                };
+                Assert.Throws<FaultException>(() => channel.KontoGetByRegnskab(kontiQuery));
+                var budgetkontiQuery = new BudgetkontoGetByRegnskabQuery
+                {
+                    Regnskabsnummer = -1
+                };
+                Assert.Throws<FaultException>(() => channel.BudgetkontoGetByRegnskab(budgetkontiQuery));
+                var bogføringslinjeQuery = new BogføringslinjeGetByRegnskabQuery
+                {
+                    Regnskabsnummer = -1
+                };
+                Assert.Throws<FaultException>(() => channel.BogføringslinjeGetByRegnskab(bogføringslinjeQuery));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
         /// Tester, at konti hentes for et givent regnskab.
         /// </summary>
         [Test]
@@ -85,39 +118,6 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                 var bogføringslinjer = channel.BogføringslinjeGetByRegnskab(query);
                 Assert.That(bogføringslinjer, Is.Not.Null);
                 Assert.That(bogføringslinjer.Count, Is.GreaterThan(0));
-            }
-            finally
-            {
-                ChannelTools.CloseChannel(channel);
-            }
-        }
-
-        /// <summary>
-        /// Tester, at der kastes FaultException(s), hvis regnskab ikke findes.
-        /// </summary>
-        [Test]
-        public void TestAtFaultExceptionKastesHvisRegnskabIkkeFindes()
-        {
-            var container = ContainerFactory.Create();
-            var channelFactory = container.Resolve<IChannelFactory>();
-            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
-            try
-            {
-                var kontiQuery = new KontoGetByRegnskabQuery
-                                     {
-                                         Regnskabsnummer = -1
-                                     };
-                Assert.Throws<FaultException>(() => channel.KontoGetByRegnskab(kontiQuery));
-                var budgetkontiQuery = new BudgetkontoGetByRegnskabQuery
-                                           {
-                                               Regnskabsnummer = -1
-                                           };
-                Assert.Throws<FaultException>(() => channel.BudgetkontoGetByRegnskab(budgetkontiQuery));
-                var bogføringslinjeQuery = new BogføringslinjeGetByRegnskabQuery
-                                               {
-                                                   Regnskabsnummer = -1
-                                               };
-                Assert.Throws<FaultException>(() => channel.BogføringslinjeGetByRegnskab(bogføringslinjeQuery));
             }
             finally
             {
