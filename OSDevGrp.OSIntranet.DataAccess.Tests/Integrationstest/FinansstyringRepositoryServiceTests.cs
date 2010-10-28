@@ -57,7 +57,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                                 };
                 var regnskab = channel.RegnskabGetByNummer(query);
                 Assert.That(regnskab, Is.Not.Null);
-                Assert.That(regnskab.Nummer, Is.GreaterThan(query.Regnskabsnummer));
+                Assert.That(regnskab.Nummer, Is.EqualTo(query.Regnskabsnummer));
             }
             finally
             {
