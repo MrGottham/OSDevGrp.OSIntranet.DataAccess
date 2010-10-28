@@ -18,6 +18,56 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
         private const int RegnskabsnummerTilTest = 1;
 
         /// <summary>
+        /// Tester, at konti hentes for et givent regnskab.
+        /// </summary>
+        [Test]
+        public void TestAtKontiHentes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var query = new KontoGetByRegnskabQuery
+                                {
+                                    Regnskabsnummer = RegnskabsnummerTilTest
+                                };
+                var konti = channel.KontoGetByRegnskab(query);
+                Assert.That(konti, Is.Not.Null);
+                Assert.That(konti.Count, Is.GreaterThan(0));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at budgetkonti hentes for et givent regnskab.
+        /// </summary>
+        [Test]
+        public void TestAtBudgetkontiHentes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var query = new BudgetkontoGetByRegnskabQuery
+                                {
+                                    Regnskabsnummer = RegnskabsnummerTilTest
+                                };
+                var budgetkonti = channel.BudgetkontoGetByRegnskab(query);
+                Assert.That(budgetkonti, Is.Not.Null);
+                Assert.That(budgetkonti.Count, Is.GreaterThan(0));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
         /// Tester, at bogføringslinjer for et givent regnskab hentes.
         /// </summary>
         [Test]
@@ -53,6 +103,16 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
             var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
             try
             {
+                var kontiQuery = new KontoGetByRegnskabQuery
+                                     {
+                                         Regnskabsnummer = -1
+                                     };
+                Assert.Throws<FaultException>(() => channel.KontoGetByRegnskab(kontiQuery));
+                var budgetkontiQuery = new BudgetkontoGetByRegnskabQuery
+                                           {
+                                               Regnskabsnummer = -1
+                                           };
+                Assert.Throws<FaultException>(() => channel.BudgetkontoGetByRegnskab(budgetkontiQuery));
                 var bogføringslinjeQuery = new BogføringslinjeGetByRegnskabQuery
                                                {
                                                    Regnskabsnummer = -1
