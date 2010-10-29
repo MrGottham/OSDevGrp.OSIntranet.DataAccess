@@ -153,6 +153,9 @@
     <value>'{0}' are missing in the AppSettings in the application configuration file.</value>
     <comment>{0} = Key name of application setting.</comment>
   </data>
+  <data name="RecordIsNotOk" xml:space="preserve">
+    <value>The record are not allowed to be flushed.</value>
+  </data>
   <data name="UnableToCreateTypeOf" xml:space="preserve">
     <value>Unable to create an object with the type '{0}'.</value>
     <comment>{0} = Name of type.</comment>

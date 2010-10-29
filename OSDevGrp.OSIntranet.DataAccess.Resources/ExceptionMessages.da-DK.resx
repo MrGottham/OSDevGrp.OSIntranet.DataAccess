@@ -153,6 +153,9 @@
     <value>'{0}' er ikke angivet under AppSettings i applikationskonfigurationsfilen.</value>
     <comment>{0} = Nøglenavn på applikationsværdien.</comment>
   </data>
+  <data name="RecordIsNotOk" xml:space="preserve">
+    <value>Det er ikke tilladt at lagre posten.</value>
+  </data>
   <data name="UnableToCreateTypeOf" xml:space="preserve">
     <value>Kunne ikke initiere et objekt af typen '{0}'.</value>
     <comment>{0} = Navn på typen.</comment>

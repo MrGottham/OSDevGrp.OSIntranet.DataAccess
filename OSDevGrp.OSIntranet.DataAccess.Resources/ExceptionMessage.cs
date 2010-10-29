@@ -16,6 +16,7 @@
         CantBeginTts,
         CantCreateRecord,
         CantSetKey,
-        CantSetKeyInterval
+        CantSetKeyInterval,
+        RecordIsNotOk
     }
 }
