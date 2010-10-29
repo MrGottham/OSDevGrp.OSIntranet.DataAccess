@@ -121,9 +121,25 @@
     <value>Can't automap the type '{0}'.</value>
     <comment>{0} = Name of type.</comment>
   </data>
+  <data name="CantBeginTts" xml:space="preserve">
+    <value>Can't begin TTS on '{0}'.</value>
+    <comment>{0} = Databasename where to begin TTS.</comment>
+  </data>
+  <data name="CantCreateRecord" xml:space="preserve">
+    <value>Can't create record on '{0}'.</value>
+    <comment>{0} = Databasename where to create a record.</comment>
+  </data>
   <data name="CantFindUniqueRecordId" xml:space="preserve">
     <value>Unable to find an instance of the type '{0}' with the unique identification '{1}'.</value>
     <comment>{0} = Name of type, {1} = Unique identification.</comment>
+  </data>
+  <data name="CantSetKey" xml:space="preserve">
+    <value>Cant change key to '{0}' on '{1}'.</value>
+    <comment>{0} = Key name, {1} = Databasename where to set key.</comment>
+  </data>
+  <data name="CantSetKeyInterval" xml:space="preserve">
+    <value>Can't set key interval '{0}' for the key '{1}' on '{2}'.</value>
+    <comment>{0} = Key interval, {1} = Key name, {2} = Databasename where to set the key interval.</comment>
   </data>
   <data name="DataStoreLocationDoesNotExists" xml:space="preserve">
     <value>The data store location '{0}' does not exists.</value>

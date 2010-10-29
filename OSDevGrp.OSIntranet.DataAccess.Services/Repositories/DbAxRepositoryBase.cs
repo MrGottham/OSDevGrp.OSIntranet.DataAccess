@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Security.Authentication;
-using DBAX;
 using OSDevGrp.OSIntranet.DataAccess.Infrastructure.Interfaces.Exceptions;
 using OSDevGrp.OSIntranet.DataAccess.Resources;
 using OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces;
+using DBAX;
 
 namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
 {
@@ -14,9 +15,9 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
     /// </summary>
     public abstract class DbAxRepositoryBase
     {
-        #region Private variables
+        #region Protected variables
 
-        private readonly IDbAxConfiguration _configuration;
+        protected readonly IDbAxConfiguration Configuration;
             
         #endregion
 
@@ -32,7 +33,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
             {
                 throw new ArgumentNullException("configuration");
             }
-            _configuration = configuration;
+            Configuration = configuration;
         }
 
         #endregion
@@ -55,12 +56,12 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
             var dbHandle = new DsiDbX();
             if (login)
             {
-                if (!dbHandle.Login(_configuration.UserName, _configuration.Password))
+                if (!dbHandle.Login(Configuration.UserName, Configuration.Password))
                 {
                     throw new AuthenticationException(Resource.GetExceptionMessage(ExceptionMessage.UnableToLoginOnDbAx));
                 }
             }
-            dbHandle.DbFile = _configuration.DataStoreLocation.FullName + Path.DirectorySeparatorChar + databaseFileName;
+            dbHandle.DbFile = Configuration.DataStoreLocation.FullName + Path.DirectorySeparatorChar + databaseFileName;
             var openResult = dbHandle.OpenDatabase(0, readOnly);
             if (!string.IsNullOrEmpty(openResult))
             {
@@ -177,6 +178,77 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                 return null;
             }
             return DateTime.Parse(dateValue);
+        }
+
+        /// <summary>
+        /// Opdaterer værdi på et givent felt.
+        /// </summary>
+        /// <param name="dbHandle">Databasehandle.</param>
+        /// <param name="searchHandle">Searchhandle.</param>
+        /// <param name="fieldName">Feltnavn.</param>
+        /// <param name="value">Værdi.</param>
+        protected void SetFieldValue(IDsiDbX dbHandle, int searchHandle, string fieldName, string value)
+        {
+            if (dbHandle == null)
+            {
+                throw new ArgumentNullException("dbHandle");
+            }
+            if (string.IsNullOrEmpty(fieldName))
+            {
+                throw new ArgumentNullException("fieldName");
+            }
+            dbHandle.SetFieldValue(searchHandle, dbHandle.GetFieldNoByName(fieldName), value);
+        }
+
+        /// <summary>
+        /// Opdaterer værdi på et givent felt.
+        /// </summary>
+        /// <param name="dbHandle">Databasehandle.</param>
+        /// <param name="searchHandle">Searchhandle.</param>
+        /// <param name="fieldName">Feltnavn.</param>
+        /// <param name="value">Værdi.</param>
+        protected void SetFieldValue(IDsiDbX dbHandle, int searchHandle, string fieldName, int value)
+        {
+            SetFieldValue(dbHandle, searchHandle, fieldName, value.ToString());
+        }
+
+        /// <summary>
+        /// Opdaterer værdi på et givent felt.
+        /// </summary>
+        /// <param name="dbHandle">Databasehandle.</param>
+        /// <param name="searchHandle">Searchhandle.</param>
+        /// <param name="fieldName">Feltnavn.</param>
+        /// <param name="value">Værdi.</param>
+        protected void SetFieldValue(IDsiDbX dbHandle, int searchHandle, string fieldName, decimal value)
+        {
+            SetFieldValue(dbHandle, searchHandle, fieldName, value.ToString());
+        }
+
+        /// <summary>
+        /// Opdaterer værdi på et givent felt.
+        /// </summary>
+        /// <param name="dbHandle">Databasehandle.</param>
+        /// <param name="searchHandle">Searchhandle.</param>
+        /// <param name="fieldName">Feltnavn.</param>
+        /// <param name="value">Værdi.</param>
+        protected void SetFieldValue(IDsiDbX dbHandle, int searchHandle, string fieldName, DateTime value)
+        {
+            var fieldType = dbHandle.GetFieldType(dbHandle.GetFieldNoByName(fieldName));
+            switch (fieldType)
+            {
+                case 3:
+                    SetFieldValue(dbHandle, searchHandle, fieldName, value.ToShortDateString());
+                    break;
+
+                case 4:
+                    SetFieldValue(dbHandle, searchHandle, fieldName, value.ToShortTimeString());
+                    break;
+
+                default:
+                    throw new DataAccessSystemException(
+                        Resource.GetExceptionMessage(ExceptionMessage.UnhandledSwichValue, fieldType, "fieldType",
+                                                     MethodBase.GetCurrentMethod().Name));
+            }
         }
 
         #endregion

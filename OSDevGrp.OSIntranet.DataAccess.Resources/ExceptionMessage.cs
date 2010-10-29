@@ -12,6 +12,10 @@
         CantAutoMapType,
         UnhandledSwichValue,
         UnableToCreateTypeOf,
-        DateIsMissingOnBalanceLine
+        DateIsMissingOnBalanceLine,
+        CantBeginTts,
+        CantCreateRecord,
+        CantSetKey,
+        CantSetKeyInterval
     }
 }

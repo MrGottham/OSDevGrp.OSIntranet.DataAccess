@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using OSDevGrp.OSIntranet.CommonLibrary.Domain.Adressekartotek;
 using OSDevGrp.OSIntranet.CommonLibrary.Domain.Enums;
 using OSDevGrp.OSIntranet.CommonLibrary.Domain.Finansstyring;
 using OSDevGrp.OSIntranet.DataAccess.Infrastructure.Interfaces.Exceptions;
@@ -200,6 +202,128 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                 }
             }
             return BudgetkontogruppeCache;
+        }
+
+        /// <summary>
+        /// Tilføjer en bogføringslinje.
+        /// </summary>
+        /// <param name="bogføringsdato">Bogføringsdato.</param>
+        /// <param name="bilag">Bilagsnummer.</param>
+        /// <param name="konto">Konto, hvorpå der skal tilføjes en kontolinje.</param>
+        /// <param name="tekst">Tekst.</param>
+        /// <param name="budgetkonto">Budgetkonto, hvorpå kontolinjen skal tilføjes.</param>
+        /// <param name="debit">Debitbeløb.</param>
+        /// <param name="kredit">Kreditbeløb.</param>
+        /// <param name="adresse">Adressen, hvorpå kontolinjen skal bogføres.</param>
+        public void BogføringslinjeAdd(DateTime bogføringsdato, string bilag, Konto konto, string tekst, Budgetkonto budgetkonto, decimal debit, decimal kredit, AdresseBase adresse)
+        {
+            if (konto == null)
+            {
+                throw new ArgumentNullException("konto");
+            }
+            if (string.IsNullOrEmpty(tekst))
+            {
+                throw new ArgumentNullException("tekst");
+            }
+            var dbHandle = OpenDatabase("KONTOLIN.DBD", false, false);
+            try
+            {
+                var databaseName = Path.GetFileNameWithoutExtension(Path.GetFileName(dbHandle.DbFile));
+                if (!dbHandle.BeginTTS())
+                {
+                    throw new DataAccessSystemException(Resource.GetExceptionMessage(ExceptionMessage.CantBeginTts,
+                                                                                     databaseName));
+                }
+                try
+                {
+                    var searchHandle = dbHandle.CreateSearch();
+                    try
+                    {
+                        if (!dbHandle.CreateRec(searchHandle))
+                        {
+                            throw new DataAccessSystemException(
+                                Resource.GetExceptionMessage(ExceptionMessage.CantCreateRecord, databaseName));
+                        }
+                        var creationTime = DateTime.Now;
+                        SetFieldValue(dbHandle, searchHandle, "TabelNr", 3070);
+                        SetFieldValue(dbHandle, searchHandle, "Regnskabnummer", konto.Regnskab.Nummer);
+                        SetFieldValue(dbHandle, searchHandle, "Kontonummer", konto.Kontonummer.ToUpper());
+                        if (budgetkonto != null)
+                        {
+                            SetFieldValue(dbHandle, searchHandle, "Budgetkontonummer", budgetkonto.Kontonummer.ToUpper());
+                        }
+                        if (adresse != null)
+                        {
+                            SetFieldValue(dbHandle, searchHandle, "Adresseident", adresse.Nummer);
+                        }
+                        SetFieldValue(dbHandle, searchHandle, "Dato", bogføringsdato);
+                        if (!string.IsNullOrEmpty(bilag))
+                        {
+                            SetFieldValue(dbHandle, searchHandle, "Bilag", bilag);
+                        }
+                        SetFieldValue(dbHandle, searchHandle, "Tekst", tekst);
+                        if (debit != 0M)
+                        {
+                            SetFieldValue(dbHandle, searchHandle, "Debit", debit);
+                        }
+                        if (kredit != 0M)
+                        {
+                            SetFieldValue(dbHandle, searchHandle, "Kredit", debit);
+                        }
+                        var nextNumberSearchHandle = dbHandle.CreateSearch();
+                        try
+                        {
+                            if (!dbHandle.SetKey(nextNumberSearchHandle, "LøbeNr"))
+                            {
+                                throw new DataAccessSystemException(
+                                    Resource.GetExceptionMessage(ExceptionMessage.CantSetKey, "LøbeNr", databaseName));
+                            }
+                            var keyStr =
+                                dbHandle.KeyStrInt(3070, dbHandle.GetFieldLength(dbHandle.GetFieldNoByName("TabelNr"))) +
+                                dbHandle.KeyStrInt(konto.Regnskab.Nummer,
+                                                   dbHandle.GetFieldLength(dbHandle.GetFieldNoByName("Regnskabnummer")));
+                            if (!dbHandle.SetKeyInterval(nextNumberSearchHandle, keyStr, keyStr))
+                            {
+                                throw new DataAccessSystemException(
+                                    Resource.GetExceptionMessage(ExceptionMessage.CantSetKeyInterval, keyStr,
+                                                                 dbHandle.GetKeyNameByNo(
+                                                                     dbHandle.GetCurKeyNo(nextNumberSearchHandle)),
+                                                                 databaseName));
+                            }
+                            var nextNumber = 1;
+                            if (dbHandle.SearchFirst(nextNumberSearchHandle))
+                            {
+                                nextNumber = GetFieldValueAsInt(dbHandle, nextNumberSearchHandle, "LøbeNr") + 1;
+                            }
+                            SetFieldValue(dbHandle, searchHandle, "LøbeNr", nextNumber);
+                        }
+                        finally
+                        {
+                            dbHandle.DeleteSearch(nextNumberSearchHandle);
+                        }
+                        SetFieldValue(dbHandle, searchHandle, "OpretBruger", Configuration.UserName);
+                        SetFieldValue(dbHandle, searchHandle, "OpretDato", creationTime);
+                        SetFieldValue(dbHandle, searchHandle, "OpretTid", creationTime);
+                        SetFieldValue(dbHandle, searchHandle, "RetBruger", Configuration.UserName);
+                        SetFieldValue(dbHandle, searchHandle, "RetDato", creationTime);
+                        SetFieldValue(dbHandle, searchHandle, "RetTid", creationTime);
+                    }
+                    finally
+                    {
+                        dbHandle.DeleteSearch(searchHandle);
+                    }
+                    dbHandle.EndTTS();
+                }
+                catch
+                {
+                    dbHandle.AbortTTS();
+                    throw;
+                }
+            }
+            finally
+            {
+                dbHandle.CloseDatabase();
+            }
         }
 
         #endregion
