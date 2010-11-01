@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using OSDevGrp.OSIntranet.CommonLibrary.Domain.Adressekartotek;
 using OSDevGrp.OSIntranet.CommonLibrary.Domain.Finansstyring;
 using OSDevGrp.OSIntranet.CommonLibrary.Infrastructure.Interfaces;
 using OSDevGrp.OSIntranet.CommonLibrary.Infrastructure.Interfaces.Core;
@@ -81,6 +82,27 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.CommandHandlers
                 throw new DataAccessSystemException(
                     Resource.GetExceptionMessage(ExceptionMessage.CantFindUniqueRecordId, typeof (Konto),
                                                  command.Kontonummer), ex);
+            }
+            Budgetkonto budgetkonto = null;
+            if (!string.IsNullOrEmpty(command.Budgetkontonummer))
+            {
+                try
+                {
+                    budgetkonto = regnskab.Konti
+                        .OfType<Budgetkonto>()
+                        .Single(m => m.Kontonummer.CompareTo(command.Budgetkontonummer) == 0);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    throw new DataAccessSystemException(
+                        Resource.GetExceptionMessage(ExceptionMessage.CantFindUniqueRecordId, typeof (Budgetkonto),
+                                                     command.Budgetkontonummer), ex);
+                }
+            }
+            AdresseBase adresseBase = null;
+            if (command.AdresseId != 0)
+            {
+                
             }
             throw new NotImplementedException();
         }
