@@ -3,6 +3,7 @@ using System.ServiceModel;
 using OSDevGrp.OSIntranet.CommonLibrary.IoC;
 using OSDevGrp.OSIntranet.CommonLibrary.Wcf;
 using OSDevGrp.OSIntranet.CommonLibrary.Wcf.ChannelFactory;
+using OSDevGrp.OSIntranet.DataAccess.Contracts.Commands;
 using OSDevGrp.OSIntranet.DataAccess.Contracts.Queries;
 using OSDevGrp.OSIntranet.DataAccess.Contracts.Services;
 using NUnit.Framework;
@@ -311,6 +312,130 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                 var bogføringslinjer = channel.BogføringslinjeGetByRegnskab(query);
                 Assert.That(bogføringslinjer, Is.Not.Null);
                 Assert.That(bogføringslinjer.Count, Is.GreaterThan(0));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved oprettelse af bogføringslinje, hvis regnskabet ikke findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOprettelseAfBogføringslinjeHvisRegnskabIkkeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var command = new BogføringslinjeAddCommand
+                                  {
+                                      Regnskabsnummer = -1,
+                                      Bogføringsdato = DateTime.Now,
+                                      Bilag = null,
+                                      Kontonummer = "DANKORT",
+                                      Tekst = "Test af DataAccess",
+                                      Budgetkontonummer = "8990",
+                                      Debit = 0M,
+                                      Kredit = 0M,
+                                      AdresseId = 1
+                                  };
+                Assert.Throws<FaultException>(() => channel.BogføringslinjeAdd(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved oprettelse af bogføringslinje, hvis kontoen ikke findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOprettelseAfBogføringslinjeHvisKontoIkkeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var command = new BogføringslinjeAddCommand
+                                  {
+                                      Regnskabsnummer = RegnskabsnummerTilTest,
+                                      Bogføringsdato = DateTime.Now,
+                                      Bilag = null,
+                                      Kontonummer = "XYZ",
+                                      Tekst = "Test af DataAccess",
+                                      Budgetkontonummer = "8990",
+                                      Debit = 0M,
+                                      Kredit = 0M,
+                                      AdresseId = 1
+                                  };
+                Assert.Throws<FaultException>(() => channel.BogføringslinjeAdd(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved oprettelse af bogføringslinje, hvis budgetkontoen ikke findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOprettelseAfBogføringslinjeHvisBudgetkontoIkkeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var command = new BogføringslinjeAddCommand
+                                  {
+                                      Regnskabsnummer = RegnskabsnummerTilTest,
+                                      Bogføringsdato = DateTime.Now,
+                                      Bilag = null,
+                                      Kontonummer = "DANKORT",
+                                      Tekst = "Test af DataAccess",
+                                      Budgetkontonummer = "XYZ",
+                                      Debit = 0M,
+                                      Kredit = 0M,
+                                      AdresseId = 1
+                                  };
+                Assert.Throws<FaultException>(() => channel.BogføringslinjeAdd(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved oprettelse af bogføringslinje, hvis adressen ikke findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOprettelseAfBogføringslinjeHvisAdresseIkkeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var command = new BogføringslinjeAddCommand
+                                  {
+                                      Regnskabsnummer = RegnskabsnummerTilTest,
+                                      Bogføringsdato = DateTime.Now,
+                                      Bilag = null,
+                                      Kontonummer = "DANKORT",
+                                      Tekst = "Test af DataAccess",
+                                      Budgetkontonummer = "8890",
+                                      Debit = 0M,
+                                      Kredit = 0M,
+                                      AdresseId = -1
+                                  };
+                Assert.Throws<FaultException>(() => channel.BogføringslinjeAdd(command));
             }
             finally
             {

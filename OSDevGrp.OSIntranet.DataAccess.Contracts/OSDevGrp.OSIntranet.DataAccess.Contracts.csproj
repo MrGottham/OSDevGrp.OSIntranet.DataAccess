@@ -51,6 +51,7 @@
     <Reference Include="System.ServiceModel" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\BogføringslinjeAddCommand.cs" />
     <Compile Include="Enums\KontogruppeType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\AdressegruppeGetAllQuery.cs" />

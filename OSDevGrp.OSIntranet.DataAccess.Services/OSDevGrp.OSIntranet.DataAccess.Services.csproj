@@ -90,6 +90,7 @@
     <Reference Include="System.ServiceProcess" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandHandlers\BogføringslinjeAddCommandHandler.cs" />
     <Compile Include="DataAccessService.cs">
       <SubType>Component</SubType>
     </Compile>

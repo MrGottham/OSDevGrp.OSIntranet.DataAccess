@@ -295,6 +295,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                             {
                                 nextNumber = GetFieldValueAsInt(dbHandle, nextNumberSearchHandle, "LøbeNr") + 1;
                             }
+                            dbHandle.ClearKeyInterval(nextNumberSearchHandle);
                             SetFieldValue(dbHandle, searchHandle, "LøbeNr", nextNumber);
                         }
                         finally
@@ -311,6 +312,22 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                         {
                             throw new DataAccessSystemException(
                                 Resource.GetExceptionMessage(ExceptionMessage.RecordIsNotOk));
+                        }
+                        if (!dbHandle.FlushRec(searchHandle))
+                        {
+                            throw new DataAccessSystemException(
+                                Resource.GetExceptionMessage(ExceptionMessage.CantFlushRecord));
+                        }
+                        var bogføringslinje = new Bogføringslinje(GetFieldValueAsInt(dbHandle, searchHandle, "LøbeNr"),
+                                                                  bogføringsdato, bilag, tekst, debit, kredit);
+                        konto.TilføjBogføringslinje(bogføringslinje);
+                        if (budgetkonto != null)
+                        {
+                            budgetkonto.TilføjBogføringslinje(bogføringslinje);
+                        }
+                        if (adresse != null)
+                        {
+                            adresse.TilføjBogføringslinje(bogføringslinje);
                         }
                     }
                     finally

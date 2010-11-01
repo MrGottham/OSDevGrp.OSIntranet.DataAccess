@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ServiceModel;
+using OSDevGrp.OSIntranet.DataAccess.Contracts.Commands;
 using OSDevGrp.OSIntranet.DataAccess.Contracts.Queries;
 using OSDevGrp.OSIntranet.DataAccess.Contracts.Views;
 
@@ -73,6 +74,14 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         [OperationContract]
         [TransactionFlow(TransactionFlowOption.Allowed)]
         IList<BogføringslinjeView> BogføringslinjeGetByRegnskab(BogføringslinjeGetByRegnskabQuery bogføringslinjeGetByRegnskabQuery);
+
+        /// <summary>
+        /// Tilføjer en bogføringslinje.
+        /// </summary>
+        /// <param name="bogføringslinjeAddCommand">Kommando til tilføjelse af en bogføringslinje.</param>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        void BogføringslinjeAdd(BogføringslinjeAddCommand bogføringslinjeAddCommand);
 
         /// <summary>
         /// Henter alle kontogrupper.

@@ -133,6 +133,9 @@
     <value>Kan ikke finde en instans af typen '{0}' med den unikke identifikation '{1}'.</value>
     <comment>{0} = Navn på typen, {1} = Unik identifikation.</comment>
   </data>
+  <data name="CantFlushRecord" xml:space="preserve">
+    <value>Kan ikke lagre posten.</value>
+  </data>
   <data name="CantSetKey" xml:space="preserve">
     <value>Kan ikke sætte nøglen '{0}' på '{1}'.</value>
     <comment>{0} = Nøglenavn, {1} = Databasenavn, hvor nøglen skal sættes.</comment>
@@ -148,6 +151,10 @@
   <data name="DateIsMissingOnBalanceLine" xml:space="preserve">
     <value>Mangler datoregistrering på bogføringslinjen med den unikke identifikation '{0}'.</value>
     <comment>{0} = Unik identifikation.</comment>
+  </data>
+  <data name="ErrorInCommandHandler" xml:space="preserve">
+    <value>Der er opstået en fejl i commandhandleren, der håndterer kommandoer af typen '{0}': {1}</value>
+    <comment>{0} = Type på kommandoen, som håndteres af commandhandleren, {1} = Fejlbesked.</comment>
   </data>
   <data name="MissingApplicationSetting" xml:space="preserve">
     <value>'{0}' er ikke angivet under AppSettings i applikationskonfigurationsfilen.</value>

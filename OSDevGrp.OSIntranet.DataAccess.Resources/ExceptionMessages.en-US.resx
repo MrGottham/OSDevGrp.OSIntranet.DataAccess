@@ -133,6 +133,9 @@
     <value>Unable to find an instance of the type '{0}' with the unique identification '{1}'.</value>
     <comment>{0} = Name of type, {1} = Unique identification.</comment>
   </data>
+  <data name="CantFlushRecord" xml:space="preserve">
+    <value>Unable to flush the record.</value>
+  </data>
   <data name="CantSetKey" xml:space="preserve">
     <value>Cant change key to '{0}' on '{1}'.</value>
     <comment>{0} = Key name, {1} = Databasename where to set key.</comment>
@@ -148,6 +151,10 @@
   <data name="DateIsMissingOnBalanceLine" xml:space="preserve">
     <value>Missing date on the balance line with the unique identification '{0}'.</value>
     <comment>{0} = Unique identification.</comment>
+  </data>
+  <data name="ErrorInCommandHandler" xml:space="preserve">
+    <value>Error in the command handler for the command '{0}': {1}</value>
+    <comment>{0} = Type of command which is handled by the command handler, {1} = Error message.</comment>
   </data>
   <data name="MissingApplicationSetting" xml:space="preserve">
     <value>'{0}' are missing in the AppSettings in the application configuration file.</value>

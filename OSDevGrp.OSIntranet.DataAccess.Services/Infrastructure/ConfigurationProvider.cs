@@ -36,6 +36,9 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
                                    .BasedOn(typeof (IQueryHandler)).WithService.FromInterface(typeof (IQueryHandler)));
 
             container.Register(AllTypes.FromAssemblyNamed("OSDevGrp.OSIntranet.DataAccess.Services")
+                                   .BasedOn(typeof (ICommandHandler)).WithService.FromInterface(typeof (ICommandHandler)));
+
+            container.Register(AllTypes.FromAssemblyNamed("OSDevGrp.OSIntranet.DataAccess.Services")
                                    .BasedOn<IRepositoryService>());
         }
 

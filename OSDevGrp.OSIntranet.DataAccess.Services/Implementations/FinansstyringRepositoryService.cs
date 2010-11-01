@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.ServiceModel;
 using OSDevGrp.OSIntranet.CommonLibrary.Infrastructure.Interfaces;
+using OSDevGrp.OSIntranet.DataAccess.Contracts.Commands;
 using OSDevGrp.OSIntranet.DataAccess.Contracts.Queries;
 using OSDevGrp.OSIntranet.DataAccess.Contracts.Services;
 using OSDevGrp.OSIntranet.DataAccess.Contracts.Views;
@@ -17,6 +18,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
     {
         #region Private variables
 
+        private readonly ICommandBus _commandBus;
         private readonly IQueryBus _queryBus;
 
         #endregion
@@ -27,14 +29,20 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         /// Danner repositoryservice for finansstyring.
         /// </summary>
         /// <param name="logRepository">Logging repository.</param>
+        /// <param name="commandBus">Implementering af en CommandBus.</param>
         /// <param name="queryBus">Implementering af en QueryBus.</param>
-        public FinansstyringRepositoryService(ILogRepository logRepository, IQueryBus queryBus)
+        public FinansstyringRepositoryService(ILogRepository logRepository, ICommandBus commandBus, IQueryBus queryBus)
             : base(logRepository)
         {
+            if (commandBus == null)
+            {
+                throw new ArgumentNullException("commandBus");
+            }
             if (queryBus == null)
             {
                 throw new ArgumentNullException("queryBus");
             }
+            _commandBus = commandBus;
             _queryBus = queryBus;
         }
 
@@ -175,6 +183,24 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
                 return
                     _queryBus.Query<BogføringslinjeGetByRegnskabQuery, IList<BogføringslinjeView>>(
                         bogføringslinjeGetByRegnskabQuery);
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogFinansstyringRepositoryService));
+            }
+        }
+
+        /// <summary>
+        /// Tilføjer en bogføringslinje.
+        /// </summary>
+        /// <param name="bogføringslinjeAddCommand">Kommando til tilføjelse af en bogføringslinje.</param>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public void BogføringslinjeAdd(BogføringslinjeAddCommand bogføringslinjeAddCommand)
+        {
+            try
+            {
+                _commandBus.Publish(bogføringslinjeAddCommand);
             }
             catch (Exception ex)
             {

@@ -17,6 +17,8 @@
         CantCreateRecord,
         CantSetKey,
         CantSetKeyInterval,
-        RecordIsNotOk
+        RecordIsNotOk,
+        CantFlushRecord,
+        ErrorInCommandHandler
     }
 }
