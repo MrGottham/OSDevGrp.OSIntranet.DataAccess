@@ -64,7 +64,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Views
         /// Budgetkonto.
         /// </summary>
         [DataMember(IsRequired = false)]
-        public BudgetkontoListeView Budgetkontor
+        public BudgetkontoListeView Budgetkonto
         {
             get;
             set;

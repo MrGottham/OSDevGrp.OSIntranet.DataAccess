@@ -242,7 +242,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
                 .ForMember(x => x.Bilag, opt => opt.MapFrom(s => s.Bilag))
                 .ForMember(x => x.Konto, opt => opt.MapFrom(s => s.Konto))
                 .ForMember(x => x.Tekst, opt => opt.MapFrom(s => s.Tekst))
-                .ForMember(x => x.Budgetkontor, opt => opt.MapFrom(s => s.Budgetkonto))
+                .ForMember(x => x.Budgetkonto, opt => opt.MapFrom(s => s.Budgetkonto))
                 .ForMember(x => x.Debit, opt => opt.MapFrom(s => s.Debit))
                 .ForMember(x => x.Kredit, opt => opt.MapFrom(s => s.Kredit))
                 .ForMember(x => x.Adresse, opt => opt.MapFrom(s => s.Adresse));
