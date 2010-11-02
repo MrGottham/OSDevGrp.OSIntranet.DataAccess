@@ -246,7 +246,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
 
                 default:
                     throw new DataAccessSystemException(
-                        Resource.GetExceptionMessage(ExceptionMessage.UnhandledSwichValue, fieldType, "fieldType",
+                        Resource.GetExceptionMessage(ExceptionMessage.UnhandledSwitchValue, fieldType, "fieldType",
                                                      MethodBase.GetCurrentMethod().Name));
             }
         }

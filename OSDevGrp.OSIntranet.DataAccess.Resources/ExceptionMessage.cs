@@ -10,7 +10,7 @@
         UnableToLoginOnDbAx,
         CantFindUniqueRecordId, 
         CantAutoMapType,
-        UnhandledSwichValue,
+        UnhandledSwitchValue,
         UnableToCreateTypeOf,
         DateIsMissingOnBalanceLine,
         CantBeginTts,

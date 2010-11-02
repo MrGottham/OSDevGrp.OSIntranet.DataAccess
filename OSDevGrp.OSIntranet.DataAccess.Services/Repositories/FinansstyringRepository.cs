@@ -146,7 +146,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                                                                         GetExceptionMessage
                                                                                                         (ExceptionMessage
                                                                                                              .
-                                                                                                             UnhandledSwichValue,
+                                                                                                             UnhandledSwitchValue,
                                                                                                          type,
                                                                                                          "Kontogruppetype",
                                                                                                          MethodBase.
