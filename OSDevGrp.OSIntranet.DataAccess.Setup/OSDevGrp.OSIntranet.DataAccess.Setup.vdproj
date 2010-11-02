@@ -75,6 +75,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_82258E3E819ED0E756169E61D756F510"
+        "OwnerKey" = "8:_FE5FCDD9376F4119B5AAC59DE4F0317C"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_8488B3DD48FCA9C07675392BD328C723"
         "OwnerKey" = "8:_FE5FCDD9376F4119B5AAC59DE4F0317C"
         "MsmSig" = "8:_UNDEFINED"
@@ -178,13 +184,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_73E42DA41A5A435BB4416D5F4F9FAA4B"
+        "OwnerKey" = "8:_BC78A38BEEEF4F5DB405B902A622D891"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_BC78A38BEEEF4F5DB405B902A622D891"
+        "OwnerKey" = "8:_73E42DA41A5A435BB4416D5F4F9FAA4B"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -259,6 +265,12 @@
         "OwnerKey" = "8:_6DAB11CEF7007D6299D1716538631EBA"
         "MsmSig" = "8:_UNDEFINED"
         }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_82258E3E819ED0E756169E61D756F510"
+        "MsmSig" = "8:_UNDEFINED"
+        }
     }
     "Configurations"
     {
@@ -323,10 +335,10 @@
             "ComponentsUrl" = "8:"
                 "Items"
                 {
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.0,Profile=Client"
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.0"
                     {
-                    "Name" = "8:Microsoft .NET Framework 4 Client Profile (x86 and x64)"
-                    "ProductCode" = "8:.NETFramework,Version=v4.0,Profile=Client"
+                    "Name" = "8:Microsoft .NET Framework 4 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.0"
                     }
                     "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
                     {
@@ -620,6 +632,37 @@
                     }
                 }
             "SourcePath" = "8:OSDevGrp.OSIntranet.CommonLibrary.Domain.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_C8B8618E4EAE407DAFDEFC1F43CB517B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_82258E3E819ED0E756169E61D756F510"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:AutoMapper, Version=1.1.0.188, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_82258E3E819ED0E756169E61D756F510"
+                    {
+                    "Name" = "8:AutoMapper.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:AutoMapper.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C8B8618E4EAE407DAFDEFC1F43CB517B"
@@ -933,7 +976,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:OS Intranet - Data Access"
         "ProductCode" = "8:{424A3959-B799-46FB-B562-F3F3A5CC3914}"
-        "PackageCode" = "8:{CD3BFD42-C282-48E3-93BB-6CA26F8A43AF}"
+        "PackageCode" = "8:{30F0780E-BCF5-4F37-8A3C-3A37556B9BBC}"
         "UpgradeCode" = "8:{DCC75A15-60B2-432F-8511-B6BD7F7364F3}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -1426,7 +1469,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_FE5FCDD9376F4119B5AAC59DE4F0317C"
             {
-            "SourcePath" = "8:..\\OSDevGrp.OSIntranet.DataAccess.Services\\obj\\x86\\Debug\\OSDevGrp.OSIntranet.DataAccess.Services.exe"
+            "SourcePath" = "8:..\\OSDevGrp.OSIntranet.DataAccess.Services\\obj\\x86\\Release\\OSDevGrp.OSIntranet.DataAccess.Services.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C8B8618E4EAE407DAFDEFC1F43CB517B"
