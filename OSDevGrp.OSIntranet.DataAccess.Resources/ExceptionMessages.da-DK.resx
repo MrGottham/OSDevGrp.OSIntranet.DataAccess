@@ -171,7 +171,7 @@
     <value>Kunne ikke logge ind ved brug af DBAX.</value>
   </data>
   <data name="UnhandledSwitchValue" xml:space="preserve">
-    <value>Uhåndteret switch værdi '{0}' for '{1}' i metode {2}'.</value>
+    <value>Uhåndteret switch værdi '{0}' for '{1}' i metode '{2}'.</value>
     <comment>{0} = Værdi, {1} = Navn for switch værdi, {2} = Metodenavn.</comment>
   </data>
 </root>

@@ -171,7 +171,7 @@
     <value>Unable to login using DBAX.</value>
   </data>
   <data name="UnhandledSwitchValue" xml:space="preserve">
-    <value>Unhandled switch value '{0}' for '{1}' in method {2}'.</value>
+    <value>Unhandled switch value '{0}' for '{1}' in method '{2}'.</value>
     <comment>{0} = Value, {1} = Name for switch value, {2} = Method name.</comment>
   </data>
 </root>
