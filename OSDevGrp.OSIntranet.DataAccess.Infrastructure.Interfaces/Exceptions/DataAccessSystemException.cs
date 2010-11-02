@@ -6,6 +6,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Infrastructure.Interfaces.Exceptions
     /// <summary>
     /// Systemexception.
     /// </summary>
+    [Serializable]
     public class DataAccessSystemException : Exception
     {
         /// <summary>
@@ -30,7 +31,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Infrastructure.Interfaces.Exceptions
         /// <summary>
         /// Danner en systemexception.
         /// </summary>
-        /// <param name="info">Serialation information.</param>
+        /// <param name="info">Serialization information.</param>
         /// <param name="context">Streaming context.</param>
         protected DataAccessSystemException(SerializationInfo info, StreamingContext context)
             : base(info, context)

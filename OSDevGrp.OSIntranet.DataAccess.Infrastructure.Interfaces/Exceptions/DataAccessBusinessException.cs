@@ -6,6 +6,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Infrastructure.Interfaces.Exceptions
     /// <summary>
     /// Businessexception.
     /// </summary>
+    [Serializable]
     public class DataAccessBusinessException : Exception
     {
         /// <summary>
@@ -30,7 +31,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Infrastructure.Interfaces.Exceptions
         /// <summary>
         /// Danner en businessexception.
         /// </summary>
-        /// <param name="info">Serialation information.</param>
+        /// <param name="info">Serialization information.</param>
         /// <param name="context">Streaming context.</param>
         protected DataAccessBusinessException(SerializationInfo info, StreamingContext context)
             : base(info, context)
