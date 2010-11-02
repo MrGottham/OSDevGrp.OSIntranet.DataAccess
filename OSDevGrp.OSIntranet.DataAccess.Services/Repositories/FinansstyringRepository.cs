@@ -268,7 +268,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                         }
                         if (kredit != 0M)
                         {
-                            SetFieldValue(dbHandle, searchHandle, "Kredit", debit);
+                            SetFieldValue(dbHandle, searchHandle, "Kredit", kredit);
                         }
                         var nextNumberSearchHandle = dbHandle.CreateSearch();
                         try
