@@ -320,6 +320,53 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
         }
 
         /// <summary>
+        /// Tester, at bogføringslinjer oprettes på et givent regnskab.
+        /// </summary>
+        [Test]
+        public void TestAtBogføringslinjeOprettes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                // Find antallet af bogførte linjer.
+                var query = new BogføringslinjeGetByRegnskabQuery
+                                {
+                                    Regnskabsnummer = RegnskabsnummerTilTest
+                                };
+                var bogførteLinjer = channel.BogføringslinjeGetByRegnskab(query).Count;
+                Assert.That(bogførteLinjer, Is.GreaterThan(0));
+                // Bogfør linje.
+                var command = new BogføringslinjeAddCommand
+                                  {
+                                      Regnskabsnummer = RegnskabsnummerTilTest,
+                                      Bogføringsdato = DateTime.Now,
+                                      Bilag = null,
+                                      Kontonummer = "DANKORT",
+                                      Tekst = "Test af DataAccess",
+                                      Budgetkontonummer = "8990",
+                                      Debit = 1000M,
+                                      Kredit = 0M,
+                                      AdresseId = 1
+                                  };
+                channel.BogføringslinjeAdd(command);
+                // Modpostér bogført linje. 
+                command.Kredit = command.Debit;
+                command.Debit = 0M;
+                channel.BogføringslinjeAdd(command);
+                // Check at antallet af bogførte linjer er steget med 2.
+                var antalLinjer = channel.BogføringslinjeGetByRegnskab(query).Count;
+                Assert.That(antalLinjer, Is.GreaterThan(0));
+                Assert.That(antalLinjer, Is.EqualTo(bogførteLinjer + 2));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
         /// Tester, at der kastes en FaultException ved oprettelse af bogføringslinje, hvis regnskabet ikke findes.
         /// </summary>
         [Test]
@@ -430,7 +477,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                                       Bilag = null,
                                       Kontonummer = "DANKORT",
                                       Tekst = "Test af DataAccess",
-                                      Budgetkontonummer = "8890",
+                                      Budgetkontonummer = "8990",
                                       Debit = 0M,
                                       Kredit = 0M,
                                       AdresseId = -1

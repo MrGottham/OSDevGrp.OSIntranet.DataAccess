@@ -99,12 +99,23 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.CommandHandlers
                                                      command.Budgetkontonummer), ex);
                 }
             }
-            AdresseBase adresseBase = null;
+            AdresseBase adresse = null;
             if (command.AdresseId != 0)
             {
-                
+                try
+                {
+                    adresse = _adresseRepository.AdresseGetAll()
+                        .Single(m => m.Nummer == command.AdresseId);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    throw new DataAccessSystemException(
+                        Resource.GetExceptionMessage(ExceptionMessage.CantFindUniqueRecordId, typeof (AdresseBase),
+                                                     command.AdresseId), ex);
+                }
             }
-            throw new NotImplementedException();
+            _finansstyringRepository.BogføringslinjeAdd(command.Bogføringsdato, command.Bilag, konto, command.Tekst,
+                                                        budgetkonto, command.Debit, command.Kredit, adresse);
         }
 
         /// <summary>
