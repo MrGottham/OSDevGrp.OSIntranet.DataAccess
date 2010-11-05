@@ -58,12 +58,12 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <returns>Liste indeholdende regnskaber inklusiv konti, budgetkonti m.m.</returns>
         public IList<Regnskab> RegnskabGetAll(Action<Regnskab> callback)
         {
-            if (RegnskabCache.Count > 0)
-            {
-                return RegnskabCache;
-            }
             lock (RegnskabCache)
             {
+                if (RegnskabCache.Count > 0)
+                {
+                    return new List<Regnskab>(RegnskabCache);
+                }
                 var kontogrupper = KontogruppeGetAll();
                 var budgetkontogrupper = BudgetkontogrupperGetAll();
                 var regnskaber = GetTableContentFromTabel<Regnskab>(3000, (dbHandle, searchHandle, list) =>
@@ -91,8 +91,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                 {
                     RegnskabCache.Add(regnskab);
                 }
+                return new List<Regnskab>(RegnskabCache);
             }
-            return RegnskabCache;
         }
 
         /// <summary>
@@ -101,12 +101,12 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <returns>Liste indeholdende alle kontogrupper.</returns>
         public IList<Kontogruppe> KontogruppeGetAll()
         {
-            if (KontogruppeCache.Count > 0)
-            {
-                return KontogruppeCache;
-            }
             lock (KontogruppeCache)
             {
+                if (KontogruppeCache.Count > 0)
+                {
+                    return new List<Kontogruppe>(KontogruppeCache);
+                }
                 var kontogrupper = GetTableContentFromTabel<Kontogruppe>(3030, (dbHandle, searchHandle, list) =>
                                                                                    {
                                                                                        var nummer =
@@ -160,8 +160,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                 {
                     KontogruppeCache.Add(kontogruppe);
                 }
+                return new List<Kontogruppe>(KontogruppeCache);
             }
-            return KontogruppeCache;
         }
 
         /// <summary>
@@ -170,12 +170,12 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <returns>Liste indeholdende alle budgetkontogrupper.</returns>
         public IList<Budgetkontogruppe> BudgetkontogrupperGetAll()
         {
-            if (BudgetkontogruppeCache.Count > 0)
-            {
-                return BudgetkontogruppeCache;
-            }
             lock (BudgetkontogruppeCache)
             {
+                if (BudgetkontogruppeCache.Count > 0)
+                {
+                    return new List<Budgetkontogruppe>(BudgetkontogruppeCache);
+                }
                 var budgetkontogrupper = GetTableContentFromTabel<Budgetkontogruppe>(3040,
                                                                                      (dbHandle, searchHandle, list) =>
                                                                                          {
@@ -200,8 +200,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                 {
                     BudgetkontogruppeCache.Add(budgetkontogruppe);
                 }
+                return new List<Budgetkontogruppe>(BudgetkontogruppeCache);
             }
-            return BudgetkontogruppeCache;
         }
 
         /// <summary>
@@ -383,6 +383,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
             }
             switch (databaseFileName.Trim().ToUpper())
             {
+                case "ADRESSE.DBD":
                 case "KONTO.DBD":
                 case "KONTOLIN.DBD":
                     lock (RegnskabCache)
@@ -392,6 +393,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                     break;
 
                 case "TABEL.DBD":
+                    lock (RegnskabCache)
+                    {
+                        RegnskabCache.Clear();
+                    }
                     lock (KontogruppeCache)
                     {
                         KontogruppeCache.Clear();

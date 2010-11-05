@@ -55,12 +55,12 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <returns>Alle adresser.</returns>
         public IList<AdresseBase> AdresseGetAll(Action<AdresseBase> callback)
         {
-            if (AdresseCache.Count > 0)
-            {
-                return AdresseCache;
-            }
             lock (AdresseCache)
             {
+                if (AdresseCache.Count > 0)
+                {
+                    return new List<AdresseBase>(AdresseCache);
+                }
                 var dbHandle = OpenDatabase("ADRESSE.DBD", false, true);
                 try
                 {
@@ -157,8 +157,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                 {
                     dbHandle.CloseDatabase();
                 }
+                return new List<AdresseBase>(AdresseCache);
             }
-            return AdresseCache;
         }
 
         /// <summary>
@@ -167,13 +167,12 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <returns>Liste indeholdende alle postnumre.</returns>
         public IList<Postnummer> PostnummerGetAll()
         {
-            if (PostnummerCache.Count > 0)
-            {
-
-                return PostnummerCache;
-            }
             lock (PostnummerCache)
             {
+                if (PostnummerCache.Count > 0)
+                {
+                    return new List<Postnummer>(PostnummerCache);
+                }
                 var dbHandle = OpenDatabase("POSTNR.DBD", false, true);
                 try
                 {
@@ -211,8 +210,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                 {
                     dbHandle.CloseDatabase();
                 }
+                return new List<Postnummer>(PostnummerCache);
             }
-            return PostnummerCache;
         }
 
         /// <summary>
@@ -221,12 +220,12 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <returns>Liste indeholdende alle adressegrupper.</returns>
         public IList<Adressegruppe> AdressegruppeGetAll()
         {
-            if (AdressegruppeCache.Count > 0)
-            {
-                return AdressegruppeCache;
-            }
             lock (AdressegruppeCache)
             {
+                if (AdressegruppeCache.Count > 0)
+                {
+                    return new List<Adressegruppe>(AdressegruppeCache);
+                }
                 var adressegrupper = GetTableContentFromTabel<Adressegruppe>(1030, (dbHandle, searchHandle, list) =>
                                                                                        {
                                                                                            var nummer =
@@ -255,8 +254,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                 {
                     AdressegruppeCache.Add(adressegruppe);
                 }
+                return new List<Adressegruppe>(AdressegruppeCache);
             }
-            return AdressegruppeCache;
         }
 
         /// <summary>
@@ -265,12 +264,12 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <returns>Liste indeholdende alle betalingsbetingelser.</returns>
         public IList<Betalingsbetingelse> BetalingsbetingelserGetAll()
         {
-            if (BetalingsbetingelseCache.Count > 0)
-            {
-                return BetalingsbetingelseCache;
-            }
             lock (BetalingsbetingelseCache)
             {
+                if (BetalingsbetingelseCache.Count > 0)
+                {
+                    return new List<Betalingsbetingelse>(BetalingsbetingelseCache);
+                }
                 var betalingsbetingelser = GetTableContentFromTabel<Betalingsbetingelse>(1040,
                                                                                          (dbHandle, searchHandle, list)
                                                                                          =>
@@ -293,12 +292,13 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                                                                  list.Add(
                                                                                                      betalingsbetingelse);
                                                                                              });
+                BetalingsbetingelseCache.Clear();
                 foreach (var betalingsbetingelse in betalingsbetingelser)
                 {
                     BetalingsbetingelseCache.Add(betalingsbetingelse);
                 }
+                return new List<Betalingsbetingelse>(BetalingsbetingelseCache);
             }
-            return BetalingsbetingelseCache;
         }
 
         #endregion
@@ -348,6 +348,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                     break;
 
                 case "POSTNR.DBD":
+                    lock (AdresseCache)
+                    {
+                        AdresseCache.Clear();
+                    }
                     lock (PostnummerCache)
                     {
                         PostnummerCache.Clear();
@@ -355,6 +359,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                     break;
 
                 case "TABEL.DBD":
+                    lock (AdresseCache)
+                    {
+                        AdresseCache.Clear();
+                    }
                     lock (AdressegruppeCache)
                     {
                         AdressegruppeCache.Clear();
