@@ -73,6 +73,12 @@
     <Reference Include="OSDevGrp.OSIntranet.CommonLibrary.IoC.Interfaces">
       <HintPath>..\External references\OSDevGrp.OSIntranet.CommonLibrary.IoC.Interfaces.dll</HintPath>
     </Reference>
+    <Reference Include="OSDevGrp.OSIntranet.CommonLibrary.Repositories">
+      <HintPath>..\External references\OSDevGrp.OSIntranet.CommonLibrary.Repositories.dll</HintPath>
+    </Reference>
+    <Reference Include="OSDevGrp.OSIntranet.CommonLibrary.Repositories.Interface">
+      <HintPath>..\External references\OSDevGrp.OSIntranet.CommonLibrary.Repositories.Interface.dll</HintPath>
+    </Reference>
     <Reference Include="OSDevGrp.OSIntranet.CommonLibrary.Resources, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1719c289d1070527, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External references\OSDevGrp.OSIntranet.CommonLibrary.Resources.dll</HintPath>
@@ -143,7 +149,7 @@
     <Compile Include="QueryHandlers\PostnummerGetByLandekodeQueryHandler.cs" />
     <Compile Include="Repositories\AdresseRepository.cs" />
     <Compile Include="Repositories\DbAxRepositoryBase.cs" />
-    <Compile Include="Repositories\Interfaces\DbAxConfiguration.cs" />
+    <Compile Include="Repositories\DbAxConfiguration.cs" />
     <Compile Include="Repositories\Interfaces\IAdresseRepository.cs" />
     <Compile Include="Repositories\Interfaces\IDbAxConfiguration.cs" />
     <Compile Include="Repositories\Interfaces\IDbAxRepositoryCacher.cs" />

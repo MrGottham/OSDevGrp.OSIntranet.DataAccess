@@ -5,8 +5,6 @@
     /// </summary>
     public enum ExceptionMessage
     {
-        MissingApplicationSetting,
-        DataStoreLocationDoesNotExists,
         UnableToLoginOnDbAx,
         CantFindUniqueRecordId, 
         CantAutoMapType,

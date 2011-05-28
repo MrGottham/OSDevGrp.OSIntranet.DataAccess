@@ -144,10 +144,6 @@
     <value>Can't set key interval '{0}' for the key '{1}' on '{2}'.</value>
     <comment>{0} = Key interval, {1} = Key name, {2} = Databasename where to set the key interval.</comment>
   </data>
-  <data name="DataStoreLocationDoesNotExists" xml:space="preserve">
-    <value>The data store location '{0}' does not exists.</value>
-    <comment>{0} = Path for the data store location.</comment>
-  </data>
   <data name="DateIsMissingOnBalanceLine" xml:space="preserve">
     <value>Missing date on the balance line with the unique identification '{0}'.</value>
     <comment>{0} = Unique identification.</comment>
@@ -155,10 +151,6 @@
   <data name="ErrorInCommandHandler" xml:space="preserve">
     <value>Error in the command handler for the command '{0}': {1}</value>
     <comment>{0} = Type of command which is handled by the command handler, {1} = Error message.</comment>
-  </data>
-  <data name="MissingApplicationSetting" xml:space="preserve">
-    <value>'{0}' are missing in the AppSettings in the application configuration file.</value>
-    <comment>{0} = Key name of application setting.</comment>
   </data>
   <data name="RecordIsNotOk" xml:space="preserve">
     <value>The record are not allowed to be flushed.</value>

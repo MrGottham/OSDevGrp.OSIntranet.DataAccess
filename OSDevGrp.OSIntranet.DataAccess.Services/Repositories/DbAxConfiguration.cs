@@ -1,15 +1,25 @@
 ﻿using System.Configuration;
 using System.IO;
+using OSDevGrp.OSIntranet.CommonLibrary.Repositories;
+using OSDevGrp.OSIntranet.CommonLibrary.Repositories.Interface.Exceptions;
 using OSDevGrp.OSIntranet.DataAccess.Infrastructure.Interfaces.Exceptions;
-using OSDevGrp.OSIntranet.DataAccess.Resources;
+using OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces;
 
-namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
+namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
 {
     /// <summary>
     /// Konfiguration til DBAX.
     /// </summary>
-    public class DbAxConfiguration : IDbAxConfiguration
+    public class DbAxConfiguration : KonfigurationRepositoryBase, IDbAxConfiguration
     {
+        #region Private variables
+
+        private DirectoryInfo _dataStoreLocation;
+        private string _userName;
+        private string _password;
+
+        #endregion
+        
         #region Constructor
 
         /// <summary>
@@ -17,33 +27,27 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
         /// </summary>
         public DbAxConfiguration()
         {
-            var dataStoreLocation = ConfigurationManager.AppSettings.Get("DataStoreLocation");
-            if (string.IsNullOrEmpty(dataStoreLocation))
+            var applicationSettings = ConfigurationManager.AppSettings;
+            try
             {
-                throw new DataAccessSystemException(
-                    Resource.GetExceptionMessage(ExceptionMessage.MissingApplicationSetting, "DataStoreLocation"));
+                _dataStoreLocation = base.GetPathFromApplicationSettings(applicationSettings, "DataStoreLocation");
+                _userName = base.GetStringFromApplicationSettings(applicationSettings, "UserName");
             }
-            // ReSharper disable DoNotCallOverridableMethodsInConstructor
-            DataStoreLocation = new DirectoryInfo(dataStoreLocation);
-            if (!DataStoreLocation.Exists)
+            catch (CommonRepositoryException ex)
             {
-                throw new DataAccessSystemException(
-                    Resource.GetExceptionMessage(ExceptionMessage.DataStoreLocationDoesNotExists,
-                                                 DataStoreLocation.FullName));
+                throw new DataAccessSystemException(ex.Message, ex);
             }
-            UserName = ConfigurationManager.AppSettings.Get("UserName");
-            if (UserName == null)
+            try
             {
-                throw new DataAccessSystemException(
-                    Resource.GetExceptionMessage(ExceptionMessage.MissingApplicationSetting, "UserName"));
+                _password = base.GetStringFromApplicationSettings(applicationSettings, "Password");
             }
-            Password = ConfigurationManager.AppSettings.Get("Password");
-            if (Password == null)
+            catch (CommonRepositoryException ex)
             {
-                throw new DataAccessSystemException(
-                    Resource.GetExceptionMessage(ExceptionMessage.MissingApplicationSetting, "Password"));
+                if (applicationSettings.Get("Password") == null)
+                {
+                    throw new DataAccessSystemException(ex.Message, ex);
+                }
             }
-            // ReSharper restore DoNotCallOverridableMethodsInConstructor
         }
 
         #endregion
@@ -55,8 +59,14 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
         /// </summary>
         public virtual DirectoryInfo DataStoreLocation
         {
-            get;
-            protected set;
+            get
+            {
+                return _dataStoreLocation;
+            }
+            protected set
+            {
+                _dataStoreLocation = value;
+            }
         }
 
         /// <summary>
@@ -64,8 +74,14 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
         /// </summary>
         public virtual string UserName
         {
-            get;
-            protected set;
+            get
+            {
+                return _userName;
+            }
+            protected set
+            {
+                _userName = value;
+            }
         }
 
         /// <summary>
@@ -73,8 +89,14 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
         /// </summary>
         public virtual string Password
         {
-            get;
-            protected set;
+            get
+            {
+                return _password;
+            }
+            protected set
+            {
+                _password = value;
+            }
         }
 
         #endregion
