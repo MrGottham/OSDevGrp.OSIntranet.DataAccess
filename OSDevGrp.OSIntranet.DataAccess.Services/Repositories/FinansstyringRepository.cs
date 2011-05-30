@@ -348,6 +348,48 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
             }
         }
 
+        /// <summary>
+        /// Tilføjer en kontogruppe.
+        /// </summary>
+        /// <param name="nummer">Unik identifikation af kontogruppen.</param>
+        /// <param name="navn">Navn på kontogruppen.</param>
+        /// <param name="kontogruppeType">Typen for kontogruppen.</param>
+        public void KontogruppeAdd(int nummer, string navn, KontogruppeType kontogruppeType)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Opdaterer en given kontogruppe.
+        /// </summary>
+        /// <param name="nummer">Unik identifikation af kontogruppen.</param>
+        /// <param name="navn">Navn på kontogruppen.</param>
+        /// <param name="kontogruppeType">Typen for kontogruppen.</param>
+        public void KontogruppeModify(int nummer, string navn, KontogruppeType kontogruppeType)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Tilføjer en gruppe til budgetkonti.
+        /// </summary>
+        /// <param name="nummer">Unik identifikation af gruppen til budgetkonti.</param>
+        /// <param name="navn">Navn på gruppen til budgetkonti.</param>
+        public void BudgetkontogruppeAdd(int nummer, string navn)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Opdaterer en given gruppe til budgetkonti.
+        /// </summary>
+        /// <param name="nummer">Unik identifikation af gruppen til budgetkonti.</param>
+        /// <param name="navn">Navn på gruppen til budgetkonti.</param>
+        public void BudgetkontogruppeModify(int nummer, string navn)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
         #region IDbAxRepositoryCacher Members

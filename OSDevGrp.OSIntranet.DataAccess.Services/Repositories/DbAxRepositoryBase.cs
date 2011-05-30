@@ -120,6 +120,162 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         }
 
         /// <summary>
+        /// Opretter en post i tabellen TABEL.
+        /// </summary>
+        /// <param name="tableNumber">Tabelnummer.</param>
+        /// <param name="number">Unik identifikation for posten.</param>
+        /// <param name="text">Tekst til posten.</param>
+        /// <param name="onCreate">Delegate, der kaldes i forbindelse med oprettelsen.</param>
+        protected void CreateTableRecord(int tableNumber, int number, string text, Action<IDsiDbX, int> onCreate)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                throw new ArgumentNullException("text");
+            }
+            var dbHandle = OpenDatabase("TABEL.DBD", false, false);
+            try
+            {
+                var databaseName = Path.GetFileNameWithoutExtension(Path.GetFileName(dbHandle.DbFile));
+                if (!dbHandle.BeginTTS())
+                {
+                    throw new DataAccessSystemException(Resource.GetExceptionMessage(ExceptionMessage.CantBeginTts,
+                                                                                     databaseName));
+                }
+                try
+                {
+                    var searchHandle = dbHandle.CreateSearch();
+                    try
+                    {
+                        if (!dbHandle.CreateRec(searchHandle))
+                        {
+                            throw new DataAccessSystemException(
+                                Resource.GetExceptionMessage(ExceptionMessage.CantCreateRecord, databaseName));
+                        }
+                        var creationTime = DateTime.Now;
+                        SetFieldValue(dbHandle, searchHandle, "TabelNr", tableNumber);
+                        SetFieldValue(dbHandle, searchHandle, "Nummer", number);
+                        SetFieldValue(dbHandle, searchHandle, "Tekst", text);
+                        if (onCreate != null)
+                        {
+                            onCreate(dbHandle, searchHandle);
+                        }
+                        SetFieldValue(dbHandle, searchHandle, "OpretBruger", Configuration.UserName);
+                        SetFieldValue(dbHandle, searchHandle, "OpretDato", creationTime);
+                        SetFieldValue(dbHandle, searchHandle, "OpretTid", creationTime);
+                        SetFieldValue(dbHandle, searchHandle, "RetBruger", Configuration.UserName);
+                        SetFieldValue(dbHandle, searchHandle, "RetDato", creationTime);
+                        SetFieldValue(dbHandle, searchHandle, "RetTid", creationTime);
+                        if (!dbHandle.IsRecOk(searchHandle))
+                        {
+                            throw new DataAccessSystemException(
+                                Resource.GetExceptionMessage(ExceptionMessage.RecordIsNotOk));
+                        }
+                        if (!dbHandle.FlushRec(searchHandle))
+                        {
+                            throw new DataAccessSystemException(
+                                Resource.GetExceptionMessage(ExceptionMessage.CantFlushRecord));
+                        }
+                    }
+                    finally
+                    {
+                        dbHandle.DeleteSearch(searchHandle);
+                    }
+                    dbHandle.EndTTS();
+                }
+                catch
+                {
+                    dbHandle.AbortTTS();
+                    throw;
+                }
+            }
+            finally
+            {
+                dbHandle.CloseDatabase();
+            }
+        }
+
+        /// <summary>
+        /// Opdaterer en post i tabellen TABEL.
+        /// </summary>
+        /// <typeparam name="TTable">Typen på posten, der skal opdateres.</typeparam>
+        /// <param name="tableNumber">Tabelnummer.</param>
+        /// <param name="number">Unik identifikation for posten.</param>
+        /// <param name="text">Tekst til posten.</param>
+        /// <param name="onModify">Delegate, der kaldes i forbindelse med opdateringen.</param>
+        protected void ModifyTableRecord<TTable>(int tableNumber, int number, string text, Action<IDsiDbX, int> onModify)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                throw new ArgumentNullException("text");
+            }
+            var dbHandle = OpenDatabase("TABEL.DBD", false, false);
+            try
+            {
+                var databaseName = Path.GetFileNameWithoutExtension(Path.GetFileName(dbHandle.DbFile));
+                if (!dbHandle.BeginTTS())
+                {
+                    throw new DataAccessSystemException(Resource.GetExceptionMessage(ExceptionMessage.CantBeginTts,
+                                                                                     databaseName));
+                }
+                try
+                {
+                    var searchHandle = dbHandle.CreateSearch();
+                    try
+                    {
+                        if (!dbHandle.SetKey(searchHandle, "Nummer"))
+                        {
+                            throw new DataAccessSystemException(Resource.GetExceptionMessage(
+                                ExceptionMessage.CantSetKey, "Nummer", databaseName));
+                        }
+                        var keyStr =
+                            dbHandle.KeyStrInt(tableNumber,
+                                               dbHandle.GetFieldLength(dbHandle.GetFieldNoByName("TabelNr"))) +
+                            dbHandle.KeyStrInt(number, dbHandle.GetFieldLength(dbHandle.GetFieldNoByName("Nummer")));
+                        if (!dbHandle.SearchEq(searchHandle, keyStr))
+                        {
+                            throw new DataAccessSystemException(
+                                Resource.GetExceptionMessage(ExceptionMessage.CantFindUniqueRecordId, typeof (TTable),
+                                                             number));
+                        }
+                        var modifyTime = DateTime.Now;
+                        SetFieldValue(dbHandle, searchHandle, "Tekst", text);
+                        if (onModify != null)
+                        {
+                            onModify(dbHandle, searchHandle);
+                        }
+                        SetFieldValue(dbHandle, searchHandle, "RetBruger", Configuration.UserName);
+                        SetFieldValue(dbHandle, searchHandle, "RetDato", modifyTime);
+                        SetFieldValue(dbHandle, searchHandle, "RetTid", modifyTime);
+                        if (!dbHandle.IsRecOk(searchHandle))
+                        {
+                            throw new DataAccessSystemException(
+                                Resource.GetExceptionMessage(ExceptionMessage.RecordIsNotOk));
+                        }
+                        if (!dbHandle.FlushRec(searchHandle))
+                        {
+                            throw new DataAccessSystemException(
+                                Resource.GetExceptionMessage(ExceptionMessage.CantFlushRecord));
+                        }
+                    }
+                    finally
+                    {
+                        dbHandle.DeleteSearch(searchHandle);
+                    }
+                    dbHandle.EndTTS();
+                }
+                catch
+                {
+                    dbHandle.AbortTTS();
+                    throw;
+                }
+            }
+            finally
+            {
+                dbHandle.CloseDatabase();
+            }
+        }
+
+        /// <summary>
         /// Henter streng værdi for et givent felt.
         /// </summary>
         /// <param name="dbHandle">Databasehandle.</param>

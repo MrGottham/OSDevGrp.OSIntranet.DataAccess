@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using OSDevGrp.OSIntranet.CommonLibrary.Domain.Adressekartotek;
+using OSDevGrp.OSIntranet.CommonLibrary.Domain.Enums;
 using OSDevGrp.OSIntranet.CommonLibrary.Domain.Finansstyring;
 
 namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
@@ -47,5 +48,36 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
         /// <param name="kredit">Kreditbeløb.</param>
         /// <param name="adresse">Adressen, hvorpå kontolinjen skal bogføres.</param>
         void BogføringslinjeAdd(DateTime bogføringsdato, string bilag, Konto konto, string tekst, Budgetkonto budgetkonto, decimal debit, decimal kredit, AdresseBase adresse);
+
+        /// <summary>
+        /// Tilføjer en kontogruppe.
+        /// </summary>
+        /// <param name="nummer">Unik identifikation af kontogruppen.</param>
+        /// <param name="navn">Navn på kontogruppen.</param>
+        /// <param name="kontogruppeType">Typen for kontogruppen.</param>
+        void KontogruppeAdd(int nummer, string navn, KontogruppeType kontogruppeType);
+
+        /// <summary>
+        /// Opdaterer en given kontogruppe.
+        /// </summary>
+        /// <param name="nummer">Unik identifikation af kontogruppen.</param>
+        /// <param name="navn">Navn på kontogruppen.</param>
+        /// <param name="kontogruppeType">Typen for kontogruppen.</param>
+        void KontogruppeModify(int nummer, string navn, KontogruppeType kontogruppeType);
+
+        /// <summary>
+        /// Tilføjer en gruppe til budgetkonti.
+        /// </summary>
+        /// <param name="nummer">Unik identifikation af gruppen til budgetkonti.</param>
+        /// <param name="navn">Navn på gruppen til budgetkonti.</param>
+        void BudgetkontogruppeAdd(int nummer, string navn);
+
+        /// <summary>
+        /// Opdaterer en given gruppe til budgetkonti.
+        /// </summary>
+        /// <param name="nummer">Unik identifikation af gruppen til budgetkonti.</param>
+        /// <param name="navn">Navn på gruppen til budgetkonti.</param>
+        void BudgetkontogruppeModify(int nummer, string navn);
+
     }
 }
