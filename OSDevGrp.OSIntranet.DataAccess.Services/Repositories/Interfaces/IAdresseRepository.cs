@@ -41,6 +41,22 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
         IList<Betalingsbetingelse> BetalingsbetingelserGetAll();
 
         /// <summary>
+        /// Tilføjer et postnummer.
+        /// </summary>
+        /// <param name="landekode">Landekode.</param>
+        /// <param name="postnr">Postnummer.</param>
+        /// <param name="by">Bynavn.</param>
+        void PostnummerAdd(string landekode, string postnr, string by);
+
+        /// <summary>
+        /// Opdaterer et givent postnummer.
+        /// </summary>
+        /// <param name="landekode">Landekode.</param>
+        /// <param name="postnr">Postnummer.</param>
+        /// <param name="by">Bynavn.</param>
+        void PostnummerModify(string landekode, string postnr, string by);
+
+        /// <summary>
         /// Tilføjer en adressegruppe.
         /// </summary>
         /// <param name="nummer">Unik identifikation af adressegruppen.</param>

@@ -302,6 +302,28 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         }
 
         /// <summary>
+        /// Tilføjer et postnummer.
+        /// </summary>
+        /// <param name="landekode">Landekode.</param>
+        /// <param name="postnr">Postnummer.</param>
+        /// <param name="by">Bynavn.</param>
+        public void PostnummerAdd(string landekode, string postnr, string by)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Opdaterer et givent postnummer.
+        /// </summary>
+        /// <param name="landekode">Landekode.</param>
+        /// <param name="postnr">Postnummer.</param>
+        /// <param name="by">Bynavn.</param>
+        public void PostnummerModify(string landekode, string postnr, string by)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Tilføjer en adressegruppe.
         /// </summary>
         /// <param name="nummer">Unik identifikation af adressegruppen.</param>
@@ -310,8 +332,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         public void AdressegruppeAdd(int nummer, string navn, int adressegruppeOswebdb)
         {
             CreateTableRecord(1030, nummer, navn,
-                              (dbHandle, searchHandle) =>
-                              SetFieldValue(dbHandle, searchHandle, "Adressegruppe", adressegruppeOswebdb));
+                              (db, sh) => SetFieldValue(db, sh, "Adressegruppe", adressegruppeOswebdb));
             lock (AdressegruppeCache)
             {
                 var adressegruppe = new Adressegruppe(nummer, navn, adressegruppeOswebdb);
@@ -332,8 +353,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         public void AdressegruppeModify(int nummer, string navn, int adressegruppeOswebdb)
         {
             ModifyTableRecord<Adressegruppe>(1030, nummer, navn,
-                                             (dbHandle, searchHandle) =>
-                                             SetFieldValue(dbHandle, searchHandle, "Adressegruppe", adressegruppeOswebdb));
+                                             (db, sh) => SetFieldValue(db, sh, "Adressegruppe", adressegruppeOswebdb));
             lock (AdressegruppeCache)
             {
                 if (AdresseCache.Count == 0)
@@ -372,7 +392,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="navn">Navn på betalingsbetingelsen.</param>
         public void BetalingsbetingelseModify(int nummer, string navn)
         {
-            ModifyTableRecord<Betalingsbetingelse>(1040, nummer, navn, null);
+            ModifyTableRecord<Betalingsbetingelse>(1040, nummer, navn);
             lock (BetalingsbetingelseCache)
             {
                 if (BetalingsbetingelseCache.Count == 0)

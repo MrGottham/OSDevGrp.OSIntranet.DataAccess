@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using OSDevGrp.OSIntranet.CommonLibrary.Domain.Adressekartotek;
@@ -216,9 +215,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
             {
                 throw new ArgumentNullException("konto");
             }
-            UpdateOrAddTableContentInKontolin("Kredit", 3050, konto.Regnskab.Nummer, konto.Kontonummer, år, måned,
-                                              (dbHandle, searchHandle) =>
-                                              SetFieldValue(dbHandle, searchHandle, "Kredit", kredit));
+            UpdateTableContentInKontolin<Kreditoplysninger>("Kredit", 3050, konto, år, måned,
+                                                            (db, sh) => SetFieldValue(db, sh, "Kredit", kredit));
             lock (RegnskabCache)
             {
                 var kreditoplysninger = konto.Kreditoplysninger.SingleOrDefault(m => m.År == år && m.Måned == måned);
@@ -235,7 +233,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// Opdaterer eller tilføjer budgetoplysninger til en given budgetkonto.
         /// </summary>
         /// <param name="budgetkonto">Budgetkonto, hvorpå budgetoplysninger skal opdateres eller tilføjes.</param>
-        /// <param name="år">Årstal.</param>gi
+        /// <param name="år">Årstal.</param>
         /// <param name="måned">Måned.</param>
         /// <param name="indtægter">Indtægter.</param>
         /// <param name="udgifter">Udgifter.</param>
@@ -245,13 +243,17 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
             {
                 throw new ArgumentNullException("budgetkonto");
             }
-            UpdateOrAddTableContentInKontolin("Budget", 3060, budgetkonto.Regnskab.Nummer, budgetkonto.Kontonummer, år,
-                                              måned, (dbHandle, searchHandle) =>
-                                                         {
-                                                             SetFieldValue(dbHandle, searchHandle, "Indtægter",
-                                                                           indtægter);
-                                                             SetFieldValue(dbHandle, searchHandle, "Udgifter", udgifter);
-                                                         });
+            UpdateTableContentInKontolin<Budgetoplysninger>("Budget", 3060, budgetkonto, år, måned, (db, sh) =>
+                                                                                                        {
+                                                                                                            SetFieldValue
+                                                                                                                (db, sh,
+                                                                                                                 "Indtægter",
+                                                                                                                 indtægter);
+                                                                                                            SetFieldValue
+                                                                                                                (db, sh,
+                                                                                                                 "Udgifter",
+                                                                                                                 udgifter);
+                                                                                                        });
             lock (RegnskabCache)
             {
                 var budgetoplysninger = budgetkonto.Budgetoplysninger.SingleOrDefault(m => m.År == år && m.Måned == måned);
@@ -286,130 +288,67 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
             {
                 throw new ArgumentNullException("tekst");
             }
-            var dbHandle = OpenDatabase("KONTOLIN.DBD", false, false);
-            try
+            var løbenr = int.MinValue;
+            CreateDatabaseRecord("KONTOLIN.DBD", (db, sh) =>
+                                                     {
+                                                         var creationTime = DateTime.Now;
+                                                         SetFieldValue(db, sh, "TabelNr", 3070);
+                                                         SetFieldValue(db, sh, "Regnskabnummer", konto.Regnskab.Nummer);
+                                                         SetFieldValue(db, sh, "Kontonummer",
+                                                                       konto.Kontonummer.ToUpper());
+                                                         if (budgetkonto != null)
+                                                         {
+                                                             SetFieldValue(db, sh, "Budgetkontonummer",
+                                                                           budgetkonto.Kontonummer.ToUpper());
+                                                         }
+                                                         if (adresse != null)
+                                                         {
+                                                             SetFieldValue(db, sh, "Adresseident", adresse.Nummer);
+                                                         }
+                                                         SetFieldValue(db, sh, "Dato", bogføringsdato);
+                                                         if (!string.IsNullOrEmpty(bilag))
+                                                         {
+                                                             SetFieldValue(db, sh, "Bilag", bilag);
+                                                         }
+                                                         SetFieldValue(db, sh, "Tekst", tekst);
+                                                         if (debit != 0M)
+                                                         {
+                                                             SetFieldValue(db, sh, "Debit", debit);
+                                                         }
+                                                         if (kredit != 0M)
+                                                         {
+                                                             SetFieldValue(db, sh, "Kredit", kredit);
+                                                         }
+                                                         var keyValue1 = db.KeyStrInt(3070,
+                                                                                      db.GetFieldLength(
+                                                                                          db.GetFieldNoByName("TabelNr")));
+                                                         var keyValue2 = db.KeyStrInt(konto.Regnskab.Nummer,
+                                                                                      db.GetFieldLength(
+                                                                                          db.GetFieldNoByName(
+                                                                                              "Regnskabnummer")));
+                                                         løbenr = GetNextUniqueIntId(db, "LøbeNr", "LøbeNr",
+                                                                                     string.Format("{0}{1}", keyValue1,
+                                                                                                   keyValue2));
+                                                         SetFieldValue(db, sh, "LøbeNr", løbenr);
+                                                         SetFieldValue(db, sh, "OpretBruger", Configuration.UserName);
+                                                         SetFieldValue(db, sh, "OpretDato", creationTime);
+                                                         SetFieldValue(db, sh, "OpretTid", creationTime);
+                                                         SetFieldValue(db, sh, "RetBruger", Configuration.UserName);
+                                                         SetFieldValue(db, sh, "RetDato", creationTime);
+                                                         SetFieldValue(db, sh, "RetTid", creationTime);
+                                                     });
+            lock (RegnskabCache)
             {
-                var databaseName = Path.GetFileNameWithoutExtension(Path.GetFileName(dbHandle.DbFile));
-                if (!dbHandle.BeginTTS())
+                var bogføringslinje = new Bogføringslinje(løbenr, bogføringsdato, bilag, tekst, debit, kredit);
+                konto.TilføjBogføringslinje(bogføringslinje);
+                if (budgetkonto != null)
                 {
-                    throw new DataAccessSystemException(Resource.GetExceptionMessage(ExceptionMessage.CantBeginTts,
-                                                                                     databaseName));
+                    budgetkonto.TilføjBogføringslinje(bogføringslinje);
                 }
-                try
+                if (adresse != null)
                 {
-                    var searchHandle = dbHandle.CreateSearch();
-                    try
-                    {
-                        if (!dbHandle.CreateRec(searchHandle))
-                        {
-                            throw new DataAccessSystemException(
-                                Resource.GetExceptionMessage(ExceptionMessage.CantCreateRecord, databaseName));
-                        }
-                        var creationTime = DateTime.Now;
-                        SetFieldValue(dbHandle, searchHandle, "TabelNr", 3070);
-                        SetFieldValue(dbHandle, searchHandle, "Regnskabnummer", konto.Regnskab.Nummer);
-                        SetFieldValue(dbHandle, searchHandle, "Kontonummer", konto.Kontonummer.ToUpper());
-                        if (budgetkonto != null)
-                        {
-                            SetFieldValue(dbHandle, searchHandle, "Budgetkontonummer", budgetkonto.Kontonummer.ToUpper());
-                        }
-                        if (adresse != null)
-                        {
-                            SetFieldValue(dbHandle, searchHandle, "Adresseident", adresse.Nummer);
-                        }
-                        SetFieldValue(dbHandle, searchHandle, "Dato", bogføringsdato);
-                        if (!string.IsNullOrEmpty(bilag))
-                        {
-                            SetFieldValue(dbHandle, searchHandle, "Bilag", bilag);
-                        }
-                        SetFieldValue(dbHandle, searchHandle, "Tekst", tekst);
-                        if (debit != 0M)
-                        {
-                            SetFieldValue(dbHandle, searchHandle, "Debit", debit);
-                        }
-                        if (kredit != 0M)
-                        {
-                            SetFieldValue(dbHandle, searchHandle, "Kredit", kredit);
-                        }
-                        var nextNumberSearchHandle = dbHandle.CreateSearch();
-                        try
-                        {
-                            if (!dbHandle.SetKey(nextNumberSearchHandle, "LøbeNr"))
-                            {
-                                throw new DataAccessSystemException(
-                                    Resource.GetExceptionMessage(ExceptionMessage.CantSetKey, "LøbeNr", databaseName));
-                            }
-                            var keyStr =
-                                dbHandle.KeyStrInt(3070, dbHandle.GetFieldLength(dbHandle.GetFieldNoByName("TabelNr"))) +
-                                dbHandle.KeyStrInt(konto.Regnskab.Nummer,
-                                                   dbHandle.GetFieldLength(dbHandle.GetFieldNoByName("Regnskabnummer")));
-                            if (!dbHandle.SetKeyInterval(nextNumberSearchHandle, keyStr, keyStr))
-                            {
-                                throw new DataAccessSystemException(
-                                    Resource.GetExceptionMessage(ExceptionMessage.CantSetKeyInterval, keyStr,
-                                                                 dbHandle.GetKeyNameByNo(
-                                                                     dbHandle.GetCurKeyNo(nextNumberSearchHandle)),
-                                                                 databaseName));
-                            }
-                            var nextNumber = 1;
-                            if (dbHandle.SearchFirst(nextNumberSearchHandle))
-                            {
-                                nextNumber = GetFieldValueAsInt(dbHandle, nextNumberSearchHandle, "LøbeNr") + 1;
-                            }
-                            dbHandle.ClearKeyInterval(nextNumberSearchHandle);
-                            SetFieldValue(dbHandle, searchHandle, "LøbeNr", nextNumber);
-                        }
-                        finally
-                        {
-                            dbHandle.DeleteSearch(nextNumberSearchHandle);
-                        }
-                        SetFieldValue(dbHandle, searchHandle, "OpretBruger", Configuration.UserName);
-                        SetFieldValue(dbHandle, searchHandle, "OpretDato", creationTime);
-                        SetFieldValue(dbHandle, searchHandle, "OpretTid", creationTime);
-                        SetFieldValue(dbHandle, searchHandle, "RetBruger", Configuration.UserName);
-                        SetFieldValue(dbHandle, searchHandle, "RetDato", creationTime);
-                        SetFieldValue(dbHandle, searchHandle, "RetTid", creationTime);
-                        if (!dbHandle.IsRecOk(searchHandle))
-                        {
-                            throw new DataAccessSystemException(
-                                Resource.GetExceptionMessage(ExceptionMessage.RecordIsNotOk));
-                        }
-                        if (!dbHandle.FlushRec(searchHandle))
-                        {
-                            throw new DataAccessSystemException(
-                                Resource.GetExceptionMessage(ExceptionMessage.CantFlushRecord));
-                        }
-                        lock (RegnskabCache)
-                        {
-                            var bogføringslinje =
-                                new Bogføringslinje(GetFieldValueAsInt(dbHandle, searchHandle, "LøbeNr"), bogføringsdato,
-                                                    bilag, tekst, debit, kredit);
-                            konto.TilføjBogføringslinje(bogføringslinje);
-                            if (budgetkonto != null)
-                            {
-                                budgetkonto.TilføjBogføringslinje(bogføringslinje);
-                            }
-                            if (adresse != null)
-                            {
-                                adresse.TilføjBogføringslinje(bogføringslinje);
-                            }
-                        }
-                    }
-                    finally
-                    {
-                        dbHandle.DeleteSearch(searchHandle);
-                    }
-                    dbHandle.EndTTS();
+                    adresse.TilføjBogføringslinje(bogføringslinje);
                 }
-                catch
-                {
-                    dbHandle.AbortTTS();
-                    throw;
-                }
-            }
-            finally
-            {
-                dbHandle.CloseDatabase();
             }
         }
 
@@ -421,16 +360,16 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="kontogruppeType">Typen for kontogruppen.</param>
         public void KontogruppeAdd(int nummer, string navn, KontogruppeType kontogruppeType)
         {
-            CreateTableRecord(3030, nummer, navn, (dbHandle, searchHandle) =>
+            CreateTableRecord(3030, nummer, navn, (db, sh) =>
                                                       {
                                                           switch (kontogruppeType)
                                                           {
                                                               case KontogruppeType.Aktiver:
-                                                                  SetFieldValue(dbHandle, searchHandle, "Type", 1);
+                                                                  SetFieldValue(db, sh, "Type", 1);
                                                                   break;
 
                                                               case KontogruppeType.Passiver:
-                                                                  SetFieldValue(dbHandle, searchHandle, "Type", 2);
+                                                                  SetFieldValue(db, sh, "Type", 2);
                                                                   break;
 
                                                               default:
@@ -460,18 +399,16 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="kontogruppeType">Typen for kontogruppen.</param>
         public void KontogruppeModify(int nummer, string navn, KontogruppeType kontogruppeType)
         {
-            ModifyTableRecord<Kontogruppe>(3030, nummer, navn, (dbHandle, searchHandle) =>
+            ModifyTableRecord<Kontogruppe>(3030, nummer, navn, (db, sh) =>
                                                                    {
                                                                        switch (kontogruppeType)
                                                                        {
                                                                            case KontogruppeType.Aktiver:
-                                                                               SetFieldValue(dbHandle, searchHandle,
-                                                                                             "Type", 1);
+                                                                               SetFieldValue(db, sh, "Type", 1);
                                                                                break;
 
                                                                            case KontogruppeType.Passiver:
-                                                                               SetFieldValue(dbHandle, searchHandle,
-                                                                                             "Type", 2);
+                                                                               SetFieldValue(db, sh, "Type", 2);
                                                                                break;
 
                                                                            default:
@@ -504,7 +441,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="navn">Navn på gruppen til budgetkonti.</param>
         public void BudgetkontogruppeAdd(int nummer, string navn)
         {
-            CreateTableRecord(3040, nummer, navn, null);
+            CreateTableRecord(3040, nummer, navn);
             lock (BudgetkontogruppeCache)
             {
                 var budgetkontogruppe = new Budgetkontogruppe(nummer, navn);
@@ -523,7 +460,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="navn">Navn på gruppen til budgetkonti.</param>
         public void BudgetkontogruppeModify(int nummer, string navn)
         {
-            ModifyTableRecord<Budgetkontogruppe>(3040, nummer, navn, null);
+            ModifyTableRecord<Budgetkontogruppe>(3040, nummer, navn);
             lock (BudgetkontogruppeCache)
             {
                 if (BudgetkontogruppeCache.Count == 0)
@@ -898,142 +835,103 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         }
 
         /// <summary>
-        /// Opdaterer eller tilføjer oplysninger i tabellen KONTOLIN.
+        /// Opdaterer eller tilføjer månedsoplysninger til en given konto.
         /// </summary>
-        /// <param name="keyName">Navn på søgenøgle.</param>
-        /// <param name="tabelnummer">Tabelnummer.</param>
-        /// <param name="regnskabsnummer">Regnskabsnummer.</param>
-        /// <param name="kontonummer">Kontonummer.</param>
-        /// <param name="år">Årstal.</param>
+        /// <typeparam name="TTable">Typen af månedsoplysninger.</typeparam>
+        /// <param name="primaryKey">Navn på primary key i tabellen (databasen).</param>
+        /// <param name="tabelNummer">Tabelnummer.</param>
+        /// <param name="kontoBase">Konto, hvortil månedsoplysninger skal opdateres eller tilføjes.</param>
+        /// <param name="år">Årstal for månedsoplysninger.</param>
         /// <param name="måned">Måned.</param>
-        /// <param name="onModify">Delegate, der kalder ved opdatering af tabeloplysninger.</param>
-        private void UpdateOrAddTableContentInKontolin(string keyName, int tabelnummer, int regnskabsnummer, string kontonummer, int år, int måned, Action<IDsiDbX, int> onModify)
+        /// <param name="onModify">Delegate, der kaldes ved opdatering af månedsoplysninger.</param>
+        private void UpdateTableContentInKontolin<TTable>(string primaryKey, int tabelNummer, KontoBase kontoBase, int år, int måned, Action<IDsiDbX, int> onModify) where TTable : Månedsoplysninger
         {
-            if (string.IsNullOrEmpty(keyName))
+            if (string.IsNullOrEmpty(primaryKey))
             {
-                throw new ArgumentNullException("keyName");
+                throw new ArgumentNullException("primaryKey");
             }
-            if (string.IsNullOrEmpty(kontonummer))
+            if (kontoBase == null)
             {
-                throw new ArgumentNullException("kontonummer");
+                throw new ArgumentNullException("kontoBase");
             }
             if (onModify == null)
             {
                 throw new ArgumentNullException("onModify");
             }
-            var dbHandle = OpenDatabase("KONTOLIN.DBD", false, false);
-            try
-            {
-                var databaseName = Path.GetFileNameWithoutExtension(Path.GetFileName(dbHandle.DbFile));
-                if (!dbHandle.BeginTTS())
-                {
-                    throw new DataAccessSystemException(Resource.GetExceptionMessage(ExceptionMessage.CantBeginTts,
-                                                                                     databaseName));
-                }
-                try
-                {
-                    var searchHandle = dbHandle.CreateSearch();
-                    try
-                    {
-                        var modifyAndCreationTime = DateTime.Now;
-                        if (!dbHandle.SetKey(searchHandle, keyName))
-                        {
-                            throw new DataAccessSystemException(Resource.GetExceptionMessage(
-                                ExceptionMessage.CantSetKey, keyName, databaseName));
-                        }
-                        var keyStr =
-                            dbHandle.KeyStrInt(tabelnummer,
-                                               dbHandle.GetFieldLength(dbHandle.GetFieldNoByName("TabelNr"))) +
-                            dbHandle.KeyStrInt(regnskabsnummer,
-                                               dbHandle.GetFieldLength(dbHandle.GetFieldNoByName("Regnskabnummer"))) +
-                            dbHandle.KeyStrAlpha(kontonummer, false,
-                                                 dbHandle.GetFieldLength(dbHandle.GetFieldNoByName("Kontonummer"))) +
-                            dbHandle.KeyStrInt(år, dbHandle.GetFieldLength(dbHandle.GetFieldNoByName("År"))) +
-                            dbHandle.KeyStrInt(måned, dbHandle.GetFieldLength(dbHandle.GetFieldNoByName("Måned")));
-                        if (!dbHandle.SearchEq(searchHandle, keyStr))
-                        {
-                            if (!dbHandle.CreateRec(searchHandle))
-                            {
-                                throw new DataAccessSystemException(
-                                    Resource.GetExceptionMessage(ExceptionMessage.CantCreateRecord, databaseName));
-                            }
-                            SetFieldValue(dbHandle, searchHandle, "TabelNr", tabelnummer);
-                            SetFieldValue(dbHandle, searchHandle, "Regnskabnummer", regnskabsnummer);
-                            SetFieldValue(dbHandle, searchHandle, "Kontonummer", kontonummer);
-                            SetFieldValue(dbHandle, searchHandle, "År", år);
-                            SetFieldValue(dbHandle, searchHandle, "Måned", måned);
-                            var nextNumberSearchHandle = dbHandle.CreateSearch();
-                            try
-                            {
-                                if (!dbHandle.SetKey(nextNumberSearchHandle, "LøbeNr"))
-                                {
-                                    throw new DataAccessSystemException(
-                                        Resource.GetExceptionMessage(ExceptionMessage.CantSetKey, "LøbeNr", databaseName));
-                                }
-                                keyStr =
-                                    dbHandle.KeyStrInt(tabelnummer,
-                                                       dbHandle.GetFieldLength(dbHandle.GetFieldNoByName("TabelNr"))) +
-                                    dbHandle.KeyStrInt(regnskabsnummer,
-                                                       dbHandle.GetFieldLength(
-                                                           dbHandle.GetFieldNoByName("Regnskabnummer")));
-                                if (!dbHandle.SetKeyInterval(nextNumberSearchHandle, keyStr, keyStr))
-                                {
-                                    throw new DataAccessSystemException(
-                                        Resource.GetExceptionMessage(ExceptionMessage.CantSetKeyInterval, keyStr,
-                                                                     dbHandle.GetKeyNameByNo(
-                                                                         dbHandle.GetCurKeyNo(nextNumberSearchHandle)),
-                                                                     databaseName));
-                                }
-                                var nextNumber = 1;
-                                if (dbHandle.SearchFirst(nextNumberSearchHandle))
-                                {
-                                    nextNumber = GetFieldValueAsInt(dbHandle, nextNumberSearchHandle, "LøbeNr") + 1;
-                                }
-                                dbHandle.ClearKeyInterval(nextNumberSearchHandle);
-                                SetFieldValue(dbHandle, searchHandle, "LøbeNr", nextNumber);
-                            }
-                            finally
-                            {
-                                dbHandle.DeleteSearch(nextNumberSearchHandle);
-                            }
-                            SetFieldValue(dbHandle, searchHandle, "OpretBruger", Configuration.UserName);
-                            SetFieldValue(dbHandle, searchHandle, "OpretDato", modifyAndCreationTime);
-                            SetFieldValue(dbHandle, searchHandle, "OpretTid", modifyAndCreationTime);
-                        }
-                        onModify(dbHandle, searchHandle);
-                        if (dbHandle.IsRecModified(searchHandle))
-                        {
-                            SetFieldValue(dbHandle, searchHandle, "RetBruger", Configuration.UserName);
-                            SetFieldValue(dbHandle, searchHandle, "RetDato", modifyAndCreationTime);
-                            SetFieldValue(dbHandle, searchHandle, "RetTid", modifyAndCreationTime);
-                            if (!dbHandle.IsRecOk(searchHandle))
-                            {
-                                throw new DataAccessSystemException(
-                                    Resource.GetExceptionMessage(ExceptionMessage.RecordIsNotOk));
-                            }
-                            if (!dbHandle.FlushRec(searchHandle))
-                            {
-                                throw new DataAccessSystemException(
-                                    Resource.GetExceptionMessage(ExceptionMessage.CantFlushRecord));
-                            }
-                        }
-                    }
-                    finally
-                    {
-                        dbHandle.DeleteSearch(searchHandle);
-                    }
-                    dbHandle.EndTTS();
-                }
-                catch
-                {
-                    dbHandle.AbortTTS();
-                    throw;
-                }
-            }
-            finally
-            {
-                dbHandle.CloseDatabase();
-            }
+            var getUniqueId = new Func<IDsiDbX, string>(db =>
+                                                            {
+                                                                var keyValue1 = db.KeyStrInt(tabelNummer,
+                                                                                             db.GetFieldLength(
+                                                                                                 db.GetFieldNoByName(
+                                                                                                     "TabelNr")));
+                                                                var keyValue2 = db.KeyStrInt(kontoBase.Regnskab.Nummer,
+                                                                                             db.GetFieldLength(
+                                                                                                 db.GetFieldNoByName(
+                                                                                                     "Regnskabnummer")));
+                                                                var keyValue3 = db.KeyStrAlpha(kontoBase.Kontonummer,
+                                                                                               false,
+                                                                                               db.GetFieldLength(
+                                                                                                   db.GetFieldNoByName(
+                                                                                                       "Kontonummer")));
+                                                                var keyValue4 = db.KeyStrInt(år,
+                                                                                             db.GetFieldLength(
+                                                                                                 db.GetFieldNoByName(
+                                                                                                     "År")));
+                                                                var keyValue5 = db.KeyStrInt(måned,
+                                                                                             db.GetFieldLength(
+                                                                                                 db.GetFieldNoByName(
+                                                                                                     "Måned")));
+                                                                return string.Format("{0}{1}{2}{3}{4}", keyValue1,
+                                                                                     keyValue2, keyValue3, keyValue4,
+                                                                                     keyValue5);
+                                                            });
+            var searchError = new Action<IDsiDbX, int>((db, sh) =>
+                                                           {
+                                                               var creationTime = DateTime.Now;
+                                                               if (!db.CreateRec(sh))
+                                                               {
+                                                                   throw new DataAccessSystemException(
+                                                                       Resource.GetExceptionMessage(
+                                                                           ExceptionMessage.CantCreateRecord,
+                                                                           "KONTOLIN"));
+                                                               }
+                                                               SetFieldValue(db, sh, "TabelNr", tabelNummer);
+                                                               SetFieldValue(db, sh, "Regnskabnummer",
+                                                                             kontoBase.Regnskab.Nummer);
+                                                               SetFieldValue(db, sh, "Kontonummer",
+                                                                             kontoBase.Kontonummer.ToUpper());
+                                                               SetFieldValue(db, sh, "År", år);
+                                                               SetFieldValue(db, sh, "Måned", måned);
+                                                               var keyValue1 = db.KeyStrInt(tabelNummer,
+                                                                                            db.GetFieldLength(
+                                                                                                db.GetFieldNoByName(
+                                                                                                    "TabelNr")));
+                                                               var keyValue2 = db.KeyStrInt(kontoBase.Regnskab.Nummer,
+                                                                                            db.GetFieldLength(
+                                                                                                db.GetFieldNoByName(
+                                                                                                    "Regnskabnummer")));
+                                                               var løbenr = GetNextUniqueIntId(db, "LøbeNr", "LøbeNr",
+                                                                                               string.Format("{0}{1}",
+                                                                                                             keyValue1,
+                                                                                                             keyValue2));
+                                                               SetFieldValue(db, sh, "LøbeNr", løbenr);
+                                                               SetFieldValue(db, sh, "OpretBruger",
+                                                                             Configuration.UserName);
+                                                               SetFieldValue(db, sh, "OpretDato", creationTime);
+                                                               SetFieldValue(db, sh, "OpretTid", creationTime);
+                                                           });
+            var modify = new Action<IDsiDbX, int>((db, sh) =>
+                                                      {
+                                                          var modifyTime = DateTime.Now;
+                                                          onModify(db, sh);
+                                                          if (db.IsRecModified(sh))
+                                                          {
+                                                              SetFieldValue(db, sh, "RetBruger", Configuration.UserName);
+                                                              SetFieldValue(db, sh, "RetDato", modifyTime);
+                                                              SetFieldValue(db, sh, "RetTid", modifyTime);
+                                                          }
+                                                      });
+            ModifyDatabaseRecord<TTable>("KONTOLIN.DBD", primaryKey, getUniqueId, modify, searchError);
         }
 
         /// <summary>
