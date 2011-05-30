@@ -204,6 +204,68 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         }
 
         /// <summary>
+        /// Opdaterer eller tilføjer kreditoplysninger til en given konto.
+        /// </summary>
+        /// <param name="konto">Konto, hvorpå kreditoplysninger skal opdateres eller tilføjes.</param>
+        /// <param name="år">Årstal.</param>
+        /// <param name="måned">Måned.</param>
+        /// <param name="kredit">Kredit.</param>
+        public void KreditoplysningerModifyOrAdd(Konto konto, int år, int måned, decimal kredit)
+        {
+            if (konto == null)
+            {
+                throw new ArgumentNullException("konto");
+            }
+            UpdateOrAddTableContentInKontolin("Kredit", 3050, konto.Regnskab.Nummer, konto.Kontonummer, år, måned,
+                                              (dbHandle, searchHandle) =>
+                                              SetFieldValue(dbHandle, searchHandle, "Kredit", kredit));
+            lock (RegnskabCache)
+            {
+                var kreditoplysninger = konto.Kreditoplysninger.SingleOrDefault(m => m.År == år && m.Måned == måned);
+                if (kreditoplysninger != null)
+                {
+                    kreditoplysninger.SætKredit(kredit);
+                    return;
+                }
+                konto.TilføjKreditoplysninger(new Kreditoplysninger(år, måned, kredit));
+            }
+        }
+
+        /// <summary>
+        /// Opdaterer eller tilføjer budgetoplysninger til en given budgetkonto.
+        /// </summary>
+        /// <param name="budgetkonto">Budgetkonto, hvorpå budgetoplysninger skal opdateres eller tilføjes.</param>
+        /// <param name="år">Årstal.</param>gi
+        /// <param name="måned">Måned.</param>
+        /// <param name="indtægter">Indtægter.</param>
+        /// <param name="udgifter">Udgifter.</param>
+        public void BudgetoplysningerModifyOrAdd(Budgetkonto budgetkonto, int år, int måned, decimal indtægter, decimal udgifter)
+        {
+            if (budgetkonto == null)
+            {
+                throw new ArgumentNullException("budgetkonto");
+            }
+            UpdateOrAddTableContentInKontolin("Budget", 3060, budgetkonto.Regnskab.Nummer, budgetkonto.Kontonummer, år,
+                                              måned, (dbHandle, searchHandle) =>
+                                                         {
+                                                             SetFieldValue(dbHandle, searchHandle, "Indtægter",
+                                                                           indtægter);
+                                                             SetFieldValue(dbHandle, searchHandle, "Udgifter", udgifter);
+                                                         });
+            lock (RegnskabCache)
+            {
+                var budgetoplysninger = budgetkonto.Budgetoplysninger.SingleOrDefault(m => m.År == år && m.Måned == måned);
+                if (budgetoplysninger != null)
+                {
+                    budgetoplysninger.SætIndtægter(indtægter);
+                    budgetoplysninger.SætUdgifter(udgifter);
+                    return;
+                }
+                budgetkonto.TilføjBudgetoplysninger(new Budgetoplysninger(år, måned, indtægter, udgifter));
+            }
+        }
+
+        /// <summary>
         /// Tilføjer en bogføringslinje.
         /// </summary>
         /// <param name="bogføringsdato">Bogføringsdato.</param>
@@ -317,16 +379,20 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                             throw new DataAccessSystemException(
                                 Resource.GetExceptionMessage(ExceptionMessage.CantFlushRecord));
                         }
-                        var bogføringslinje = new Bogføringslinje(GetFieldValueAsInt(dbHandle, searchHandle, "LøbeNr"),
-                                                                  bogføringsdato, bilag, tekst, debit, kredit);
-                        konto.TilføjBogføringslinje(bogføringslinje);
-                        if (budgetkonto != null)
+                        lock (RegnskabCache)
                         {
-                            budgetkonto.TilføjBogføringslinje(bogføringslinje);
-                        }
-                        if (adresse != null)
-                        {
-                            adresse.TilføjBogføringslinje(bogføringslinje);
+                            var bogføringslinje =
+                                new Bogføringslinje(GetFieldValueAsInt(dbHandle, searchHandle, "LøbeNr"), bogføringsdato,
+                                                    bilag, tekst, debit, kredit);
+                            konto.TilføjBogføringslinje(bogføringslinje);
+                            if (budgetkonto != null)
+                            {
+                                budgetkonto.TilføjBogføringslinje(bogføringslinje);
+                            }
+                            if (adresse != null)
+                            {
+                                adresse.TilføjBogføringslinje(bogføringslinje);
+                            }
                         }
                     }
                     finally
@@ -828,6 +894,145 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
             finally
             {
                 dbHandle.DeleteSearch(searchHandle);
+            }
+        }
+
+        /// <summary>
+        /// Opdaterer eller tilføjer oplysninger i tabellen KONTOLIN.
+        /// </summary>
+        /// <param name="keyName">Navn på søgenøgle.</param>
+        /// <param name="tabelnummer">Tabelnummer.</param>
+        /// <param name="regnskabsnummer">Regnskabsnummer.</param>
+        /// <param name="kontonummer">Kontonummer.</param>
+        /// <param name="år">Årstal.</param>
+        /// <param name="måned">Måned.</param>
+        /// <param name="onModify">Delegate, der kalder ved opdatering af tabeloplysninger.</param>
+        private void UpdateOrAddTableContentInKontolin(string keyName, int tabelnummer, int regnskabsnummer, string kontonummer, int år, int måned, Action<IDsiDbX, int> onModify)
+        {
+            if (string.IsNullOrEmpty(keyName))
+            {
+                throw new ArgumentNullException("keyName");
+            }
+            if (string.IsNullOrEmpty(kontonummer))
+            {
+                throw new ArgumentNullException("kontonummer");
+            }
+            if (onModify == null)
+            {
+                throw new ArgumentNullException("onModify");
+            }
+            var dbHandle = OpenDatabase("KONTOLIN.DBD", false, false);
+            try
+            {
+                var databaseName = Path.GetFileNameWithoutExtension(Path.GetFileName(dbHandle.DbFile));
+                if (!dbHandle.BeginTTS())
+                {
+                    throw new DataAccessSystemException(Resource.GetExceptionMessage(ExceptionMessage.CantBeginTts,
+                                                                                     databaseName));
+                }
+                try
+                {
+                    var searchHandle = dbHandle.CreateSearch();
+                    try
+                    {
+                        var modifyAndCreationTime = DateTime.Now;
+                        if (!dbHandle.SetKey(searchHandle, keyName))
+                        {
+                            throw new DataAccessSystemException(Resource.GetExceptionMessage(
+                                ExceptionMessage.CantSetKey, keyName, databaseName));
+                        }
+                        var keyStr =
+                            dbHandle.KeyStrInt(tabelnummer,
+                                               dbHandle.GetFieldLength(dbHandle.GetFieldNoByName("TabelNr"))) +
+                            dbHandle.KeyStrInt(regnskabsnummer,
+                                               dbHandle.GetFieldLength(dbHandle.GetFieldNoByName("Regnskabnummer"))) +
+                            dbHandle.KeyStrAlpha(kontonummer, false,
+                                                 dbHandle.GetFieldLength(dbHandle.GetFieldNoByName("Kontonummer"))) +
+                            dbHandle.KeyStrInt(år, dbHandle.GetFieldLength(dbHandle.GetFieldNoByName("År"))) +
+                            dbHandle.KeyStrInt(måned, dbHandle.GetFieldLength(dbHandle.GetFieldNoByName("Måned")));
+                        if (!dbHandle.SearchEq(searchHandle, keyStr))
+                        {
+                            if (!dbHandle.CreateRec(searchHandle))
+                            {
+                                throw new DataAccessSystemException(
+                                    Resource.GetExceptionMessage(ExceptionMessage.CantCreateRecord, databaseName));
+                            }
+                            SetFieldValue(dbHandle, searchHandle, "TabelNr", tabelnummer);
+                            SetFieldValue(dbHandle, searchHandle, "Regnskabnummer", regnskabsnummer);
+                            SetFieldValue(dbHandle, searchHandle, "Kontonummer", kontonummer);
+                            SetFieldValue(dbHandle, searchHandle, "År", år);
+                            SetFieldValue(dbHandle, searchHandle, "Måned", måned);
+                            var nextNumberSearchHandle = dbHandle.CreateSearch();
+                            try
+                            {
+                                if (!dbHandle.SetKey(nextNumberSearchHandle, "LøbeNr"))
+                                {
+                                    throw new DataAccessSystemException(
+                                        Resource.GetExceptionMessage(ExceptionMessage.CantSetKey, "LøbeNr", databaseName));
+                                }
+                                keyStr =
+                                    dbHandle.KeyStrInt(tabelnummer,
+                                                       dbHandle.GetFieldLength(dbHandle.GetFieldNoByName("TabelNr"))) +
+                                    dbHandle.KeyStrInt(regnskabsnummer,
+                                                       dbHandle.GetFieldLength(
+                                                           dbHandle.GetFieldNoByName("Regnskabnummer")));
+                                if (!dbHandle.SetKeyInterval(nextNumberSearchHandle, keyStr, keyStr))
+                                {
+                                    throw new DataAccessSystemException(
+                                        Resource.GetExceptionMessage(ExceptionMessage.CantSetKeyInterval, keyStr,
+                                                                     dbHandle.GetKeyNameByNo(
+                                                                         dbHandle.GetCurKeyNo(nextNumberSearchHandle)),
+                                                                     databaseName));
+                                }
+                                var nextNumber = 1;
+                                if (dbHandle.SearchFirst(nextNumberSearchHandle))
+                                {
+                                    nextNumber = GetFieldValueAsInt(dbHandle, nextNumberSearchHandle, "LøbeNr") + 1;
+                                }
+                                dbHandle.ClearKeyInterval(nextNumberSearchHandle);
+                                SetFieldValue(dbHandle, searchHandle, "LøbeNr", nextNumber);
+                            }
+                            finally
+                            {
+                                dbHandle.DeleteSearch(nextNumberSearchHandle);
+                            }
+                            SetFieldValue(dbHandle, searchHandle, "OpretBruger", Configuration.UserName);
+                            SetFieldValue(dbHandle, searchHandle, "OpretDato", modifyAndCreationTime);
+                            SetFieldValue(dbHandle, searchHandle, "OpretTid", modifyAndCreationTime);
+                        }
+                        onModify(dbHandle, searchHandle);
+                        if (dbHandle.IsRecModified(searchHandle))
+                        {
+                            SetFieldValue(dbHandle, searchHandle, "RetBruger", Configuration.UserName);
+                            SetFieldValue(dbHandle, searchHandle, "RetDato", modifyAndCreationTime);
+                            SetFieldValue(dbHandle, searchHandle, "RetTid", modifyAndCreationTime);
+                            if (!dbHandle.IsRecOk(searchHandle))
+                            {
+                                throw new DataAccessSystemException(
+                                    Resource.GetExceptionMessage(ExceptionMessage.RecordIsNotOk));
+                            }
+                            if (!dbHandle.FlushRec(searchHandle))
+                            {
+                                throw new DataAccessSystemException(
+                                    Resource.GetExceptionMessage(ExceptionMessage.CantFlushRecord));
+                            }
+                        }
+                    }
+                    finally
+                    {
+                        dbHandle.DeleteSearch(searchHandle);
+                    }
+                    dbHandle.EndTTS();
+                }
+                catch
+                {
+                    dbHandle.AbortTTS();
+                    throw;
+                }
+            }
+            finally
+            {
+                dbHandle.CloseDatabase();
             }
         }
 

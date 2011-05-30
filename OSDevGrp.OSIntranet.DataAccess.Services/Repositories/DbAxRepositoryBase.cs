@@ -243,18 +243,21 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                         {
                             onModify(dbHandle, searchHandle);
                         }
-                        SetFieldValue(dbHandle, searchHandle, "RetBruger", Configuration.UserName);
-                        SetFieldValue(dbHandle, searchHandle, "RetDato", modifyTime);
-                        SetFieldValue(dbHandle, searchHandle, "RetTid", modifyTime);
-                        if (!dbHandle.IsRecOk(searchHandle))
+                        if (dbHandle.IsRecModified(searchHandle))
                         {
-                            throw new DataAccessSystemException(
-                                Resource.GetExceptionMessage(ExceptionMessage.RecordIsNotOk));
-                        }
-                        if (!dbHandle.FlushRec(searchHandle))
-                        {
-                            throw new DataAccessSystemException(
-                                Resource.GetExceptionMessage(ExceptionMessage.CantFlushRecord));
+                            SetFieldValue(dbHandle, searchHandle, "RetBruger", Configuration.UserName);
+                            SetFieldValue(dbHandle, searchHandle, "RetDato", modifyTime);
+                            SetFieldValue(dbHandle, searchHandle, "RetTid", modifyTime);
+                            if (!dbHandle.IsRecOk(searchHandle))
+                            {
+                                throw new DataAccessSystemException(
+                                    Resource.GetExceptionMessage(ExceptionMessage.RecordIsNotOk));
+                            }
+                            if (!dbHandle.FlushRec(searchHandle))
+                            {
+                                throw new DataAccessSystemException(
+                                    Resource.GetExceptionMessage(ExceptionMessage.CantFlushRecord));
+                            }
                         }
                     }
                     finally

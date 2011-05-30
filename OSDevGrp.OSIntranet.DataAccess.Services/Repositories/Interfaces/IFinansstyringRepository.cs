@@ -37,6 +37,25 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
         IList<Budgetkontogruppe> BudgetkontogrupperGetAll();
 
         /// <summary>
+        /// Opdaterer eller tilføjer kreditoplysninger til en given konto.
+        /// </summary>
+        /// <param name="konto">Konto, hvorpå kreditoplysninger skal opdateres eller tilføjes.</param>
+        /// <param name="år">Årstal.</param>
+        /// <param name="måned">Måned.</param>
+        /// <param name="kredit">Kredit.</param>
+        void KreditoplysningerModifyOrAdd(Konto konto, int år, int måned, decimal kredit);
+
+        /// <summary>
+        /// Opdaterer eller tilføjer budgetoplysninger til en given budgetkonto.
+        /// </summary>
+        /// <param name="budgetkonto">Budgetkonto, hvorpå budgetoplysninger skal opdateres eller tilføjes.</param>
+        /// <param name="år">Årstal.</param>gi
+        /// <param name="måned">Måned.</param>
+        /// <param name="indtægter">Indtægter.</param>
+        /// <param name="udgifter">Udgifter.</param>
+        void BudgetoplysningerModifyOrAdd(Budgetkonto budgetkonto, int år, int måned, decimal indtægter, decimal udgifter);
+        
+        /// <summary>
         /// Tilføjer en bogføringslinje.
         /// </summary>
         /// <param name="bogføringsdato">Bogføringsdato.</param>
