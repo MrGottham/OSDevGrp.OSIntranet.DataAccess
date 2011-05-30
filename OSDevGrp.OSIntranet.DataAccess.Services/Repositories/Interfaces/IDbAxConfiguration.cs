@@ -16,6 +16,14 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
         }
 
         /// <summary>
+        /// Placering af DBAX databaser ved offline brug.
+        /// </summary> 
+        DirectoryInfo OfflineDataStoreLocation
+        {
+            get;
+        }
+
+        /// <summary>
         /// Brugernavn til DBAX login.
         /// </summary>
         string UserName

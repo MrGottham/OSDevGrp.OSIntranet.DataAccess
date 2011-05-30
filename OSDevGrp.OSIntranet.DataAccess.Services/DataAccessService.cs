@@ -188,15 +188,15 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
             dbAxRepositoryWatcher.EnableRaisingEvents = true;
             _dbAxRepositoryWatchers.Add(dbAxRepositoryWatcher);
             // Start overvågning af Offline DBAX Files.
-            var offlinePath =
-                new DirectoryInfo(string.Format("{0}{1}CSC",
-                                                Environment.GetFolderPath(Environment.SpecialFolder.Windows),
-                                                Path.DirectorySeparatorChar));
-            if (!offlinePath.Exists)
+            if (_dbAxConfiguration.OfflineDataStoreLocation == null)
             {
                 return;
             }
-            var offlineDbAxRepositoryWatcher = new FileSystemWatcher(offlinePath.FullName, "*.DBD")
+            if (!_dbAxConfiguration.OfflineDataStoreLocation.Exists)
+            {
+                return;
+            }
+            var offlineDbAxRepositoryWatcher = new FileSystemWatcher(_dbAxConfiguration.OfflineDataStoreLocation.FullName, "*.DBD")
                                                    {
                                                        EnableRaisingEvents = false,
                                                        IncludeSubdirectories = true,

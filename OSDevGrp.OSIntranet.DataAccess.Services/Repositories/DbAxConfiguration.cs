@@ -15,6 +15,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         #region Private variables
 
         private DirectoryInfo _dataStoreLocation;
+        private DirectoryInfo _offlineDataStoreLocation;
         private string _userName;
         private string _password;
 
@@ -31,7 +32,9 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
             try
             {
                 _dataStoreLocation = base.GetPathFromApplicationSettings(applicationSettings, "DataStoreLocation");
+                _offlineDataStoreLocation = base.GetPathFromApplicationSettings(applicationSettings, "OfflineDataStoreLocation", true);
                 _userName = base.GetStringFromApplicationSettings(applicationSettings, "UserName");
+                _password = base.GetStringFromApplicationSettings(applicationSettings, "Password", true);
             }
             catch (CommonRepositoryException ex)
             {
@@ -66,6 +69,21 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
             protected set
             {
                 _dataStoreLocation = value;
+            }
+        }
+
+        /// <summary>
+        /// Placering af DBAX databaser ved offline brug.
+        /// </summary>
+        public virtual DirectoryInfo OfflineDataStoreLocation
+        {
+            get
+            {
+                return _offlineDataStoreLocation;
+            }
+            protected set
+            {
+                _offlineDataStoreLocation = value;
             }
         }
 
