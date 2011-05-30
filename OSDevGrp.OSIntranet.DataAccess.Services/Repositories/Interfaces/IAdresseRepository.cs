@@ -39,5 +39,35 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
         /// </summary>
         /// <returns>Liste indeholdende alle betalingsbetingelser.</returns>
         IList<Betalingsbetingelse> BetalingsbetingelserGetAll();
+
+        /// <summary>
+        /// Tilføjer en adressegruppe.
+        /// </summary>
+        /// <param name="nummer">Unik identifikation af adressegruppen.</param>
+        /// <param name="navn">Navn på adressegruppen.</param>
+        /// <param name="adressegruppeOswebdb">Nummer på den tilsvarende adressegruppe i OSWEBDB.</param>
+        void AdressegruppeAdd(int nummer, string navn, int adressegruppeOswebdb);
+
+        /// <summary>
+        /// Opdaterer en given adressegruppe.
+        /// </summary>
+        /// <param name="nummer">Unik identifikation af adressegruppen.</param>
+        /// <param name="navn">Navn på adressegruppen.</param>
+        /// <param name="adressegruppeOswebdb">Nummer på den tilsvarende adressegruppe i OSWEBDB.</param>
+        void AdressegruppeModify(int nummer, string navn, int adressegruppeOswebdb);
+
+        /// <summary>
+        /// Tilføjer en betalingsbetingelse.
+        /// </summary>
+        /// <param name="nummer">Unik identifikation af betalingsbetingelsen.</param>
+        /// <param name="navn">Navn på betalingsbetingelsen.</param>
+        void BetalingsbetingelseAdd(int nummer, string navn);
+
+        /// <summary>
+        /// Opdaterer en given adressegruppe.
+        /// </summary>
+        /// <param name="nummer">Unik identifikation af betalingsbetingelsen.</param>
+        /// <param name="navn">Navn på betalingsbetingelsen.</param>
+        void BetalingsbetingelseModify(int nummer, string navn);
     }
 }

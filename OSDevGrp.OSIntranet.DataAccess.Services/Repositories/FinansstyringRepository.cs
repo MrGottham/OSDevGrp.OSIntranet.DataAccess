@@ -193,7 +193,6 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                                                                  new Budgetkontogruppe(
                                                                                                      nummer, navn);
                                                                                              list.Add(budgetkontogruppe);
-                    
                                                                                          });
                 BudgetkontogruppeCache.Clear();
                 foreach (var budgetkontogruppe in budgetkontogrupper)
@@ -356,7 +355,35 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="kontogruppeType">Typen for kontogruppen.</param>
         public void KontogruppeAdd(int nummer, string navn, KontogruppeType kontogruppeType)
         {
-            throw new NotImplementedException();
+            CreateTableRecord(3030, nummer, navn, (dbHandle, searchHandle) =>
+                                                      {
+                                                          switch (kontogruppeType)
+                                                          {
+                                                              case KontogruppeType.Aktiver:
+                                                                  SetFieldValue(dbHandle, searchHandle, "Type", 1);
+                                                                  break;
+
+                                                              case KontogruppeType.Passiver:
+                                                                  SetFieldValue(dbHandle, searchHandle, "Type", 2);
+                                                                  break;
+
+                                                              default:
+                                                                  throw new DataAccessSystemException(
+                                                                      Resource.GetExceptionMessage(
+                                                                          ExceptionMessage.UnhandledSwitchValue,
+                                                                          kontogruppeType, "kontogruppeType",
+                                                                          MethodBase.GetCurrentMethod().Name));
+                                                          }
+                                                      });
+            lock (KontogruppeCache)
+            {
+                var kontogruppe = new Kontogruppe(nummer, navn, kontogruppeType);
+                if (KontogruppeCache.SingleOrDefault(m => m.Nummer == kontogruppe.Nummer) != null)
+                {
+                    return;
+                }
+                KontogruppeCache.Add(kontogruppe);
+            }
         }
 
         /// <summary>
@@ -367,7 +394,41 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="kontogruppeType">Typen for kontogruppen.</param>
         public void KontogruppeModify(int nummer, string navn, KontogruppeType kontogruppeType)
         {
-            throw new NotImplementedException();
+            ModifyTableRecord<Kontogruppe>(3030, nummer, navn, (dbHandle, searchHandle) =>
+                                                                   {
+                                                                       switch (kontogruppeType)
+                                                                       {
+                                                                           case KontogruppeType.Aktiver:
+                                                                               SetFieldValue(dbHandle, searchHandle,
+                                                                                             "Type", 1);
+                                                                               break;
+
+                                                                           case KontogruppeType.Passiver:
+                                                                               SetFieldValue(dbHandle, searchHandle,
+                                                                                             "Type", 2);
+                                                                               break;
+
+                                                                           default:
+                                                                               throw new DataAccessSystemException(
+                                                                                   Resource.GetExceptionMessage(
+                                                                                       ExceptionMessage.
+                                                                                           UnhandledSwitchValue,
+                                                                                       kontogruppeType,
+                                                                                       "kontogruppeType",
+                                                                                       MethodBase.GetCurrentMethod().
+                                                                                           Name));
+                                                                       }
+                                                                   });
+            lock (KontogruppeCache)
+            {
+                if (KontogruppeCache.Count == 0)
+                {
+                    return;
+                }
+                var kontogruppe = KontogruppeCache.Single(m => m.Nummer == nummer);
+                kontogruppe.SætNavn(navn);
+                kontogruppe.SætKontogruppeType(kontogruppeType);
+            }
         }
 
         /// <summary>
@@ -377,7 +438,16 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="navn">Navn på gruppen til budgetkonti.</param>
         public void BudgetkontogruppeAdd(int nummer, string navn)
         {
-            throw new NotImplementedException();
+            CreateTableRecord(3040, nummer, navn, null);
+            lock (BudgetkontogruppeCache)
+            {
+                var budgetkontogruppe = new Budgetkontogruppe(nummer, navn);
+                if (BudgetkontogruppeCache.SingleOrDefault(m => m.Nummer == budgetkontogruppe.Nummer) != null)
+                {
+                    return;
+                }
+                BudgetkontogruppeCache.Add(budgetkontogruppe);
+            }
         }
 
         /// <summary>
@@ -387,7 +457,16 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="navn">Navn på gruppen til budgetkonti.</param>
         public void BudgetkontogruppeModify(int nummer, string navn)
         {
-            throw new NotImplementedException();
+            ModifyTableRecord<Budgetkontogruppe>(3040, nummer, navn, null);
+            lock (BudgetkontogruppeCache)
+            {
+                if (BudgetkontogruppeCache.Count == 0)
+                {
+                    return;
+                }
+                var budgetkontogruppe = BudgetkontogruppeCache.Single(m => m.Nummer == nummer);
+                budgetkontogruppe.SætNavn(navn);
+            }
         }
 
         #endregion

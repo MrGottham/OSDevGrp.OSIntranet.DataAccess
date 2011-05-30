@@ -301,6 +301,89 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
             }
         }
 
+        /// <summary>
+        /// Tilføjer en adressegruppe.
+        /// </summary>
+        /// <param name="nummer">Unik identifikation af adressegruppen.</param>
+        /// <param name="navn">Navn på adressegruppen.</param>
+        /// <param name="adressegruppeOswebdb">Nummer på den tilsvarende adressegruppe i OSWEBDB.</param>
+        public void AdressegruppeAdd(int nummer, string navn, int adressegruppeOswebdb)
+        {
+            CreateTableRecord(1030, nummer, navn,
+                              (dbHandle, searchHandle) =>
+                              SetFieldValue(dbHandle, searchHandle, "Adressegruppe", adressegruppeOswebdb));
+            lock (AdressegruppeCache)
+            {
+                var adressegruppe = new Adressegruppe(nummer, navn, adressegruppeOswebdb);
+                if (AdressegruppeCache.SingleOrDefault(m => m.Nummer == adressegruppe.Nummer) != null)
+                {
+                    return;
+                }
+                AdressegruppeCache.Add(adressegruppe);
+            }
+        }
+
+        /// <summary>
+        /// Opdaterer en given adressegruppe.
+        /// </summary>
+        /// <param name="nummer">Unik identifikation af adressegruppen.</param>
+        /// <param name="navn">Navn på adressegruppen.</param>
+        /// <param name="adressegruppeOswebdb">Nummer på den tilsvarende adressegruppe i OSWEBDB.</param>
+        public void AdressegruppeModify(int nummer, string navn, int adressegruppeOswebdb)
+        {
+            ModifyTableRecord<Adressegruppe>(1030, nummer, navn,
+                                             (dbHandle, searchHandle) =>
+                                             SetFieldValue(dbHandle, searchHandle, "Adressegruppe", adressegruppeOswebdb));
+            lock (AdressegruppeCache)
+            {
+                if (AdresseCache.Count == 0)
+                {
+                    return;
+                }
+                var adressegruppe = AdressegruppeCache.Single(m => m.Nummer == nummer);
+                adressegruppe.SætNavn(navn);
+                adressegruppe.SætAdressegruppeOswebdb(adressegruppeOswebdb);
+            }
+        }
+
+        /// <summary>
+        /// Tilføjer en betalingsbetingelse.
+        /// </summary>
+        /// <param name="nummer">Unik identifikation af betalingsbetingelsen.</param>
+        /// <param name="navn">Navn på betalingsbetingelsen.</param>
+        public void BetalingsbetingelseAdd(int nummer, string navn)
+        {
+            CreateTableRecord(1040, nummer, navn, null);
+            lock (BetalingsbetingelseCache)
+            {
+                var betalingsbetingelse = new Betalingsbetingelse(nummer, navn);
+                if (BetalingsbetingelseCache.SingleOrDefault(m => m.Nummer == betalingsbetingelse.Nummer) != null)
+                {
+                    return;
+                }
+                BetalingsbetingelseCache.Add(betalingsbetingelse);
+            }
+        }
+
+        /// <summary>
+        /// Opdaterer en given adressegruppe.
+        /// </summary>
+        /// <param name="nummer">Unik identifikation af betalingsbetingelsen.</param>
+        /// <param name="navn">Navn på betalingsbetingelsen.</param>
+        public void BetalingsbetingelseModify(int nummer, string navn)
+        {
+            ModifyTableRecord<Betalingsbetingelse>(1040, nummer, navn, null);
+            lock (BetalingsbetingelseCache)
+            {
+                if (BetalingsbetingelseCache.Count == 0)
+                {
+                    return;
+                }
+                var betalingsbetingelse = BetalingsbetingelseCache.Single(m => m.Nummer == nummer);
+                betalingsbetingelse.SætNavn(navn);
+            }
+        }
+
         #endregion
 
         #region IDbAxRepositoryCacher Members

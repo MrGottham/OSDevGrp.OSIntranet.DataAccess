@@ -78,6 +78,5 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
         /// <param name="nummer">Unik identifikation af gruppen til budgetkonti.</param>
         /// <param name="navn">Navn på gruppen til budgetkonti.</param>
         void BudgetkontogruppeModify(int nummer, string navn);
-
     }
 }
