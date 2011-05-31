@@ -37,6 +37,50 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
         IEnumerable<Budgetkontogruppe> BudgetkontogrupperGetAll();
 
         /// <summary>
+        /// Tilføjer en konto til et givent regnskab.
+        /// </summary>
+        /// <param name="regnskab">Regnskab, som kontoen skal tilføjes.</param>
+        /// <param name="kontonummer">Kontonummer.</param>
+        /// <param name="kontonavn">Kontonavn.</param>
+        /// <param name="beskrivelse">Beskrivelse</param>
+        /// <param name="notat">Notat.</param>
+        /// <param name="kontogruppe">Kontogruppe.</param>
+        void KontoAdd(Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, Kontogruppe kontogruppe);
+
+        /// <summary>
+        /// Opdaterer en konto i et givent regnskab.
+        /// </summary>
+        /// <param name="regnskab">Regnskab, hvori kontoen skal opdateres.</param>
+        /// <param name="kontonummer">Kontonummer.</param>
+        /// <param name="kontonavn">Kontonavn.</param>
+        /// <param name="beskrivelse">Beskrivelse.</param>
+        /// <param name="notat">Notat.</param>
+        /// <param name="kontogruppe">Kontogruppe.</param>
+        void KontoModify(Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, Kontogruppe kontogruppe);
+
+        /// <summary>
+        /// Tilføjer en budgetkonto til et givent regnskab.
+        /// </summary>
+        /// <param name="regnskab">Regnskab, som kontoen skal tilføjes.</param>
+        /// <param name="kontonummer">Kontonummer.</param>
+        /// <param name="kontonavn">Kontonavn.</param>
+        /// <param name="beskrivelse">Beskrivelse</param>
+        /// <param name="notat">Notat.</param>
+        /// <param name="budgetkontogruppe">Budgetkontogruppe.</param>
+        void BudgetkontoAdd(Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, Budgetkontogruppe budgetkontogruppe);
+
+        /// <summary>
+        /// Opdaterer en budgetkonto i et givent regnskab.
+        /// </summary>
+        /// <param name="regnskab">Regnskab, hvori kontoen skal opdateres.</param>
+        /// <param name="kontonummer">Kontonummer.</param>
+        /// <param name="kontonavn">Kontonavn.</param>
+        /// <param name="beskrivelse">Beskrivelse.</param>
+        /// <param name="notat">Notat.</param>
+        /// <param name="budgetkontogruppe">Budgetkontogruppe.</param>
+        void BudgetkontoModify(Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, Budgetkontogruppe budgetkontogruppe);
+
+        /// <summary>
         /// Opdaterer eller tilføjer kreditoplysninger til en given konto.
         /// </summary>
         /// <param name="konto">Konto, hvorpå kreditoplysninger skal opdateres eller tilføjes.</param>

@@ -203,6 +203,62 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         }
 
         /// <summary>
+        /// Tilføjer en konto til et givent regnskab.
+        /// </summary>
+        /// <param name="regnskab">Regnskab, som kontoen skal tilføjes.</param>
+        /// <param name="kontonummer">Kontonummer.</param>
+        /// <param name="kontonavn">Kontonavn.</param>
+        /// <param name="beskrivelse">Beskrivelse</param>
+        /// <param name="notat">Notat.</param>
+        /// <param name="kontogruppe">Kontogruppe.</param>
+        public void KontoAdd(Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, Kontogruppe kontogruppe)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Opdaterer en konto i et givent regnskab.
+        /// </summary>
+        /// <param name="regnskab">Regnskab, hvori kontoen skal opdateres.</param>
+        /// <param name="kontonummer">Kontonummer.</param>
+        /// <param name="kontonavn">Kontonavn.</param>
+        /// <param name="beskrivelse">Beskrivelse.</param>
+        /// <param name="notat">Notat.</param>
+        /// <param name="kontogruppe">Kontogruppe.</param>
+        public void KontoModify(Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, Kontogruppe kontogruppe)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Tilføjer en budgetkonto til et givent regnskab.
+        /// </summary>
+        /// <param name="regnskab">Regnskab, som kontoen skal tilføjes.</param>
+        /// <param name="kontonummer">Kontonummer.</param>
+        /// <param name="kontonavn">Kontonavn.</param>
+        /// <param name="beskrivelse">Beskrivelse</param>
+        /// <param name="notat">Notat.</param>
+        /// <param name="budgetkontogruppe">Budgetkontogruppe.</param>
+        public void BudgetkontoAdd(Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, Budgetkontogruppe budgetkontogruppe)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Opdaterer en budgetkonto i et givent regnskab.
+        /// </summary>
+        /// <param name="regnskab">Regnskab, hvori kontoen skal opdateres.</param>
+        /// <param name="kontonummer">Kontonummer.</param>
+        /// <param name="kontonavn">Kontonavn.</param>
+        /// <param name="beskrivelse">Beskrivelse.</param>
+        /// <param name="notat">Notat.</param>
+        /// <param name="budgetkontogruppe">Budgetkontogruppe.</param>
+        public void BudgetkontoModify(Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, Budgetkontogruppe budgetkontogruppe)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Opdaterer eller tilføjer kreditoplysninger til en given konto.
         /// </summary>
         /// <param name="konto">Konto, hvorpå kreditoplysninger skal opdateres eller tilføjes.</param>
@@ -852,6 +908,36 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
             {
                 dbHandle.DeleteSearch(searchHandle);
             }
+        }
+
+        /// <summary>
+        /// Tilføjer en basiskonto til et givent regnskab.
+        /// </summary>
+        /// <param name="tableNumber">Tabelnummer.</param>
+        /// <param name="regnskab">Regnskab, som basiskontoen skal tilføjes.</param>
+        /// <param name="kontonummer">Kontonummer.</param>
+        /// <param name="kontonavn">Kontonavn.</param>
+        /// <param name="beskrivelse">Beskrivelse.</param>
+        /// <param name="notat">Notat.</param>
+        /// <param name="kontogruppeBase">Basiskontogruppe.</param>
+        private void KontoBaseAdd(int tableNumber, Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, KontogruppeBase kontogruppeBase)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Opdaterer en basiskonto til et givent regnskab.
+        /// </summary>
+        /// <param name="tableNumber">Tabelnummer.</param>
+        /// <param name="regnskab">Regnskab, hvori basiskontoen skal opdateres.</param>
+        /// <param name="kontonummer">Kontonummer.</param>
+        /// <param name="kontonavn">Kontonavn.</param>
+        /// <param name="beskrivelse">Beskrivelse.</param>
+        /// <param name="notat">Notat.</param>
+        /// <param name="kontogruppeBase">Basiskontogruppe.</param>
+        private void KontoBaseModify(int tableNumber, Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, KontogruppeBase kontogruppeBase)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
