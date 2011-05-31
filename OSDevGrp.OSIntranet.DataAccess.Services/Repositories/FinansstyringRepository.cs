@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using OSDevGrp.OSIntranet.CommonLibrary.Domain.Adressekartotek;
@@ -213,12 +214,119 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="kontogruppe">Kontogruppe.</param>
         public void KontoAdd(Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, Kontogruppe kontogruppe)
         {
+            var kreditoplysninger = new List<Kreditoplysninger>(24);
             KontoBaseAdd(3010, regnskab, kontonummer, kontonavn, beskrivelse, notat, kontogruppe,
                          (db, sh, ct) =>
                              {
-                                 // TODO: Oprettelse af kreditoplysninger.
+                                 var fromDate = ct.AddMonths(-11);
+                                 for (var i = 0; i < kreditoplysninger.Capacity; i++)
+                                 {
+                                     kreditoplysninger.Add(new Kreditoplysninger(fromDate.Year, fromDate.Month, 0));
+                                     fromDate = fromDate.AddMonths(1);
+                                 }
+                                 var dbHandle = OpenDatabase("KONTOLIN.DBD", false, false);
+                                 try
+                                 {
+                                     var databaseName = Path.GetFileNameWithoutExtension(Path.GetFileName(dbHandle.DbFile));
+                                     if (!dbHandle.BeginTTS())
+                                     {
+                                         throw new DataAccessSystemException(
+                                             Resource.GetExceptionMessage(ExceptionMessage.CantBeginTts, databaseName));
+                                     }
+                                     try
+                                     {
+                                         var keyValue1 = dbHandle.KeyStrInt(3050,
+                                                                            dbHandle.GetFieldLength(
+                                                                                dbHandle.GetFieldNoByName("TabelNr")));
+                                         var keyValue2 = dbHandle.KeyStrInt(regnskab.Nummer,
+                                                                            dbHandle.GetFieldLength(
+                                                                                dbHandle.GetFieldNoByName(
+                                                                                    "Regnskabnummer")));
+                                         var løbenr = GetNextUniqueIntId(dbHandle, "LøbeNr", "LøbeNr", false,
+                                                                         string.Format("{0}{1}", keyValue1, keyValue2));
+
+                                         var searchHandle = dbHandle.CreateSearch();
+                                         try
+                                         {
+                                             foreach (var kreditoplysning in kreditoplysninger)
+                                             {
+                                                 if (!dbHandle.CreateRec(searchHandle))
+                                                 {
+                                                     throw new DataAccessSystemException(
+                                                         Resource.GetExceptionMessage(
+                                                             ExceptionMessage.CantCreateRecord, databaseName));
+                                                 }
+                                                 SetFieldValue(dbHandle, searchHandle, "TabelNr", 3050);
+                                                 SetFieldValue(dbHandle, searchHandle, "Regnskabnummer", regnskab.Nummer);
+                                                 SetFieldValue(dbHandle, searchHandle, "Kontonummer", kontonummer.ToUpper());
+                                                 SetFieldValue(dbHandle, searchHandle, "År", kreditoplysning.År);
+                                                 SetFieldValue(dbHandle, searchHandle, "Måned", kreditoplysning.Måned);
+                                                 SetFieldValue(dbHandle, searchHandle, "Kredit", kreditoplysning.Kredit);
+                                                 SetFieldValue(dbHandle, searchHandle, "LøbeNr", løbenr);
+                                                 SetFieldValue(dbHandle, searchHandle, "OpretBruger", Configuration.UserName);
+                                                 SetFieldValue(dbHandle, searchHandle, "OpretDato", ct);
+                                                 SetFieldValue(dbHandle, searchHandle, "OpretTid", ct);
+                                                 SetFieldValue(dbHandle, searchHandle, "RetBruger", Configuration.UserName);
+                                                 SetFieldValue(dbHandle, searchHandle, "RetDato", ct);
+                                                 SetFieldValue(dbHandle, searchHandle, "RetTid", ct);
+                                                 if (!dbHandle.IsRecOk(searchHandle))
+                                                 {
+                                                     throw new DataAccessSystemException(
+                                                         Resource.GetExceptionMessage(ExceptionMessage.RecordIsNotOk));
+                                                 }
+                                                 if (!dbHandle.FlushRec(searchHandle))
+                                                 {
+                                                     throw new DataAccessSystemException(
+                                                         Resource.GetExceptionMessage(ExceptionMessage.CantFlushRecord));
+                                                 }
+                                                 løbenr = løbenr + 1;
+                                             }
+                                         }
+                                         finally
+                                         {
+                                             dbHandle.DeleteSearch(searchHandle);
+                                         }
+                                         dbHandle.EndTTS();
+                                     }
+                                     catch
+                                     {
+                                         dbHandle.AbortTTS();
+                                         throw;
+                                     }
+                                 }
+                                 finally
+                                 {
+                                     dbHandle.CloseDatabase();
+                                 }
                              });
-            throw new NotImplementedException();
+            lock (RegnskabCache)
+            {
+                if (RegnskabCache.Count == 0)
+                {
+                    return;
+                }
+                var konto = regnskab.Konti.OfType<Konto>().Single(m => m.Kontonummer.CompareTo(kontonummer) == 0);
+                if (konto == null)
+                {
+                    konto = new Konto(regnskab, kontonummer.ToUpper(), kontonavn, kontogruppe);
+                    konto.SætBeskrivelse(beskrivelse);
+                    konto.SætNote(notat);
+                    kreditoplysninger.ForEach(m => konto.TilføjKreditoplysninger(m));
+                    regnskab.TilføjKonto(konto);
+                    return;
+                }
+                kreditoplysninger.ForEach(m =>
+                                              {
+                                                  var kreditoplysning = konto.Kreditoplysninger
+                                                      .SingleOrDefault(n => n.År == m.År && n.Måned == m.Måned);
+                                                  if (kreditoplysning == null)
+                                                  {
+                                                      konto.TilføjKreditoplysninger(m);
+                                                      return;
+                                                  }
+                                                  kreditoplysning.SætKredit(m.Kredit);
+                                              });
+            }
         }
 
         /// <summary>
@@ -258,12 +366,122 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="budgetkontogruppe">Budgetkontogruppe.</param>
         public void BudgetkontoAdd(Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, Budgetkontogruppe budgetkontogruppe)
         {
+            var budgetoplysninger = new List<Budgetoplysninger>(24);
             KontoBaseAdd(3020, regnskab, kontonummer, kontonavn, beskrivelse, notat, budgetkontogruppe,
                          (db, sh, ct) =>
                              {
-                                 // TODO: Oprettelse af budgetoplysninger.
+                                 var fromDate = ct.AddMonths(-11);
+                                 for (var i = 0; i < budgetoplysninger.Capacity; i++)
+                                 {
+                                     budgetoplysninger.Add(new Budgetoplysninger(fromDate.Year, fromDate.Month, 0, 0));
+                                     fromDate = fromDate.AddMonths(1);
+                                 }
+                                 var dbHandle = OpenDatabase("KONTOLIN.DBD", false, false);
+                                 try
+                                 {
+                                     var databaseName = Path.GetFileNameWithoutExtension(Path.GetFileName(dbHandle.DbFile));
+                                     if (!dbHandle.BeginTTS())
+                                     {
+                                         throw new DataAccessSystemException(
+                                             Resource.GetExceptionMessage(ExceptionMessage.CantBeginTts, databaseName));
+                                     }
+                                     try
+                                     {
+                                         var keyValue1 = dbHandle.KeyStrInt(3060,
+                                                                            dbHandle.GetFieldLength(
+                                                                                dbHandle.GetFieldNoByName("TabelNr")));
+                                         var keyValue2 = dbHandle.KeyStrInt(regnskab.Nummer,
+                                                                            dbHandle.GetFieldLength(
+                                                                                dbHandle.GetFieldNoByName(
+                                                                                    "Regnskabnummer")));
+                                         var løbenr = GetNextUniqueIntId(dbHandle, "LøbeNr", "LøbeNr", false,
+                                                                         string.Format("{0}{1}", keyValue1, keyValue2));
+                                         var searchHandle = dbHandle.CreateSearch();
+                                         try
+                                         {
+                                             foreach (var budgetoplysning in budgetoplysninger)
+                                             {
+                                                 if (!dbHandle.CreateRec(searchHandle))
+                                                 {
+                                                     throw new DataAccessSystemException(
+                                                         Resource.GetExceptionMessage(
+                                                             ExceptionMessage.CantCreateRecord, databaseName));
+                                                 }
+                                                 SetFieldValue(dbHandle, searchHandle, "TabelNr", 3060);
+                                                 SetFieldValue(dbHandle, searchHandle, "Regnskabnummer", regnskab.Nummer);
+                                                 SetFieldValue(dbHandle, searchHandle, "Kontonummer", kontonummer.ToUpper());
+                                                 SetFieldValue(dbHandle, searchHandle, "År", budgetoplysning.År);
+                                                 SetFieldValue(dbHandle, searchHandle, "Måned", budgetoplysning.Måned);
+                                                 SetFieldValue(dbHandle, searchHandle, "Indtægter", budgetoplysning.Indtægter);
+                                                 SetFieldValue(dbHandle, searchHandle, "Udgifter", budgetoplysning.Udgifter);
+                                                 SetFieldValue(dbHandle, searchHandle, "LøbeNr", løbenr);
+                                                 SetFieldValue(dbHandle, searchHandle, "OpretBruger", Configuration.UserName);
+                                                 SetFieldValue(dbHandle, searchHandle, "OpretDato", ct);
+                                                 SetFieldValue(dbHandle, searchHandle, "OpretTid", ct);
+                                                 SetFieldValue(dbHandle, searchHandle, "RetBruger", Configuration.UserName);
+                                                 SetFieldValue(dbHandle, searchHandle, "RetDato", ct);
+                                                 SetFieldValue(dbHandle, searchHandle, "RetTid", ct);
+                                                 if (!dbHandle.IsRecOk(searchHandle))
+                                                 {
+                                                     throw new DataAccessSystemException(
+                                                         Resource.GetExceptionMessage(ExceptionMessage.RecordIsNotOk));
+                                                 }
+                                                 if (!dbHandle.FlushRec(searchHandle))
+                                                 {
+                                                     throw new DataAccessSystemException(
+                                                         Resource.GetExceptionMessage(ExceptionMessage.CantFlushRecord));
+                                                 }
+                                                 løbenr = løbenr + 1;
+                                             }
+                                         }
+                                         finally
+                                         {
+                                             dbHandle.DeleteSearch(searchHandle);
+                                         }
+                                         dbHandle.EndTTS();
+                                     }
+                                     catch
+                                     {
+                                         dbHandle.AbortTTS();
+                                         throw;
+                                     }
+                                 }
+                                 finally
+                                 {
+                                     dbHandle.CloseDatabase();
+                                 }
                              });
-            throw new NotImplementedException();
+            lock (RegnskabCache)
+            {
+                if (RegnskabCache.Count == 0)
+                {
+                    return;
+                }
+                var budgetkonto = regnskab.Konti
+                    .OfType<Budgetkonto>()
+                    .Single(m => m.Kontonummer.CompareTo(kontonummer) == 0);
+                if (budgetkonto == null)
+                {
+                    budgetkonto = new Budgetkonto(regnskab, kontonummer.ToUpper(), kontonavn, budgetkontogruppe);
+                    budgetkonto.SætBeskrivelse(beskrivelse);
+                    budgetkonto.SætNote(notat);
+                    budgetoplysninger.ForEach(m => budgetkonto.TilføjBudgetoplysninger(m));
+                    regnskab.TilføjKonto(budgetkonto);
+                    return;
+                }
+                budgetoplysninger.ForEach(m =>
+                {
+                    var budgetoplysning = budgetkonto.Budgetoplysninger
+                        .SingleOrDefault(n => n.År == m.År && n.Måned == m.Måned);
+                    if (budgetoplysning == null)
+                    {
+                        budgetkonto.TilføjBudgetoplysninger(m);
+                        return;
+                    }
+                    budgetoplysning.SætIndtægter(m.Indtægter);
+                    budgetoplysning.SætUdgifter(m.Udgifter);
+                });
+            }
         }
 
         /// <summary>
@@ -284,11 +502,13 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                 {
                     return;
                 }
-                var konto = regnskab.Konti.OfType<Budgetkonto>().Single(m => m.Kontonummer.CompareTo(kontonummer) == 0);
-                konto.SætKontonavn(kontonavn);
-                konto.SætBeskrivelse(beskrivelse);
-                konto.SætNote(notat);
-                konto.SætBudgetkontogruppe(budgetkontogruppe);
+                var budgetkonto = regnskab.Konti
+                    .OfType<Budgetkonto>()
+                    .Single(m => m.Kontonummer.CompareTo(kontonummer) == 0);
+                budgetkonto.SætKontonavn(kontonavn);
+                budgetkonto.SætBeskrivelse(beskrivelse);
+                budgetkonto.SætNote(notat);
+                budgetkonto.SætBudgetkontogruppe(budgetkontogruppe);
             }
         }
 
@@ -424,7 +644,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                                                       db.GetFieldLength(
                                                                                           db.GetFieldNoByName(
                                                                                               "Regnskabnummer")));
-                                                         løbenr = GetNextUniqueIntId(db, "LøbeNr", "LøbeNr",
+                                                         løbenr = GetNextUniqueIntId(db, "LøbeNr", "LøbeNr", false,
                                                                                      string.Format("{0}{1}", keyValue1,
                                                                                                    keyValue2));
                                                          SetFieldValue(db, sh, "LøbeNr", løbenr);
@@ -1155,6 +1375,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                                                                 db.GetFieldNoByName(
                                                                                                     "Regnskabnummer")));
                                                                var løbenr = GetNextUniqueIntId(db, "LøbeNr", "LøbeNr",
+                                                                                               false,
                                                                                                string.Format("{0}{1}",
                                                                                                              keyValue1,
                                                                                                              keyValue2));

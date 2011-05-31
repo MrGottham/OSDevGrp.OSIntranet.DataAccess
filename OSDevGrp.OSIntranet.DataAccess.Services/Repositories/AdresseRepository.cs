@@ -302,6 +302,98 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         }
 
         /// <summary>
+        /// TIlføjer en person.
+        /// </summary>
+        /// <param name="navn">Navn på personen.</param>
+        /// <param name="adresse1">Adresse (linje 1).</param>
+        /// <param name="adresse2">Adresse (linje 2).</param>
+        /// <param name="postnrBy">Postnummer og bynavn.</param>
+        /// <param name="telefon">Telefonnummer.</param>
+        /// <param name="mobil">Mobilnummer.</param>
+        /// <param name="fødselsdato">Fødselsdato.</param>
+        /// <param name="adressegruppe">Adressegruppe.</param>
+        /// <param name="bekendtskab">Bekendtskab.</param>
+        /// <param name="mailadresse">Mailadresse.</param>
+        /// <param name="webadresse">Webadresse.</param>
+        /// <param name="betalingsbetingelse">Betalingsbetingelse.</param>
+        /// <param name="udlånsfrist">Udlånsfrist.</param>
+        /// <param name="filofaxAdresselabel">Markering for Filofax adresselabel.</param>
+        /// <param name="firma">Firmatilknytning.</param>
+        public void PersonAdd(string navn, string adresse1, string adresse2, string postnrBy, string telefon, string mobil, DateTime? fødselsdato, Adressegruppe adressegruppe, string bekendtskab, string mailadresse, string webadresse, Betalingsbetingelse betalingsbetingelse, int udlånsfrist, bool filofaxAdresselabel, Firma firma)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Opdaterer en given person.
+        /// </summary>
+        /// <param name="nummer">Unik identifikation af personen.</param>
+        /// <param name="navn">Navn på personen.</param>
+        /// <param name="adresse1">Adresse (linje 1).</param>
+        /// <param name="adresse2">Adresse (linje 2).</param>
+        /// <param name="postnrBy">Postnummer og bynavn.</param>
+        /// <param name="telefon">Telefonnummer.</param>
+        /// <param name="mobil">Mobilnummer.</param>
+        /// <param name="fødselsdato">Fødselsdato.</param>
+        /// <param name="adressegruppe">Adressegruppe.</param>
+        /// <param name="bekendtskab">Bekendtskab.</param>
+        /// <param name="mailadresse">Mailadresse.</param>
+        /// <param name="webadresse">Webadresse.</param>
+        /// <param name="betalingsbetingelse">Betalingsbetingelse.</param>
+        /// <param name="udlånsfrist">Udlånsfrist.</param>
+        /// <param name="filofaxAdresselabel">Markering for Filofax adresselabel.</param>
+        /// <param name="firma">Firmatilknytning.</param>
+        public void PersonModify(int nummer, string navn, string adresse1, string adresse2, string postnrBy, string telefon, string mobil, DateTime? fødselsdato, Adressegruppe adressegruppe, string bekendtskab, string mailadresse, string webadresse, Betalingsbetingelse betalingsbetingelse, int udlånsfrist, bool filofaxAdresselabel, Firma firma)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// TIlføjer et firmat.
+        /// </summary>
+        /// <param name="navn">Navn på firmaet.</param>
+        /// <param name="adresse1">Adresse (linje 1).</param>
+        /// <param name="adresse2">Adresse (linje 2).</param>
+        /// <param name="postnrBy">Postnummer og bynavn.</param>
+        /// <param name="telefon1">Primært telefonnummer.</param>
+        /// <param name="telefon2">Sekundært telefonnummer.</param>
+        /// <param name="telefax">Telefax.</param>
+        /// <param name="adressegruppe">Adressegruppe.</param>
+        /// <param name="bekendtskab">Bekendtskab.</param>
+        /// <param name="mailadresse">Mailadresse.</param>
+        /// <param name="webadresse">Webadresse.</param>
+        /// <param name="betalingsbetingelse">Betalingsbetingelse.</param>
+        /// <param name="udlånsfrist">Udlånsfrist.</param>
+        /// <param name="filofaxAdresselabel">Markering for Filofax adresselabel.</param>
+        public void FirmaAdd(string navn, string adresse1, string adresse2, string postnrBy, string telefon1, string telefon2, string telefax, Adressegruppe adressegruppe, string bekendtskab, string mailadresse, string webadresse, Betalingsbetingelse betalingsbetingelse, int udlånsfrist, bool filofaxAdresselabel)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Opdaterer et givent firma.
+        /// </summary>
+        /// <param name="nummer">Unik identifikation af firmaet.</param>
+        /// <param name="navn">Navn på firmaet.</param>
+        /// <param name="adresse1">Adresse (linje 1).</param>
+        /// <param name="adresse2">Adresse (linje 2).</param>
+        /// <param name="postnrBy">Postnummer og bynavn.</param>
+        /// <param name="telefon1">Primært telefonnummer.</param>
+        /// <param name="telefon2">Sekundært telefonnummer.</param>
+        /// <param name="telefax">Telefax.</param>
+        /// <param name="adressegruppe">Adressegruppe.</param>
+        /// <param name="bekendtskab">Bekendtskab.</param>
+        /// <param name="mailadresse">Mailadresse.</param>
+        /// <param name="webadresse">Webadresse.</param>
+        /// <param name="betalingsbetingelse">Betalingsbetingelse.</param>
+        /// <param name="udlånsfrist">Udlånsfrist.</param>
+        /// <param name="filofaxAdresselabel">Markering for Filofax adresselabel.</param>
+        public void FirmaModify(int nummer, string navn, string adresse1, string adresse2, string postnrBy, string telefon1, string telefon2, string telefax, Adressegruppe adressegruppe, string bekendtskab, string mailadresse, string webadresse, Betalingsbetingelse betalingsbetingelse, int udlånsfrist, bool filofaxAdresselabel)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Tilføjer et postnummer.
         /// </summary>
         /// <param name="landekode">Landekode.</param>
@@ -702,6 +794,108 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                                                      "Betalingsnummer")));
             adresse.SætUdlånsfrist(GetFieldValueAsInt(dbHandle, searchHandle, "Udlånsfrist"));
             adresse.SætFilofaxAdresselabel((GetFieldValueAsInt(dbHandle, searchHandle, "Andet") & 1) == 1);
+        }
+
+        /// <summary>
+        /// Tilføjer en basisadresse.
+        /// </summary>
+        /// <param name="tableNumber">Tabelnummer for basisadressen.</param>
+        /// <param name="navn">Navn på personen.</param>
+        /// <param name="adresse1">Adresse (linje 1).</param>
+        /// <param name="adresse2">Adresse (linje 2).</param>
+        /// <param name="postnrBy">Postnummer og bynavn.</param>
+        /// <param name="adressegruppe">Adressegruppe.</param>
+        /// <param name="bekendtskab">Bekendtskab.</param>
+        /// <param name="mailadresse">Mailadresse.</param>
+        /// <param name="webadresse">Webadresse.</param>
+        /// <param name="betalingsbetingelse">Betalingsbetingelse.</param>
+        /// <param name="udlånsfrist">Udlånsfrist.</param>
+        /// <param name="filofaxAdresselabel">Markering for Filofax adresselabel.</param>
+        /// <param name="onCreate">Delegate, der kaldes i forbindelse med oprettelse.</param>
+        private void AdresseBaseAdd(int tableNumber, string navn, string adresse1, string adresse2, string postnrBy, Adressegruppe adressegruppe, string bekendtskab, string mailadresse, string webadresse, Betalingsbetingelse betalingsbetingelse, int udlånsfrist, bool filofaxAdresselabel, Action<IDsiDbX, int> onCreate)
+        {
+            if (string.IsNullOrEmpty(navn))
+            {
+                throw new ArgumentNullException("navn");
+            }
+            if (adressegruppe == null)
+            {
+                throw new ArgumentNullException("adressegruppe");
+            }
+            if (onCreate == null)
+            {
+                throw new ArgumentNullException("onCreate");
+            }
+            CreateDatabaseRecord("ADRESSE.DBD", (db, sh) =>
+                                                    {
+                                                        var creationTime = DateTime.Now;
+                                                        var ident = GetNextUniqueIntId(db, "Ident", "Ident", true);
+                                                        SetFieldValue(db, sh, "TabelNr", tableNumber);
+                                                        SetFieldValue(db, sh, "Ident", ident);
+                                                        SetFieldValue(db, sh, "Navn", navn);
+                                                        SetFieldValue(db, sh, "Adresse1", adresse1);
+                                                        SetFieldValue(db, sh, "Adresse2", adresse2);
+                                                        SetFieldValue(db, sh, "PostnummerBy", postnrBy);
+                                                        SetFieldValue(db, sh, "Gruppenummer", adressegruppe.Nummer);
+                                                        SetFieldValue(db, sh, "Bekendtskab", bekendtskab);
+                                                        SetFieldValue(db, sh, "Email", mailadresse);
+                                                        SetFieldValue(db, sh, "Web", webadresse);
+                                                        SetFieldValue(db, sh, "Betalingsnummer",
+                                                                      betalingsbetingelse == null
+                                                                          ? 0
+                                                                          : betalingsbetingelse.Nummer);
+                                                        SetFieldValue(db, sh, "Udlånsfrist", udlånsfrist);
+                                                        var andet = 0;
+                                                        if (filofaxAdresselabel)
+                                                        {
+                                                            andet = andet + 1;
+                                                        }
+                                                        SetFieldValue(db, sh, "Andet", andet);
+                                                        onCreate(db, sh);
+                                                        SetFieldValue(db, sh, "OpretBruger", Configuration.UserName);
+                                                        SetFieldValue(db, sh, "OpretDato", creationTime);
+                                                        SetFieldValue(db, sh, "OpretTid", creationTime);
+                                                        SetFieldValue(db, sh, "RetBruger", Configuration.UserName);
+                                                        SetFieldValue(db, sh, "RetDato", creationTime);
+                                                        SetFieldValue(db, sh, "RetTid", creationTime);
+                                                    });
+        }
+
+        /// <summary>
+        /// Opdaterer en basisadresse.
+        /// </summary>
+        /// <typeparam name="TAdresseBase">Typen for basisadressen, der skal opdateres.</typeparam>
+        /// <param name="tableNumber">Tabelnummer for basisadressen.</param>
+        /// <param name="nummer">Unik identifikation af basisadressen.</param>
+        /// <param name="navn">Navn på personen.</param>
+        /// <param name="adresse1">Adresse (linje 1).</param>
+        /// <param name="adresse2">Adresse (linje 2).</param>
+        /// <param name="postnrBy">Postnummer og bynavn.</param>
+        /// <param name="adressegruppe">Adressegruppe.</param>
+        /// <param name="bekendtskab">Bekendtskab.</param>
+        /// <param name="mailadresse">Mailadresse.</param>
+        /// <param name="webadresse">Webadresse.</param>
+        /// <param name="betalingsbetingelse">Betalingsbetingelse.</param>
+        /// <param name="udlånsfrist">Udlånsfrist.</param>
+        /// <param name="filofaxAdresselabel">Markering for Filofax adresselabel.</param>
+        /// <param name="onModify">Delegate, der kaldes i forbindelse med opdatering.</param>
+        private void AdresseBaseModify<TAdresseBase>(int tableNumber, int nummer, string navn, string adresse1, string adresse2, string postnrBy, Adressegruppe adressegruppe, string bekendtskab, string mailadresse, string webadresse, Betalingsbetingelse betalingsbetingelse, int udlånsfrist, bool filofaxAdresselabel, Action<IDsiDbX, int> onModify)
+        {
+            if (string.IsNullOrEmpty(navn))
+            {
+                throw new ArgumentNullException("navn");
+            }
+            if (adressegruppe == null)
+            {
+                throw new ArgumentNullException("adressegruppe");
+            }
+            if (onModify == null)
+            {
+                throw new ArgumentNullException("onModify");
+            }
+
+            // TODO: Primary key: TabelIdent (TabelNr, Ident)
+            throw new NotImplementedException();
         }
 
         #endregion

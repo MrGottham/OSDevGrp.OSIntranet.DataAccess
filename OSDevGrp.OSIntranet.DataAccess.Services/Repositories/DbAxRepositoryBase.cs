@@ -395,10 +395,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="dbHandle">Databasehandle.</param>
         /// <param name="primaryKey">Navn på primary key (sortering af unik identifikation).</param>
         /// <param name="idFieldName">Navn på felt for unik identifikation.</param>
+        /// <param name="searchLast">Angivelse af, om næste unikke identifikation skal beregnes på baggrund af sidste post i stedet for første post.</param>
         /// <returns>Næste unikke identifikation (integer).</returns>
-        protected int GetNextUniqueIntId(IDsiDbX dbHandle, string primaryKey, string idFieldName)
+        protected int GetNextUniqueIntId(IDsiDbX dbHandle, string primaryKey, string idFieldName, bool searchLast)
         {
-            return GetNextUniqueIntId(dbHandle, primaryKey, idFieldName, null);
+            return GetNextUniqueIntId(dbHandle, primaryKey, idFieldName, searchLast, null);
         }
 
         /// <summary>
@@ -408,8 +409,9 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="primaryKey">Navn på primary key (sortering af unik identifikation).</param>
         /// <param name="idFieldName">Navn på felt for unik identifikation.</param>
         /// <param name="keyInterval">Opsætning af eventuelt keyinterval.</param>
+        /// <param name="searchLast">Angivelse af, om næste unikke identifikation skal beregnes på baggrund af sidste post i stedet for første post.</param>
         /// <returns>Næste unikke identifikation (integer).</returns>
-        protected int GetNextUniqueIntId(IDsiDbX dbHandle, string primaryKey, string idFieldName, string keyInterval)
+        protected int GetNextUniqueIntId(IDsiDbX dbHandle, string primaryKey, string idFieldName, bool searchLast, string keyInterval)
         {
             if (dbHandle == null)
             {
@@ -445,7 +447,14 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                 try
                 {
                     var nextNumber = 1;
-                    if (dbHandle.SearchFirst(searchHandle))
+                    if (searchLast)
+                    {
+                        if (dbHandle.SearchLast(searchHandle))
+                        {
+                            nextNumber = GetFieldValueAsInt(dbHandle, searchHandle, idFieldName) + 1;
+                        }
+                    }
+                    else if (dbHandle.SearchFirst(searchHandle))
                     {
                         nextNumber = GetFieldValueAsInt(dbHandle, searchHandle, idFieldName) + 1;
                     }
