@@ -213,6 +213,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="kontogruppe">Kontogruppe.</param>
         public void KontoAdd(Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, Kontogruppe kontogruppe)
         {
+            KontoBaseAdd(3010, regnskab, kontonummer, kontonavn, beskrivelse, notat, kontogruppe,
+                         (db, sh, ct) =>
+                             {
+                                 // TODO: Oprettelse af kreditoplysninger.
+                             });
             throw new NotImplementedException();
         }
 
@@ -227,7 +232,19 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="kontogruppe">Kontogruppe.</param>
         public void KontoModify(Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, Kontogruppe kontogruppe)
         {
-            throw new NotImplementedException();
+            KontoBaseModify<Konto>(3010, regnskab, kontonummer, kontonavn, beskrivelse, notat, kontogruppe);
+            lock (RegnskabCache)
+            {
+                if (RegnskabCache.Count == 0)
+                {
+                    return;
+                }
+                var konto = regnskab.Konti.OfType<Konto>().Single(m => m.Kontonummer.CompareTo(kontonummer) == 0);
+                konto.SætKontonavn(kontonavn);
+                konto.SætBeskrivelse(beskrivelse);
+                konto.SætNote(notat);
+                konto.SætKontogruppe(kontogruppe);
+            }
         }
 
         /// <summary>
@@ -241,6 +258,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="budgetkontogruppe">Budgetkontogruppe.</param>
         public void BudgetkontoAdd(Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, Budgetkontogruppe budgetkontogruppe)
         {
+            KontoBaseAdd(3020, regnskab, kontonummer, kontonavn, beskrivelse, notat, budgetkontogruppe,
+                         (db, sh, ct) =>
+                             {
+                                 // TODO: Oprettelse af budgetoplysninger.
+                             });
             throw new NotImplementedException();
         }
 
@@ -255,7 +277,19 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="budgetkontogruppe">Budgetkontogruppe.</param>
         public void BudgetkontoModify(Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, Budgetkontogruppe budgetkontogruppe)
         {
-            throw new NotImplementedException();
+            KontoBaseModify<Budgetkonto>(3012, regnskab, kontonummer, kontonavn, beskrivelse, notat, budgetkontogruppe);
+            lock (RegnskabCache)
+            {
+                if (RegnskabCache.Count == 0)
+                {
+                    return;
+                }
+                var konto = regnskab.Konti.OfType<Budgetkonto>().Single(m => m.Kontonummer.CompareTo(kontonummer) == 0);
+                konto.SætKontonavn(kontonavn);
+                konto.SætBeskrivelse(beskrivelse);
+                konto.SætNote(notat);
+                konto.SætBudgetkontogruppe(budgetkontogruppe);
+            }
         }
 
         /// <summary>
@@ -920,14 +954,53 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="beskrivelse">Beskrivelse.</param>
         /// <param name="notat">Notat.</param>
         /// <param name="kontogruppeBase">Basiskontogruppe.</param>
-        private void KontoBaseAdd(int tableNumber, Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, KontogruppeBase kontogruppeBase)
+        /// <param name="onCreate">Delegate, der kaldes ved oprettelse af basiskonto.</param>
+        private void KontoBaseAdd(int tableNumber, Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, KontogruppeBase kontogruppeBase, Action<IDsiDbX, int, DateTime> onCreate)
         {
-            throw new NotImplementedException();
+            if (regnskab == null)
+            {
+                throw new ArgumentNullException("regnskab");
+            }
+            if (string.IsNullOrEmpty(kontonummer))
+            {
+                throw new ArgumentNullException("kontonummer");
+            }
+            if (string.IsNullOrEmpty(kontonavn))
+            {
+                throw new ArgumentNullException("kontonavn");
+            }
+            if (kontogruppeBase == null)
+            {
+                throw new ArgumentNullException("kontogruppeBase");
+            }
+            if (onCreate == null)
+            {
+                throw new ArgumentNullException("onCreate");
+            }
+            CreateDatabaseRecord("KONTO.DBD", (db, sh) =>
+                                                  {
+                                                      var creationTime = DateTime.Now;
+                                                      SetFieldValue(db, sh, "TabelNr", tableNumber);
+                                                      SetFieldValue(db, sh, "Regnskabnummer", regnskab.Nummer);
+                                                      SetFieldValue(db, sh, "Kontonummer", kontonummer.ToUpper());
+                                                      SetFieldValue(db, sh, "Kontonavn", kontonavn);
+                                                      SetFieldValue(db, sh, "Beskrivelse", beskrivelse);
+                                                      SetFieldValue(db, sh, "Note", notat);
+                                                      SetFieldValue(db, sh, "Gruppenummer", kontogruppeBase.Nummer);
+                                                      SetFieldValue(db, sh, "OpretBruger", Configuration.UserName);
+                                                      SetFieldValue(db, sh, "OpretDato", creationTime);
+                                                      SetFieldValue(db, sh, "OpretTid", creationTime);
+                                                      SetFieldValue(db, sh, "RetBruger", Configuration.UserName);
+                                                      SetFieldValue(db, sh, "RetDato", creationTime);
+                                                      SetFieldValue(db, sh, "RetTid", creationTime);
+                                                      onCreate(db, sh, creationTime);
+                                                  });
         }
 
         /// <summary>
         /// Opdaterer en basiskonto til et givent regnskab.
         /// </summary>
+        /// <typeparam name="TKontoType">Typen på basiskontoen, der skal opdateres.</typeparam>
         /// <param name="tableNumber">Tabelnummer.</param>
         /// <param name="regnskab">Regnskab, hvori basiskontoen skal opdateres.</param>
         /// <param name="kontonummer">Kontonummer.</param>
@@ -935,11 +1008,76 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="beskrivelse">Beskrivelse.</param>
         /// <param name="notat">Notat.</param>
         /// <param name="kontogruppeBase">Basiskontogruppe.</param>
-        private void KontoBaseModify(int tableNumber, Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, KontogruppeBase kontogruppeBase)
+        private void KontoBaseModify<TKontoType>(int tableNumber, Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, KontogruppeBase kontogruppeBase)
         {
-            throw new NotImplementedException();
+            if (regnskab == null)
+            {
+                throw new ArgumentNullException("regnskab");
+            }
+            if (string.IsNullOrEmpty(kontonummer))
+            {
+                throw new ArgumentNullException("kontonummer");
+            }
+            if (string.IsNullOrEmpty(kontonavn))
+            {
+                throw new ArgumentNullException("kontonavn");
+            }
+            if (kontogruppeBase == null)
+            {
+                throw new ArgumentNullException("kontogruppeBase");
+            }
+            var getUniqueId = new Func<IDsiDbX, string>(db =>
+                                                            {
+                                                                var keyValue1 = db.KeyStrInt(tableNumber,
+                                                                                             db.GetFieldLength(
+                                                                                                 db.GetFieldNoByName(
+                                                                                                     "TabelNr")));
+                                                                var keyValue2 = db.KeyStrInt(regnskab.Nummer,
+                                                                                             db.GetFieldLength(
+                                                                                                 db.GetFieldNoByName(
+                                                                                                     "Regnskabnummer")));
+                                                                var keyValue3 = db.KeyStrAlpha(kontonummer, false,
+                                                                                               db.GetFieldLength(
+                                                                                                   db.GetFieldNoByName(
+                                                                                                       "Kontonummer")));
+                                                                return string.Format("{0}{1}{2}", keyValue1, keyValue2,
+                                                                                     keyValue3);
+                                                            });
+            ModifyDatabaseRecord<TKontoType>("KONTO.DBD", "Kontonummer", getUniqueId, (db, sh) =>
+                                                                                          {
+                                                                                              var modifyTime =
+                                                                                                  DateTime.Now;
+                                                                                              SetFieldValue(db, sh,
+                                                                                                            "Kontonavn",
+                                                                                                            kontonavn);
+                                                                                              SetFieldValue(db, sh,
+                                                                                                            "Beskrivelse",
+                                                                                                            beskrivelse);
+                                                                                              SetFieldValue(db, sh,
+                                                                                                            "Note",
+                                                                                                            notat);
+                                                                                              SetFieldValue(db, sh,
+                                                                                                            "Gruppenummer",
+                                                                                                            kontogruppeBase
+                                                                                                                .Nummer);
+                                                                                              if (!db.IsRecModified(sh))
+                                                                                              {
+                                                                                                  return;
+                                                                                              }
+                                                                                              SetFieldValue(db, sh,
+                                                                                                            "RetBruger",
+                                                                                                            Configuration
+                                                                                                                .
+                                                                                                                UserName);
+                                                                                              SetFieldValue(db, sh,
+                                                                                                            "RetDato",
+                                                                                                            modifyTime);
+                                                                                              SetFieldValue(db, sh,
+                                                                                                            "RetTid",
+                                                                                                            modifyTime);
+                                                                                          });
         }
-
+        
         /// <summary>
         /// Opdaterer eller tilføjer månedsoplysninger til en given konto.
         /// </summary>

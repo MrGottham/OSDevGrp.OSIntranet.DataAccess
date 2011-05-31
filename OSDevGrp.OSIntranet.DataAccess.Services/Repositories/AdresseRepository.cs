@@ -341,9 +341,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                     return;
                 }
                 var postnummer = new Postnummer(landekode, postnr, by);
-                if (PostnummerCache.SingleOrDefault(m =>
-                                                    m.Landekode == postnummer.Landekode &&
-                                                    m.Postnr == postnummer.Postnr) != null)
+                if (PostnummerCache.SingleOrDefault(m => m.Landekode.CompareTo(landekode) == 0 && m.Postnr.CompareTo(postnr) == 0) != null)
                 {
                     return;
                 }
@@ -411,7 +409,9 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                 {
                     return;
                 }
-                var postnummer = PostnummerCache.Single(m => m.Landekode == landekode && m.Postnr == postnr);
+                var postnummer = PostnummerCache.Single(m =>
+                                                        m.Landekode.CompareTo(landekode) == 0 &&
+                                                        m.Postnr.CompareTo(postnr) == 0);
                 postnummer.SætBy(by);
             }
         }
