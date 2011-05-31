@@ -321,7 +321,34 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
             {
                 throw new ArgumentNullException("by");
             }
-            throw new NotImplementedException();
+            CreateDatabaseRecord("POSTNR.DBD", (db, sh) =>
+                                                   {
+                                                       var creationTime = DateTime.Now;
+                                                       SetFieldValue(db, sh, "Landekode", landekode);
+                                                       SetFieldValue(db, sh, "Postnummer", postnr);
+                                                       SetFieldValue(db, sh, "By", by);
+                                                       SetFieldValue(db, sh, "OpretBruger", Configuration.UserName);
+                                                       SetFieldValue(db, sh, "OpretDato", creationTime);
+                                                       SetFieldValue(db, sh, "OpretTid", creationTime);
+                                                       SetFieldValue(db, sh, "RetBruger", Configuration.UserName);
+                                                       SetFieldValue(db, sh, "RetDato", creationTime);
+                                                       SetFieldValue(db, sh, "RetTid", creationTime);
+                                                   });
+            lock (PostnummerCache)
+            {
+                if (PostnummerCache.Count == 0)
+                {
+                    return;
+                }
+                var postnummer = new Postnummer(landekode, postnr, by);
+                if (PostnummerCache.SingleOrDefault(m =>
+                                                    m.Landekode == postnummer.Landekode &&
+                                                    m.Postnr == postnummer.Postnr) != null)
+                {
+                    return;
+                }
+                PostnummerCache.Add(postnummer);
+            }
         }
 
         /// <summary>
@@ -344,7 +371,49 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
             {
                 throw new ArgumentNullException("by");
             }
-            throw new NotImplementedException();
+            var getUniqueId = new Func<IDsiDbX, string>(db =>
+                                                            {
+                                                                var keyValue1 = db.KeyStrAlpha(landekode, false,
+                                                                                               db.GetFieldLength(
+                                                                                                   db.GetFieldNoByName(
+                                                                                                       "Landekode")));
+                                                                var keyValue2 = db.KeyStrAlpha(postnr, false,
+                                                                                               db.GetFieldLength(
+                                                                                                   db.GetFieldNoByName(
+                                                                                                       "Postnummer")));
+                                                                return string.Format("{0}{1}", keyValue1, keyValue2);
+                                                            });
+            ModifyDatabaseRecord<Postnummer>("POSTNR.DBD", "Postnummer", getUniqueId, (db, sh) =>
+                                                                                          {
+                                                                                              var modifyTime =
+                                                                                                  DateTime.Now;
+                                                                                              SetFieldValue(db, sh, "By",
+                                                                                                            by);
+                                                                                              if (!db.IsRecModified(sh))
+                                                                                              {
+                                                                                                  return;
+                                                                                              }
+                                                                                              SetFieldValue(db, sh,
+                                                                                                            "RetBruger",
+                                                                                                            Configuration
+                                                                                                                .
+                                                                                                                UserName);
+                                                                                              SetFieldValue(db, sh,
+                                                                                                            "RetDato",
+                                                                                                            modifyTime);
+                                                                                              SetFieldValue(db, sh,
+                                                                                                            "RetTid",
+                                                                                                            modifyTime);
+                                                                                          });
+            lock (PostnummerCache)
+            {
+                if (PostnummerCache.Count == 0)
+                {
+                    return;
+                }
+                var postnummer = PostnummerCache.Single(m => m.Landekode == landekode && m.Postnr == postnr);
+                postnummer.SætBy(by);
+            }
         }
 
         /// <summary>

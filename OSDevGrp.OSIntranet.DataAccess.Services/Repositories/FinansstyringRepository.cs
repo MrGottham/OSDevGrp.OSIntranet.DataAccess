@@ -944,12 +944,13 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                       {
                                                           var modifyTime = DateTime.Now;
                                                           onModify(db, sh);
-                                                          if (db.IsRecModified(sh))
+                                                          if (!db.IsRecModified(sh))
                                                           {
-                                                              SetFieldValue(db, sh, "RetBruger", Configuration.UserName);
-                                                              SetFieldValue(db, sh, "RetDato", modifyTime);
-                                                              SetFieldValue(db, sh, "RetTid", modifyTime);
+                                                              return;
                                                           }
+                                                          SetFieldValue(db, sh, "RetBruger", Configuration.UserName);
+                                                          SetFieldValue(db, sh, "RetDato", modifyTime);
+                                                          SetFieldValue(db, sh, "RetTid", modifyTime);
                                                       });
             ModifyDatabaseRecord<TTable>("KONTOLIN.DBD", primaryKey, getUniqueId, modify, searchError);
         }
