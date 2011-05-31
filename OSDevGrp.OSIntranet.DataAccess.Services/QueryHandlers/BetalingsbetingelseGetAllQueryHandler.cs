@@ -58,7 +58,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
                 throw new ArgumentNullException("query");
             }
             var betalingsbetingelser = _adresseRepository.BetalingsbetingelserGetAll();
-            return _objectMapper.Map<IList<Betalingsbetingelse>, IList<BetalingsbetingelseView>>(betalingsbetingelser);
+            return
+                _objectMapper.Map<IEnumerable<Betalingsbetingelse>, IList<BetalingsbetingelseView>>(betalingsbetingelser);
         }
 
         #endregion

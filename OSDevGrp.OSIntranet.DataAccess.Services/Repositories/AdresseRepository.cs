@@ -43,7 +43,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// Henter alle adresser.
         /// </summary>
         /// <returns>Alle adresser.</returns>
-        public IList<AdresseBase> AdresseGetAll()
+        public IEnumerable<AdresseBase> AdresseGetAll()
         {
             return AdresseGetAll(null);
         }
@@ -53,7 +53,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// </summary>
         /// <param name="callback">Callbackmetode, til behandling af de enkelte adresser.</param>
         /// <returns>Alle adresser.</returns>
-        public IList<AdresseBase> AdresseGetAll(Action<AdresseBase> callback)
+        public IEnumerable<AdresseBase> AdresseGetAll(Action<AdresseBase> callback)
         {
             lock (AdresseCache)
             {
@@ -165,7 +165,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// Henter alle postnumre.
         /// </summary>
         /// <returns>Liste indeholdende alle postnumre.</returns>
-        public IList<Postnummer> PostnummerGetAll()
+        public IEnumerable<Postnummer> PostnummerGetAll()
         {
             lock (PostnummerCache)
             {
@@ -218,7 +218,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// Henter alle adressegrupper.
         /// </summary>
         /// <returns>Liste indeholdende alle adressegrupper.</returns>
-        public IList<Adressegruppe> AdressegruppeGetAll()
+        public IEnumerable<Adressegruppe> AdressegruppeGetAll()
         {
             lock (AdressegruppeCache)
             {
@@ -262,7 +262,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// Henter alle betalingsbetingelser.
         /// </summary>
         /// <returns>Liste indeholdende alle betalingsbetingelser.</returns>
-        public IList<Betalingsbetingelse> BetalingsbetingelserGetAll()
+        public IEnumerable<Betalingsbetingelse> BetalingsbetingelserGetAll()
         {
             lock (BetalingsbetingelseCache)
             {
@@ -309,6 +309,18 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="by">Bynavn.</param>
         public void PostnummerAdd(string landekode, string postnr, string by)
         {
+            if (string.IsNullOrEmpty(landekode))
+            {
+                throw new ArgumentNullException("landekode");
+            }
+            if (string.IsNullOrEmpty(postnr))
+            {
+                throw new ArgumentNullException("postnr");
+            }
+            if (string.IsNullOrEmpty(by))
+            {
+                throw new ArgumentNullException("by");
+            }
             throw new NotImplementedException();
         }
 
@@ -320,6 +332,18 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="by">Bynavn.</param>
         public void PostnummerModify(string landekode, string postnr, string by)
         {
+            if (string.IsNullOrEmpty(landekode))
+            {
+                throw new ArgumentNullException("landekode");
+            }
+            if (string.IsNullOrEmpty(postnr))
+            {
+                throw new ArgumentNullException("postnr");
+            }
+            if (string.IsNullOrEmpty(by))
+            {
+                throw new ArgumentNullException("by");
+            }
             throw new NotImplementedException();
         }
 
@@ -335,6 +359,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                               (db, sh) => SetFieldValue(db, sh, "Adressegruppe", adressegruppeOswebdb));
             lock (AdressegruppeCache)
             {
+                if (AdressegruppeCache.Count == 0)
+                {
+                    return;
+                }
                 var adressegruppe = new Adressegruppe(nummer, navn, adressegruppeOswebdb);
                 if (AdressegruppeCache.SingleOrDefault(m => m.Nummer == adressegruppe.Nummer) != null)
                 {
@@ -356,7 +384,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                              (db, sh) => SetFieldValue(db, sh, "Adressegruppe", adressegruppeOswebdb));
             lock (AdressegruppeCache)
             {
-                if (AdresseCache.Count == 0)
+                if (AdressegruppeCache.Count == 0)
                 {
                     return;
                 }
@@ -376,6 +404,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
             CreateTableRecord(1040, nummer, navn, null);
             lock (BetalingsbetingelseCache)
             {
+                if (BetalingsbetingelseCache.Count == 0)
+                {
+                    return;
+                }
                 var betalingsbetingelse = new Betalingsbetingelse(nummer, navn);
                 if (BetalingsbetingelseCache.SingleOrDefault(m => m.Nummer == betalingsbetingelse.Nummer) != null)
                 {

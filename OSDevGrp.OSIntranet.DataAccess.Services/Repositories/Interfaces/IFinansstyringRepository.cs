@@ -15,26 +15,26 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
         /// Henter alle regnskaber inklusiv konti, budgetkonti m.m.
         /// </summary>
         /// <returns>Liste indeholdende regnskaber inklusiv konti, budgetkonti m.m.</returns>
-        IList<Regnskab> RegnskabGetAll();
+        IEnumerable<Regnskab> RegnskabGetAll();
 
         /// <summary>
         /// Henter alle regnskaber inklusiv konti, budgetkonti m.m.
         /// </summary>
         /// <param name="callback">Callbackmetode, til behandling af de enkelte regnskaber.</param>
         /// <returns>Liste indeholdende regnskaber inklusiv konti, budgetkonti m.m.</returns>
-        IList<Regnskab> RegnskabGetAll(Action<Regnskab> callback);
+        IEnumerable<Regnskab> RegnskabGetAll(Action<Regnskab> callback);
 
         /// <summary>
         /// Henter alle kontogrupper.
         /// </summary>
         /// <returns>Liste indeholdende alle kontogrupper.</returns>
-        IList<Kontogruppe> KontogruppeGetAll();
+        IEnumerable<Kontogruppe> KontogruppeGetAll();
 
         /// <summary>
         /// Henter alle budgetkontogrupper.
         /// </summary>
         /// <returns>Liste indeholdende alle budgetkontogrupper.</returns>
-        IList<Budgetkontogruppe> BudgetkontogrupperGetAll();
+        IEnumerable<Budgetkontogruppe> BudgetkontogrupperGetAll();
 
         /// <summary>
         /// Opdaterer eller tilføjer kreditoplysninger til en given konto.

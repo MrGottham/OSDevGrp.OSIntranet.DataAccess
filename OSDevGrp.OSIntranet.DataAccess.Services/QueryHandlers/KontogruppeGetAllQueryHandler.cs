@@ -58,7 +58,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
                 throw new ArgumentNullException("query");
             }
             var kontogrupper = _finansstyringRepository.KontogruppeGetAll();
-            return _objectMapper.Map<IList<Kontogruppe>, IList<KontogruppeView>>(kontogrupper);
+            return _objectMapper.Map<IEnumerable<Kontogruppe>, IList<KontogruppeView>>(kontogrupper);
         }
 
         #endregion

@@ -45,7 +45,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// Henter alle regnskaber inklusiv konti, budgetkonti m.m.
         /// </summary>
         /// <returns>Liste indeholdende regnskaber inklusiv konti, budgetkonti m.m.</returns>
-        public IList<Regnskab> RegnskabGetAll()
+        public IEnumerable<Regnskab> RegnskabGetAll()
         {
             return RegnskabGetAll(null);
         }
@@ -55,7 +55,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// </summary>
         /// <param name="callback">Callbackmetode, til behandling af de enkelte regnskaber.</param>
         /// <returns>Liste indeholdende regnskaber inklusiv konti, budgetkonti m.m.</returns>
-        public IList<Regnskab> RegnskabGetAll(Action<Regnskab> callback)
+        public IEnumerable<Regnskab> RegnskabGetAll(Action<Regnskab> callback)
         {
             lock (RegnskabCache)
             {
@@ -98,7 +98,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// Henter alle kontogrupper.
         /// </summary>
         /// <returns>Liste indeholdende alle kontogrupper.</returns>
-        public IList<Kontogruppe> KontogruppeGetAll()
+        public IEnumerable<Kontogruppe> KontogruppeGetAll()
         {
             lock (KontogruppeCache)
             {
@@ -167,7 +167,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// Henter alle budgetkontogrupper.
         /// </summary>
         /// <returns>Liste indeholdende alle budgetkontogrupper.</returns>
-        public IList<Budgetkontogruppe> BudgetkontogrupperGetAll()
+        public IEnumerable<Budgetkontogruppe> BudgetkontogrupperGetAll()
         {
             lock (BudgetkontogruppeCache)
             {
@@ -219,6 +219,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                             (db, sh) => SetFieldValue(db, sh, "Kredit", kredit));
             lock (RegnskabCache)
             {
+                if (RegnskabCache.Count == 0)
+                {
+                    return;
+                }
                 var kreditoplysninger = konto.Kreditoplysninger.SingleOrDefault(m => m.År == år && m.Måned == måned);
                 if (kreditoplysninger != null)
                 {
@@ -256,6 +260,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                                                                         });
             lock (RegnskabCache)
             {
+                if (RegnskabCache.Count == 0)
+                {
+                    return;
+                }
                 var budgetoplysninger = budgetkonto.Budgetoplysninger.SingleOrDefault(m => m.År == år && m.Måned == måned);
                 if (budgetoplysninger != null)
                 {
@@ -339,6 +347,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                      });
             lock (RegnskabCache)
             {
+                if (RegnskabCache.Count == 0)
+                {
+                    return;
+                }
                 var bogføringslinje = new Bogføringslinje(løbenr, bogføringsdato, bilag, tekst, debit, kredit);
                 konto.TilføjBogføringslinje(bogføringslinje);
                 if (budgetkonto != null)
@@ -382,6 +394,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                       });
             lock (KontogruppeCache)
             {
+                if (KontogruppeCache.Count == 0)
+                {
+                    return;
+                }
                 var kontogruppe = new Kontogruppe(nummer, navn, kontogruppeType);
                 if (KontogruppeCache.SingleOrDefault(m => m.Nummer == kontogruppe.Nummer) != null)
                 {
@@ -444,6 +460,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
             CreateTableRecord(3040, nummer, navn);
             lock (BudgetkontogruppeCache)
             {
+                if (BudgetkontogruppeCache.Count == 0)
+                {
+                    return;
+                }
                 var budgetkontogruppe = new Budgetkontogruppe(nummer, navn);
                 if (BudgetkontogruppeCache.SingleOrDefault(m => m.Nummer == budgetkontogruppe.Nummer) != null)
                 {

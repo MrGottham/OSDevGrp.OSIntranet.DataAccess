@@ -58,7 +58,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
                 throw new ArgumentNullException("query");
             }
             var adressegrupper = _adresseRepository.AdressegruppeGetAll();
-            return _objectMapper.Map<IList<Adressegruppe>, IList<AdressegruppeView>>(adressegrupper);
+            return _objectMapper.Map<IEnumerable<Adressegruppe>, IList<AdressegruppeView>>(adressegrupper);
         }
 
         #endregion

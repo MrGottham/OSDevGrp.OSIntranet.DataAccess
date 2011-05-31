@@ -66,7 +66,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
             }
             var adresser = _adresseRepository.AdresseGetAll();
             var regnskaber = _finansstyringRepository.RegnskabGetAll(r => MergeInformations(r, adresser));
-            return _objectMapper.Map<IList<Regnskab>, IList<RegnskabListeView>>(regnskaber);
+            return _objectMapper.Map<IEnumerable<Regnskab>, IList<RegnskabListeView>>(regnskaber);
         }
 
         #endregion

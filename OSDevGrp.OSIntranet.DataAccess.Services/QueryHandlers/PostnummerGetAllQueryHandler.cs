@@ -58,7 +58,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
                 throw new ArgumentNullException("query");
             }
             var postnumre = _adresseRepository.PostnummerGetAll();
-            return _objectMapper.Map<IList<Postnummer>, IList<PostnummerView>>(postnumre);
+            return _objectMapper.Map<IEnumerable<Postnummer>, IList<PostnummerView>>(postnumre);
         }
 
         #endregion
