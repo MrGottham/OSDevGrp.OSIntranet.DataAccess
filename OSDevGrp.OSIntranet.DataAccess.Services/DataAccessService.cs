@@ -26,6 +26,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
         private readonly IList<FileSystemWatcher> _dbAxRepositoryWatchers;
         private ServiceHost _adresseRepositoryService;
         private ServiceHost _finansstyringRepositoryService;
+        private ServiceHost _fællesRepositoryService;
 
         #endregion
 
@@ -244,9 +245,20 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
             {
                 _finansstyringRepositoryService.Open();
             }
-            catch (Exception)
+            catch
             {
                 _finansstyringRepositoryService.Abort();
+                throw;
+            }
+            // WCF host til repository for fælles elementer.
+            _fællesRepositoryService = new ServiceHost(typeof (FællesRepositoryService));
+            try
+            {
+                _fællesRepositoryService.Open();
+            }
+            catch
+            {
+                _fællesRepositoryService.Abort();
                 throw;
             }
         }
@@ -279,6 +291,18 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
             finally
             {
                 _finansstyringRepositoryService = null;
+            }
+            // WCF host til repository for fælles elementer.
+            try
+            {
+                if (_fællesRepositoryService != null)
+                {
+                    ChannelTools.CloseChannel(_fællesRepositoryService);
+                }
+            }
+            finally
+            {
+                _fællesRepositoryService = null;
             }
         }
 
