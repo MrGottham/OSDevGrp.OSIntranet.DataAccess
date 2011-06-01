@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using OSDevGrp.OSIntranet.CommonLibrary.Domain.Adressekartotek;
 using OSDevGrp.OSIntranet.CommonLibrary.Domain.Enums;
 using OSDevGrp.OSIntranet.CommonLibrary.Domain.Finansstyring;
+using OSDevGrp.OSIntranet.CommonLibrary.Domain.Fælles;
 
 namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
 {
@@ -35,6 +36,22 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
         /// </summary>
         /// <returns>Liste indeholdende alle budgetkontogrupper.</returns>
         IEnumerable<Budgetkontogruppe> BudgetkontogrupperGetAll();
+
+        /// <summary>
+        /// Tilføjer et regnskab.
+        /// </summary>
+        /// <param name="nummer">Nummer på regnskabet.</param>
+        /// <param name="navn">Navn på regnskabet.</param>
+        /// <param name="brevhoved">Brevhoved til regnskabet.</param>
+        void RegnskabAdd(int nummer, string navn, Brevhoved brevhoved);
+
+        /// <summary>
+        /// Opdaterer et givent regnskab.
+        /// </summary>
+        /// <param name="nummer">Nummer på regnskabet.</param>
+        /// <param name="navn">Navn på regnskabet.</param>
+        /// <param name="brevhoved">Brevhoved til regnskabet.</param>
+        void RegnskabModify(int nummer, string navn, Brevhoved brevhoved);
 
         /// <summary>
         /// Tilføjer en konto til et givent regnskab.

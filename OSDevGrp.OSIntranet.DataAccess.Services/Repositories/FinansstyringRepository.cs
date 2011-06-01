@@ -6,6 +6,7 @@ using System.Reflection;
 using OSDevGrp.OSIntranet.CommonLibrary.Domain.Adressekartotek;
 using OSDevGrp.OSIntranet.CommonLibrary.Domain.Enums;
 using OSDevGrp.OSIntranet.CommonLibrary.Domain.Finansstyring;
+using OSDevGrp.OSIntranet.CommonLibrary.Domain.Fælles;
 using OSDevGrp.OSIntranet.DataAccess.Infrastructure.Interfaces.Exceptions;
 using OSDevGrp.OSIntranet.DataAccess.Resources;
 using OSDevGrp.OSIntranet.DataAccess.Services.Domain;
@@ -200,6 +201,57 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                     BudgetkontogruppeCache.Add(budgetkontogruppe);
                 }
                 return new List<Budgetkontogruppe>(BudgetkontogruppeCache);
+            }
+        }
+
+        /// <summary>
+        /// Tilføjer et regnskab.
+        /// </summary>
+        /// <param name="nummer">Nummer på regnskabet.</param>
+        /// <param name="navn">Navn på regnskabet.</param>
+        /// <param name="brevhoved">Brevhoved til regnskabet.</param>
+        public void RegnskabAdd(int nummer, string navn, Brevhoved brevhoved)
+        {
+            CreateTableRecord(3000, nummer, navn,
+                              (db, sh) =>
+                              SetFieldValue(db, sh, "Brevhovednummer", brevhoved == null ? 0 : brevhoved.Nummer));
+            lock (RegnskabCache)
+            {
+                if (RegnskabCache.Count == 0)
+                {
+                    return;
+                }
+                var regnskab = new Regnskab(nummer, navn);
+                regnskab.SætBrevhoved(brevhoved);
+                if (RegnskabCache.SingleOrDefault(m => m.Nummer == regnskab.Nummer) != null)
+                {
+                    return;
+                }
+                RegnskabCache.Add(regnskab);
+            }
+        }
+
+        /// <summary>
+        /// Opdaterer et givent regnskab.
+        /// </summary>
+        /// <param name="nummer">Nummer på regnskabet.</param>
+        /// <param name="navn">Navn på regnskabet.</param>
+        /// <param name="brevhoved">Brevhoved til regnskabet.</param>
+        public void RegnskabModify(int nummer, string navn, Brevhoved brevhoved)
+        {
+            ModifyTableRecord<Regnskab>(3000, nummer, navn,
+                                        (db, sh) =>
+                                        SetFieldValue(db, sh, "Brevhovednummer",
+                                                      brevhoved == null ? 0 : brevhoved.Nummer));
+            lock (RegnskabCache)
+            {
+                if (RegnskabCache.Count == 0)
+                {
+                    return;
+                }
+                var regnskab = RegnskabCache.Single(m => m.Nummer == nummer);
+                regnskab.SætNavn(navn);
+                regnskab.SætBrevhoved(brevhoved);
             }
         }
 
