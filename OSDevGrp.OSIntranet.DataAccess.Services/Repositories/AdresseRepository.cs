@@ -302,7 +302,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         }
 
         /// <summary>
-        /// TIlføjer en person.
+        /// Tilføjer en person.
         /// </summary>
         /// <param name="navn">Navn på personen.</param>
         /// <param name="adresse1">Adresse (linje 1).</param>
@@ -321,7 +321,53 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="firma">Firmatilknytning.</param>
         public void PersonAdd(string navn, string adresse1, string adresse2, string postnrBy, string telefon, string mobil, DateTime? fødselsdato, Adressegruppe adressegruppe, string bekendtskab, string mailadresse, string webadresse, Betalingsbetingelse betalingsbetingelse, int udlånsfrist, bool filofaxAdresselabel, Firma firma)
         {
-            throw new NotImplementedException();
+            var ident = 0;
+            AdresseBaseAdd(1000, navn, adresse1, adresse2, postnrBy, adressegruppe, bekendtskab, mailadresse, webadresse,
+                           betalingsbetingelse, udlånsfrist, filofaxAdresselabel,
+                           (db, sh) =>
+                               {
+                                   ident = GetFieldValueAsInt(db, sh, "Ident");
+                                   SetFieldValue(db, sh, "Telefon", telefon);
+                                   SetFieldValue(db, sh, "Telefon2", mobil);
+                                   if (!fødselsdato.HasValue)
+                                   {
+                                       SetFieldValue(db, sh, "Fødselsdato", null);
+                                       SetFieldValue(db, sh, "Fødselssort", 0);
+                                   }
+                                   else
+                                   {
+                                       SetFieldValue(db, sh, "Fødselsdato", fødselsdato.Value);
+                                       SetFieldValue(db, sh, "Fødselssort",
+                                                     int.Parse(fødselsdato.Value.ToString("MMdd")));
+                                   }
+                                   SetFieldValue(db, sh, "Firmaident", firma == null ? 0 : firma.Nummer);
+                               });
+            lock (AdresseCache)
+            {
+                if (AdresseCache.Count == 0)
+                {
+                    return;
+                }
+                var person = new Person(ident, navn, adressegruppe);
+                person.SætAdresseoplysninger(adresse1, adresse2, postnrBy);
+                person.SætTelefon(telefon, mobil);
+                person.SætFødselsdato(fødselsdato);
+                person.SætBekendtskab(bekendtskab);
+                person.SætMailadresse(mailadresse);
+                person.SætWebadresse(webadresse);
+                person.SætBetalingsbetingelse(betalingsbetingelse);
+                person.SætUdlånsfrist(udlånsfrist);
+                person.SætFilofaxAdresselabel(filofaxAdresselabel);
+                if (AdresseCache.OfType<Person>().SingleOrDefault(m => m.Nummer == person.Nummer) != null)
+                {
+                    return;
+                }
+                if (firma != null)
+                {
+                    firma.TilføjPerson(person);
+                }
+                AdresseCache.Add(person);
+            }
         }
 
         /// <summary>
@@ -345,11 +391,46 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="firma">Firmatilknytning.</param>
         public void PersonModify(int nummer, string navn, string adresse1, string adresse2, string postnrBy, string telefon, string mobil, DateTime? fødselsdato, Adressegruppe adressegruppe, string bekendtskab, string mailadresse, string webadresse, Betalingsbetingelse betalingsbetingelse, int udlånsfrist, bool filofaxAdresselabel, Firma firma)
         {
-            throw new NotImplementedException();
+            AdresseBaseModify<Person>(1000, nummer, navn, adresse1, adresse2, postnrBy, adressegruppe, bekendtskab,
+                                      mailadresse, webadresse, betalingsbetingelse, udlånsfrist, filofaxAdresselabel,
+                                      (db, sh) =>
+                                          {
+                                              SetFieldValue(db, sh, "Telefon", telefon);
+                                              SetFieldValue(db, sh, "Telefon2", mobil);
+                                              if (!fødselsdato.HasValue)
+                                              {
+                                                  SetFieldValue(db, sh, "Fødselsdato", null);
+                                                  SetFieldValue(db, sh, "Fødselssort", 0);
+                                              }
+                                              else
+                                              {
+                                                  SetFieldValue(db, sh, "Fødselsdato", fødselsdato.Value);
+                                                  SetFieldValue(db, sh, "Fødselssort",
+                                                                int.Parse(fødselsdato.Value.ToString("MMdd")));
+                                              }
+                                              SetFieldValue(db, sh, "Firmaident", firma == null ? 0 : firma.Nummer);
+                                          });
+            lock (AdresseCache)
+            {
+                if (AdresseCache.Count == 0)
+                {
+                    return;
+                }
+                var person = AdresseCache.OfType<Person>().Single(m => m.Nummer == nummer);
+                person.SætAdresseoplysninger(adresse1, adresse2, postnrBy);
+                person.SætTelefon(telefon, mobil);
+                person.SætFødselsdato(fødselsdato);
+                person.SætBekendtskab(bekendtskab);
+                person.SætMailadresse(mailadresse);
+                person.SætWebadresse(webadresse);
+                person.SætBetalingsbetingelse(betalingsbetingelse);
+                person.SætUdlånsfrist(udlånsfrist);
+                person.SætFilofaxAdresselabel(filofaxAdresselabel);
+            }
         }
 
         /// <summary>
-        /// TIlføjer et firmat.
+        /// Tilføjer et firmat.
         /// </summary>
         /// <param name="navn">Navn på firmaet.</param>
         /// <param name="adresse1">Adresse (linje 1).</param>
@@ -367,7 +448,37 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="filofaxAdresselabel">Markering for Filofax adresselabel.</param>
         public void FirmaAdd(string navn, string adresse1, string adresse2, string postnrBy, string telefon1, string telefon2, string telefax, Adressegruppe adressegruppe, string bekendtskab, string mailadresse, string webadresse, Betalingsbetingelse betalingsbetingelse, int udlånsfrist, bool filofaxAdresselabel)
         {
-            throw new NotImplementedException();
+            var ident = 0;
+            AdresseBaseAdd(1010, navn, adresse1, adresse2, postnrBy, adressegruppe, bekendtskab, mailadresse, webadresse,
+                           betalingsbetingelse, udlånsfrist, filofaxAdresselabel,
+                           (db, sh) =>
+                               {
+                                   ident = GetFieldValueAsInt(db, sh, "Ident");
+                                   SetFieldValue(db, sh, "Telefon", telefon1);
+                                   SetFieldValue(db, sh, "Telefon2", telefon2);
+                                   SetFieldValue(db, sh, "Telefon3", telefax);
+                               });
+            lock (AdresseCache)
+            {
+                if (AdresseCache.Count == 0)
+                {
+                    return;
+                }
+                var firma = new Firma(ident, navn, adressegruppe);
+                firma.SætAdresseoplysninger(adresse1, adresse2, postnrBy);
+                firma.SætTelefon(telefon1, telefon2, telefax);
+                firma.SætBekendtskab(bekendtskab);
+                firma.SætMailadresse(mailadresse);
+                firma.SætWebadresse(webadresse);
+                firma.SætBetalingsbetingelse(betalingsbetingelse);
+                firma.SætUdlånsfrist(udlånsfrist);
+                firma.SætFilofaxAdresselabel(filofaxAdresselabel);
+                if (AdresseCache.OfType<Firma>().SingleOrDefault(m => m.Nummer == firma.Nummer) != null)
+                {
+                    return;
+                }
+                AdresseCache.Add(firma);
+            }
         }
 
         /// <summary>
@@ -390,7 +501,30 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="filofaxAdresselabel">Markering for Filofax adresselabel.</param>
         public void FirmaModify(int nummer, string navn, string adresse1, string adresse2, string postnrBy, string telefon1, string telefon2, string telefax, Adressegruppe adressegruppe, string bekendtskab, string mailadresse, string webadresse, Betalingsbetingelse betalingsbetingelse, int udlånsfrist, bool filofaxAdresselabel)
         {
-            throw new NotImplementedException();
+            AdresseBaseModify<Firma>(1000, nummer, navn, adresse1, adresse2, postnrBy, adressegruppe, bekendtskab,
+                                     mailadresse, webadresse, betalingsbetingelse, udlånsfrist, filofaxAdresselabel,
+                                     (db, sh) =>
+                                         {
+                                             SetFieldValue(db, sh, "Telefon", telefon1);
+                                             SetFieldValue(db, sh, "Telefon2", telefon2);
+                                             SetFieldValue(db, sh, "Telefon3", telefax);
+                                         });
+            lock (AdresseCache)
+            {
+                if (AdresseCache.Count == 0)
+                {
+                    return;
+                }
+                var firma = AdresseCache.OfType<Firma>().Single(m => m.Nummer == nummer);
+                firma.SætAdresseoplysninger(adresse1, adresse2, postnrBy);
+                firma.SætTelefon(telefon1, telefon2, telefax);
+                firma.SætBekendtskab(bekendtskab);
+                firma.SætMailadresse(mailadresse);
+                firma.SætWebadresse(webadresse);
+                firma.SætBetalingsbetingelse(betalingsbetingelse);
+                firma.SætUdlånsfrist(udlånsfrist);
+                firma.SætFilofaxAdresselabel(filofaxAdresselabel);
+            }
         }
 
         /// <summary>
@@ -893,9 +1027,44 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
             {
                 throw new ArgumentNullException("onModify");
             }
-
-            // TODO: Primary key: TabelIdent (TabelNr, Ident)
-            throw new NotImplementedException();
+            var getUniqueId = new Func<IDsiDbX, string>(db =>
+                                                            {
+                                                                var keyValue1 = db.KeyStrInt(tableNumber, db.GetFieldLength(db.GetFieldNoByName("TabelNr")));
+                                                                var keyValue2 = db.KeyStrInt(nummer, db.GetFieldLength(db.GetFieldNoByName("Ident")));
+                                                                return string.Format("{0}{1}", keyValue1, keyValue2);
+                                                            });
+            ModifyDatabaseRecord<TAdresseBase>("ADRESSE.DBD", "TabelIdent", getUniqueId,
+                                               (db, sh) =>
+                                                   {
+                                                       var modifyTime = DateTime.Now;
+                                                       SetFieldValue(db, sh, "Navn", navn);
+                                                       SetFieldValue(db, sh, "Adresse1", adresse1);
+                                                       SetFieldValue(db, sh, "Adresse2", adresse2);
+                                                       SetFieldValue(db, sh, "PostnummerBy", postnrBy);
+                                                       SetFieldValue(db, sh, "Gruppenummer", adressegruppe.Nummer);
+                                                       SetFieldValue(db, sh, "Bekendtskab", bekendtskab);
+                                                       SetFieldValue(db, sh, "Email", mailadresse);
+                                                       SetFieldValue(db, sh, "Web", webadresse);
+                                                       SetFieldValue(db, sh, "Betalingsnummer",
+                                                                     betalingsbetingelse == null
+                                                                         ? 0
+                                                                         : betalingsbetingelse.Nummer);
+                                                       SetFieldValue(db, sh, "Udlånsfrist", udlånsfrist);
+                                                       var andet = 0;
+                                                       if (filofaxAdresselabel)
+                                                       {
+                                                           andet = andet + 1;
+                                                       }
+                                                       SetFieldValue(db, sh, "Andet", andet);
+                                                       onModify(db, sh);
+                                                       if (!db.IsRecModified(sh))
+                                                       {
+                                                           return;
+                                                       }
+                                                       SetFieldValue(db, sh, "RetBruger", Configuration.UserName);
+                                                       SetFieldValue(db, sh, "RetDato", modifyTime);
+                                                       SetFieldValue(db, sh, "RetTid", modifyTime);
+                                                   });
         }
 
         #endregion
