@@ -13,7 +13,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
     /// <summary>
     /// Queryhandler til håndtering af forespørgelsen: FirmaGetAllQuery.
     /// </summary>
-    public class FirmaGetAllQueryHandler : AdresseQueryHandlerBase, IQueryHandler<FirmaGetAllQuery, IList<FirmaView>>
+    public class FirmaGetAllQueryHandler : AdresseQueryHandlerBase, IQueryHandler<FirmaGetAllQuery, IEnumerable<FirmaView>>
     {
         #region Private variables
 
@@ -52,14 +52,14 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
 
         #endregion
 
-        #region IQueryHandler<FirmaGetAllQuery,IList<FirmaView>> Members
+        #region IQueryHandler<FirmaGetAllQuery,IEnumerable<FirmaView>> Members
 
         /// <summary>
         /// Udfører forespørgelse.
         /// </summary>
         /// <param name="query">Forespørgelse efter alle firmaer.</param>
         /// <returns>Alle firmaer.</returns>
-        public IList<FirmaView> Query(FirmaGetAllQuery query)
+        public IEnumerable<FirmaView> Query(FirmaGetAllQuery query)
         {
             if (query == null)
             {
@@ -70,7 +70,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
                 .Where(m => m is Firma)
                 .Cast<Firma>()
                 .ToArray();
-            return _objectMapper.Map<IList<Firma>, IList<FirmaView>>(firmaer);
+            return _objectMapper.Map<IEnumerable<Firma>, IEnumerable<FirmaView>>(firmaer);
         }
 
         #endregion

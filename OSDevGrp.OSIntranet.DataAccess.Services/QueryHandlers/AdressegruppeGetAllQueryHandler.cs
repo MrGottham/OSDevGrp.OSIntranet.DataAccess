@@ -12,7 +12,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
     /// <summary>
     /// Queryhandler til håndtering af forespørgelsen: AdressegruppeGetAllQuery.
     /// </summary>
-    public class AdressegruppeGetAllQueryHandler : IQueryHandler<AdressegruppeGetAllQuery, IList<AdressegruppeView>>
+    public class AdressegruppeGetAllQueryHandler : IQueryHandler<AdressegruppeGetAllQuery, IEnumerable<AdressegruppeView>>
     {
         #region Private variables
 
@@ -44,21 +44,21 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
 
         #endregion
 
-        #region IQueryHandler<AdressegruppeGetAllQuery,IList<AdressegruppeView>> Members
+        #region IQueryHandler<AdressegruppeGetAllQuery,IEnumerable<AdressegruppeView>> Members
 
         /// <summary>
         /// Udfører forespørgelse.
         /// </summary>
         /// <param name="query">Forespørgelse efter alle adressegrupper.</param>
         /// <returns>Alle adressegrupper.</returns>
-        public IList<AdressegruppeView> Query(AdressegruppeGetAllQuery query)
+        public IEnumerable<AdressegruppeView> Query(AdressegruppeGetAllQuery query)
         {
             if (query == null)
             {
                 throw new ArgumentNullException("query");
             }
             var adressegrupper = _adresseRepository.AdressegruppeGetAll();
-            return _objectMapper.Map<IEnumerable<Adressegruppe>, IList<AdressegruppeView>>(adressegrupper);
+            return _objectMapper.Map<IEnumerable<Adressegruppe>, IEnumerable<AdressegruppeView>>(adressegrupper);
         }
 
         #endregion

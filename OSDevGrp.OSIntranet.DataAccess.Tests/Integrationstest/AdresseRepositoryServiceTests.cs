@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.ServiceModel;
 using OSDevGrp.OSIntranet.CommonLibrary.IoC;
 using OSDevGrp.OSIntranet.CommonLibrary.Wcf;
@@ -30,7 +31,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                 var query = new PersonGetAllQuery();
                 var personer = channel.PersonGetAll(query);
                 Assert.That(personer, Is.Not.Null);
-                Assert.That(personer.Count, Is.GreaterThan(0));
+                Assert.That(personer.Count(), Is.GreaterThan(0));
             }
             finally
             {
@@ -53,11 +54,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                 var queryGetAll = new PersonGetAllQuery();
                 var personer = channel.PersonGetAll(queryGetAll);
                 Assert.That(personer, Is.Not.Null);
-                Assert.That(personer.Count, Is.GreaterThan(0));
+                Assert.That(personer.Count(), Is.GreaterThan(0));
 
                 var query = new PersonGetByNummerQuery
                                 {
-                                    Nummer = personer[random.Next(0, personer.Count - 1)].Nummer
+                                    Nummer = personer.ElementAt(random.Next(0, personer.Count() - 1)).Nummer
                                 };
                 var person = channel.PersonGetByNummer(query);
                 Assert.That(person, Is.Not.Null);
@@ -106,7 +107,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                 var query = new FirmaGetAllQuery();
                 var firmaer = channel.FirmaGetAll(query);
                 Assert.That(firmaer, Is.Not.Null);
-                Assert.That(firmaer.Count, Is.GreaterThan(0));
+                Assert.That(firmaer.Count(), Is.GreaterThan(0));
             }
             finally
             {
@@ -129,11 +130,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                 var queryGetAll = new FirmaGetAllQuery();
                 var firmaer = channel.FirmaGetAll(queryGetAll);
                 Assert.That(firmaer, Is.Not.Null);
-                Assert.That(firmaer.Count, Is.GreaterThan(0));
+                Assert.That(firmaer.Count(), Is.GreaterThan(0));
 
                 var query = new FirmaGetByNummerQuery
                                 {
-                                    Nummer = firmaer[random.Next(0, firmaer.Count - 1)].Nummer
+                                    Nummer = firmaer.ElementAt(random.Next(0, firmaer.Count() - 1)).Nummer
                                 };
                 var firma = channel.FirmaGetByNummer(query);
                 Assert.That(firma, Is.Not.Null);
@@ -182,7 +183,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                 var query = new AdresselisteGetAllQuery();
                 var adresser = channel.AdresselisteGetAll(query);
                 Assert.That(adresser, Is.Not.Null);
-                Assert.That(adresser.Count, Is.GreaterThan(0));
+                Assert.That(adresser.Count(), Is.GreaterThan(0));
             }
             finally
             {
@@ -204,7 +205,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                 var query = new PostnummerGetAllQuery();
                 var postnumre = channel.PostnummerGetAll(query);
                 Assert.That(postnumre, Is.Not.Null);
-                Assert.That(postnumre.Count, Is.GreaterThan(0));
+                Assert.That(postnumre.Count(), Is.GreaterThan(0));
             }
             finally
             {
@@ -229,7 +230,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                                 };
                 var postnumre = channel.PostnummerGetAllByLandekode(query);
                 Assert.That(postnumre, Is.Not.Null);
-                Assert.That(postnumre.Count, Is.GreaterThan(0));
+                Assert.That(postnumre.Count(), Is.GreaterThan(0));
             }
             finally
             {
@@ -306,7 +307,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                 var query = new AdressegruppeGetAllQuery();
                 var adressegrupper = channel.AdressegruppeGetAll(query);
                 Assert.That(adressegrupper, Is.Not.Null);
-                Assert.That(adressegrupper.Count, Is.GreaterThan(0));
+                Assert.That(adressegrupper.Count(), Is.GreaterThan(0));
             }
             finally
             {
@@ -379,7 +380,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                 var query = new BetalingsbetingelseGetAllQuery();
                 var betalingsbetingelser = channel.BetalingsbetingelseGetAll(query);
                 Assert.That(betalingsbetingelser, Is.Not.Null);
-                Assert.That(betalingsbetingelser.Count, Is.GreaterThan(0));
+                Assert.That(betalingsbetingelser.Count(), Is.GreaterThan(0));
             }
             finally
             {

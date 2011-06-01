@@ -12,7 +12,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
     /// <summary>
     /// Queryhandler til håndtering af forespørgelsen: AdresselisteGetAllQuery.
     /// </summary>
-    public class AdresselisteGetAllQueryHandler : AdresseQueryHandlerBase, IQueryHandler<AdresselisteGetAllQuery, IList<AdresselisteView>>
+    public class AdresselisteGetAllQueryHandler : AdresseQueryHandlerBase, IQueryHandler<AdresselisteGetAllQuery, IEnumerable<AdresselisteView>>
     {
         #region Private variables
 
@@ -51,14 +51,14 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
 
         #endregion
 
-        #region IQueryHandler<AdresselisteGetAllQuery,IList<AdresselisteView>> Members
+        #region IQueryHandler<AdresselisteGetAllQuery,IEnumerable<AdresselisteView>> Members
 
         /// <summary>
         /// Udfører forespørgelse.
         /// </summary>
         /// <param name="query">Forespørgelse efter alle adresser til en adresseliste.</param>
         /// <returns>Alle adresser til en adresseliste.</returns>
-        public IList<AdresselisteView> Query(AdresselisteGetAllQuery query)
+        public IEnumerable<AdresselisteView> Query(AdresselisteGetAllQuery query)
         {
             if (query == null)
             {
@@ -66,7 +66,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
             }
             var regnskaber = _finansstyringRepository.RegnskabGetAll();
             var adresser = _adresseRepository.AdresseGetAll(adresse => MergeInformations(adresse, regnskaber));
-            return _objectMapper.Map<IEnumerable<AdresseBase>, IList<AdresselisteView>>(adresser);
+            return _objectMapper.Map<IEnumerable<AdresseBase>, IEnumerable<AdresselisteView>>(adresser);
         }
 
         #endregion

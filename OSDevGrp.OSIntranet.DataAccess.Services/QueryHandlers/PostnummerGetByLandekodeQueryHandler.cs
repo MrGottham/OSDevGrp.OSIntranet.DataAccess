@@ -13,7 +13,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
     /// <summary>
     /// Queryhandler til håndtering af forespørgelsen: PostnummerGetByLandekodeQuery.
     /// </summary>
-    public class PostnummerGetByLandekodeQueryHandler : IQueryHandler<PostnummerGetByLandekodeQuery, IList<PostnummerView>>
+    public class PostnummerGetByLandekodeQueryHandler : IQueryHandler<PostnummerGetByLandekodeQuery, IEnumerable<PostnummerView>>
     {
         #region Private variables
 
@@ -45,14 +45,14 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
 
         #endregion
 
-        #region IQueryHandler<PostnummerGetByLandekodeQuery,IList<PostnummerView>> Members
+        #region IQueryHandler<PostnummerGetByLandekodeQuery,IEnumerable<PostnummerView>> Members
 
         /// <summary>
         /// Udfører forespørgelse.
         /// </summary>
         /// <param name="query">Forespørgelse efter alle postnumre på en given landekode.</param>
         /// <returns>Alle postnumre for en given landekode.</returns>
-        public IList<PostnummerView> Query(PostnummerGetByLandekodeQuery query)
+        public IEnumerable<PostnummerView> Query(PostnummerGetByLandekodeQuery query)
         {
             if (query == null)
             {
@@ -61,7 +61,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
             var postnumre = _adresseRepository.PostnummerGetAll()
                 .Where(m => m.Landekode.CompareTo(query.Landekode) == 0)
                 .ToArray();
-            return _objectMapper.Map<IList<Postnummer>, IList<PostnummerView>>(postnumre);
+            return _objectMapper.Map<IEnumerable<Postnummer>, IEnumerable<PostnummerView>>(postnumre);
         }
 
         #endregion

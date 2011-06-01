@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.ServiceModel;
 using OSDevGrp.OSIntranet.CommonLibrary.IoC;
 using OSDevGrp.OSIntranet.CommonLibrary.Wcf;
@@ -33,7 +34,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                 var query = new RegnskabGetAllQuery();
                 var regnskaber = channel.RegnskabGetAll(query);
                 Assert.That(regnskaber, Is.Not.Null);
-                Assert.That(regnskaber.Count, Is.GreaterThan(0));
+                Assert.That(regnskaber.Count(), Is.GreaterThan(0));
             }
             finally
             {
@@ -133,7 +134,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                                 };
                 var konti = channel.KontoGetByRegnskab(query);
                 Assert.That(konti, Is.Not.Null);
-                Assert.That(konti.Count, Is.GreaterThan(0));
+                Assert.That(konti.Count(), Is.GreaterThan(0));
             }
             finally
             {
@@ -160,13 +161,13 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                                      };
                 var konti = channel.KontoGetByRegnskab(kontiQuery);
                 Assert.That(konti, Is.Not.Null);
-                Assert.That(konti.Count, Is.GreaterThan(0));
+                Assert.That(konti.Count(), Is.GreaterThan(0));
                 // Hent en given konto i regnskabet.
-                var no = random.Next(0, konti.Count - 1);
+                var no = random.Next(0, konti.Count() - 1);
                 var query = new KontoGetByRegnskabAndKontonummerQuery
                                 {
                                     Regnskabsnummer = RegnskabsnummerTilTest,
-                                    Kontonummer = konti[no].Kontonummer
+                                    Kontonummer = konti.ElementAt(no).Kontonummer
                                 };
                 var konto = channel.KontoGetByRegnskabAndKontonummer(query);
                 Assert.That(konto, Is.Not.Null);
@@ -222,7 +223,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                                 };
                 var budgetkonti = channel.BudgetkontoGetByRegnskab(query);
                 Assert.That(budgetkonti, Is.Not.Null);
-                Assert.That(budgetkonti.Count, Is.GreaterThan(0));
+                Assert.That(budgetkonti.Count(), Is.GreaterThan(0));
             }
             finally
             {
@@ -249,13 +250,13 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                                            };
                 var budgetkonti = channel.BudgetkontoGetByRegnskab(budgetkontiQuery);
                 Assert.That(budgetkonti, Is.Not.Null);
-                Assert.That(budgetkonti.Count, Is.GreaterThan(0));
+                Assert.That(budgetkonti.Count(), Is.GreaterThan(0));
                 // Hent en given konto i regnskabet.
-                var no = random.Next(0, budgetkonti.Count - 1);
+                var no = random.Next(0, budgetkonti.Count() - 1);
                 var query = new BudgetkontoGetByRegnskabAndKontonummerQuery
                                 {
                                     Regnskabsnummer = RegnskabsnummerTilTest,
-                                    Kontonummer = budgetkonti[no].Kontonummer
+                                    Kontonummer = budgetkonti.ElementAt(no).Kontonummer
                                 };
                 var budgetkonto = channel.BudgetkontoGetByRegnskabAndKontonummer(query);
                 Assert.That(budgetkonto, Is.Not.Null);
@@ -311,7 +312,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                                 };
                 var bogføringslinjer = channel.BogføringslinjeGetByRegnskab(query);
                 Assert.That(bogføringslinjer, Is.Not.Null);
-                Assert.That(bogføringslinjer.Count, Is.GreaterThan(0));
+                Assert.That(bogføringslinjer.Count(), Is.GreaterThan(0));
             }
             finally
             {
@@ -335,7 +336,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                                 {
                                     Regnskabsnummer = RegnskabsnummerTilTest
                                 };
-                var bogførteLinjer = channel.BogføringslinjeGetByRegnskab(query).Count;
+                var bogførteLinjer = channel.BogføringslinjeGetByRegnskab(query).Count();
                 Assert.That(bogførteLinjer, Is.GreaterThan(0));
                 // Bogfør linje.
                 var command = new BogføringslinjeAddCommand
@@ -356,7 +357,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                 command.Debit = 0M;
                 channel.BogføringslinjeAdd(command);
                 // Check at antallet af bogførte linjer er steget med 2.
-                var antalLinjer = channel.BogføringslinjeGetByRegnskab(query).Count;
+                var antalLinjer = channel.BogføringslinjeGetByRegnskab(query).Count();
                 Assert.That(antalLinjer, Is.GreaterThan(0));
                 Assert.That(antalLinjer, Is.EqualTo(bogførteLinjer + 2));
             }
@@ -504,7 +505,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                 var query = new KontogruppeGetAllQuery();
                 var kontogrupper = channel.KontogruppeGetAll(query);
                 Assert.That(kontogrupper, Is.Not.Null);
-                Assert.That(kontogrupper.Count, Is.GreaterThan(0));
+                Assert.That(kontogrupper.Count(), Is.GreaterThan(0));
             }
             finally
             {
@@ -574,7 +575,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                 var query = new BudgetkontogruppeGetAllQuery();
                 var budgetkontogrupper = channel.BudgetkontogruppeGetAll(query);
                 Assert.That(budgetkontogrupper, Is.Not.Null);
-                Assert.That(budgetkontogrupper.Count, Is.GreaterThan(0));
+                Assert.That(budgetkontogrupper.Count(), Is.GreaterThan(0));
             }
             finally
             {

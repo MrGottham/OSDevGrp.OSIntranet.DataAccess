@@ -12,7 +12,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
     /// <summary>
     /// Queryhandler til håndtering af forespørgelsen: BetalingsbetingelseGetAllQuery.
     /// </summary>
-    public class BetalingsbetingelseGetAllQueryHandler : IQueryHandler<BetalingsbetingelseGetAllQuery, IList<BetalingsbetingelseView>>
+    public class BetalingsbetingelseGetAllQueryHandler : IQueryHandler<BetalingsbetingelseGetAllQuery, IEnumerable<BetalingsbetingelseView>>
     {
         #region Private variables
 
@@ -44,14 +44,14 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
 
         #endregion
 
-        #region IQueryHandler<BetalingsbetingelseGetAllQuery,IList<BetalingsbetingelseView>> Members
+        #region IQueryHandler<BetalingsbetingelseGetAllQuery,IEnumerable<BetalingsbetingelseView>> Members
 
         /// <summary>
         /// Udfører forespørgelse.
         /// </summary>
         /// <param name="query">Forespørgelse efter alle betalingsbetingelser.</param>
         /// <returns>Alle betalingsbetingelser.</returns>
-        public IList<BetalingsbetingelseView> Query(BetalingsbetingelseGetAllQuery query)
+        public IEnumerable<BetalingsbetingelseView> Query(BetalingsbetingelseGetAllQuery query)
         {
             if (query == null)
             {
@@ -59,7 +59,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
             }
             var betalingsbetingelser = _adresseRepository.BetalingsbetingelserGetAll();
             return
-                _objectMapper.Map<IEnumerable<Betalingsbetingelse>, IList<BetalingsbetingelseView>>(betalingsbetingelser);
+                _objectMapper.Map<IEnumerable<Betalingsbetingelse>, IEnumerable<BetalingsbetingelseView>>(
+                    betalingsbetingelser);
         }
 
         #endregion

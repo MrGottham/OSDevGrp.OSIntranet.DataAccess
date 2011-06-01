@@ -56,11 +56,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         /// <param name="regnskabGetAllQuery">Forespørgelse til at hente alle regnskaber.</param>
         /// <returns>Alle regnskaber.</returns>
         [OperationBehavior(TransactionScopeRequired = false)]
-        public IList<RegnskabListeView> RegnskabGetAll(RegnskabGetAllQuery regnskabGetAllQuery)
+        public IEnumerable<RegnskabListeView> RegnskabGetAll(RegnskabGetAllQuery regnskabGetAllQuery)
         {
             try
             {
-                return _queryBus.Query<RegnskabGetAllQuery, IList<RegnskabListeView>>(regnskabGetAllQuery);
+                return _queryBus.Query<RegnskabGetAllQuery, IEnumerable<RegnskabListeView>>(regnskabGetAllQuery);
             }
             catch (Exception ex)
             {
@@ -94,11 +94,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         /// <param name="kontoGetByRegnskabQuery">Forespørgelse til at hente alle konti i et givent regnskab.</param>
         /// <returns>Alle konti i regnskabet.</returns>
         [OperationBehavior(TransactionScopeRequired = false)]
-        public IList<KontoListeView> KontoGetByRegnskab(KontoGetByRegnskabQuery kontoGetByRegnskabQuery)
+        public IEnumerable<KontoListeView> KontoGetByRegnskab(KontoGetByRegnskabQuery kontoGetByRegnskabQuery)
         {
             try
             {
-                return _queryBus.Query<KontoGetByRegnskabQuery, IList<KontoListeView>>(kontoGetByRegnskabQuery);
+                return _queryBus.Query<KontoGetByRegnskabQuery, IEnumerable<KontoListeView>>(kontoGetByRegnskabQuery);
             }
             catch (Exception ex)
             {
@@ -134,12 +134,12 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         /// <param name="budgetkontoGetByRegnskabQuery">Forespørgelse til at hente alle budgetkonti i et givent regnskab.</param>
         /// <returns>Alle budgetkonti i et givent regnskab.</returns>
         [OperationBehavior(TransactionScopeRequired = false)]
-        public IList<BudgetkontoListeView> BudgetkontoGetByRegnskab(BudgetkontoGetByRegnskabQuery budgetkontoGetByRegnskabQuery)
+        public IEnumerable<BudgetkontoListeView> BudgetkontoGetByRegnskab(BudgetkontoGetByRegnskabQuery budgetkontoGetByRegnskabQuery)
         {
             try
             {
                 return
-                    _queryBus.Query<BudgetkontoGetByRegnskabQuery, IList<BudgetkontoListeView>>(
+                    _queryBus.Query<BudgetkontoGetByRegnskabQuery, IEnumerable<BudgetkontoListeView>>(
                         budgetkontoGetByRegnskabQuery);
             }
             catch (Exception ex)
@@ -176,12 +176,12 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         /// <param name="bogføringslinjeGetByRegnskabQuery">Forespørgelse til at hente alle bogføringslinjer for et givent regnskab.</param>
         /// <returns>Alle bogføringslinjer for regnskabet.</returns>
         [OperationBehavior(TransactionScopeRequired = false)]
-        public IList<BogføringslinjeView> BogføringslinjeGetByRegnskab(BogføringslinjeGetByRegnskabQuery bogføringslinjeGetByRegnskabQuery)
+        public IEnumerable<BogføringslinjeView> BogføringslinjeGetByRegnskab(BogføringslinjeGetByRegnskabQuery bogføringslinjeGetByRegnskabQuery)
         {
             try
             {
                 return
-                    _queryBus.Query<BogføringslinjeGetByRegnskabQuery, IList<BogføringslinjeView>>(
+                    _queryBus.Query<BogføringslinjeGetByRegnskabQuery, IEnumerable<BogføringslinjeView>>(
                         bogføringslinjeGetByRegnskabQuery);
             }
             catch (Exception ex)
@@ -215,11 +215,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         /// <param name="kontogruppeGetAllQuery">Forespørgelse til at hente alle kontogrupper.</param>
         /// <returns>Alle kontogrupper.</returns>
         [OperationBehavior(TransactionScopeRequired = false)]
-        public IList<KontogruppeView> KontogruppeGetAll(KontogruppeGetAllQuery kontogruppeGetAllQuery)
+        public IEnumerable<KontogruppeView> KontogruppeGetAll(KontogruppeGetAllQuery kontogruppeGetAllQuery)
         {
             try
             {
-                return _queryBus.Query<KontogruppeGetAllQuery, IList<KontogruppeView>>(kontogruppeGetAllQuery);
+                return _queryBus.Query<KontogruppeGetAllQuery, IEnumerable<KontogruppeView>>(kontogruppeGetAllQuery);
             }
             catch (Exception ex)
             {
@@ -253,13 +253,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         /// <param name="budgetkontogruppeGetAllQuery">Forespørgelse til at hente alle budgetkonti.</param>
         /// <returns>Alle grupper for budgetkonti.</returns>
         [OperationBehavior(TransactionScopeRequired = false)]
-        public IList<BudgetkontogruppeView> BudgetkontogruppeGetAll(BudgetkontogruppeGetAllQuery budgetkontogruppeGetAllQuery)
+        public IEnumerable<BudgetkontogruppeView> BudgetkontogruppeGetAll(BudgetkontogruppeGetAllQuery budgetkontogruppeGetAllQuery)
         {
             try
             {
-                return
-                    _queryBus.Query<BudgetkontogruppeGetAllQuery, IList<BudgetkontogruppeView>>(
-                        budgetkontogruppeGetAllQuery);
+                return _queryBus.Query<BudgetkontogruppeGetAllQuery, IEnumerable<BudgetkontogruppeView>>(budgetkontogruppeGetAllQuery);
             }
             catch (Exception ex)
             {

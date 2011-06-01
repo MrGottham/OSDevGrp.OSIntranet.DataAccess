@@ -12,7 +12,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
     /// <summary>
     /// Queryhandler til håndtering af forespørgelsen: KontogruppeGetAllQuery.
     /// </summary>
-    public class KontogruppeGetAllQueryHandler : IQueryHandler<KontogruppeGetAllQuery, IList<KontogruppeView>>
+    public class KontogruppeGetAllQueryHandler : IQueryHandler<KontogruppeGetAllQuery, IEnumerable<KontogruppeView>>
     {
         #region Private variables
 
@@ -44,21 +44,21 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
 
         #endregion
 
-        #region IQueryHandler<KontogruppeGetAllQuery,IList<KontogruppeView>> Members
+        #region IQueryHandler<KontogruppeGetAllQuery,IEnumerable<KontogruppeView>> Members
 
         /// <summary>
         /// Udfører forespørgelse.
         /// </summary>
         /// <param name="query">Forespørgelse efter alle kontogrupper.</param>
         /// <returns>Alle kontogrupper.</returns>
-        public IList<KontogruppeView> Query(KontogruppeGetAllQuery query)
+        public IEnumerable<KontogruppeView> Query(KontogruppeGetAllQuery query)
         {
             if (query == null)
             {
                 throw new ArgumentNullException("query");
             }
             var kontogrupper = _finansstyringRepository.KontogruppeGetAll();
-            return _objectMapper.Map<IEnumerable<Kontogruppe>, IList<KontogruppeView>>(kontogrupper);
+            return _objectMapper.Map<IEnumerable<Kontogruppe>, IEnumerable<KontogruppeView>>(kontogrupper);
         }
 
         #endregion

@@ -48,11 +48,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         /// <param name="personGetAllQuery">Query til forespørgelse efter alle personer.</param>
         /// <returns>Alle personer.</returns>
         [OperationBehavior(TransactionScopeRequired = false)]
-        public IList<PersonView> PersonGetAll(PersonGetAllQuery personGetAllQuery)
+        public IEnumerable<PersonView> PersonGetAll(PersonGetAllQuery personGetAllQuery)
         {
             try
             {
-                return _queryBus.Query<PersonGetAllQuery, IList<PersonView>>(personGetAllQuery);
+                return _queryBus.Query<PersonGetAllQuery, IEnumerable<PersonView>>(personGetAllQuery);
             }
             catch (Exception ex)
             {
@@ -86,11 +86,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         /// <param name="firmaGetAllQuery">Query til forespørgelse efter alle firmaer.</param>
         /// <returns>Alle firmaer.</returns>
         [OperationBehavior(TransactionScopeRequired = false)]
-        public IList<FirmaView> FirmaGetAll(FirmaGetAllQuery firmaGetAllQuery)
+        public IEnumerable<FirmaView> FirmaGetAll(FirmaGetAllQuery firmaGetAllQuery)
         {
             try
             {
-                return _queryBus.Query<FirmaGetAllQuery, IList<FirmaView>>(firmaGetAllQuery);
+                return _queryBus.Query<FirmaGetAllQuery, IEnumerable<FirmaView>>(firmaGetAllQuery);
             }
             catch (Exception ex)
             {
@@ -124,11 +124,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         /// <param name="adresselisteGetAllQuery">Query til forespørgelse efter alle adresser til en adresseliste.</param>
         /// <returns>Alle adresser til en adresseliste.</returns>
         [OperationBehavior(TransactionScopeRequired = false)]
-        public IList<AdresselisteView> AdresselisteGetAll(AdresselisteGetAllQuery adresselisteGetAllQuery)
+        public IEnumerable<AdresselisteView> AdresselisteGetAll(AdresselisteGetAllQuery adresselisteGetAllQuery)
         {
             try
             {
-                return _queryBus.Query<AdresselisteGetAllQuery, IList<AdresselisteView>>(adresselisteGetAllQuery);
+                return _queryBus.Query<AdresselisteGetAllQuery, IEnumerable<AdresselisteView>>(adresselisteGetAllQuery);
             }
             catch (Exception ex)
             {
@@ -143,11 +143,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         /// <param name="postnummerGetAllQuery">Query til forespørgelse efter alle postnumre.</param>
         /// <returns>Alle postnumre.</returns>
         [OperationBehavior(TransactionScopeRequired = false)]
-        public IList<PostnummerView> PostnummerGetAll(PostnummerGetAllQuery postnummerGetAllQuery)
+        public IEnumerable<PostnummerView> PostnummerGetAll(PostnummerGetAllQuery postnummerGetAllQuery)
         {
             try
             {
-                return _queryBus.Query<PostnummerGetAllQuery, IList<PostnummerView>>(postnummerGetAllQuery);
+                return _queryBus.Query<PostnummerGetAllQuery, IEnumerable<PostnummerView>>(postnummerGetAllQuery);
             }
             catch (Exception ex)
             {
@@ -162,12 +162,13 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         /// <param name="postnummerGetByLandekodeQuery">Query til forespørgelse efter alle postnumre for en given landekode.</param>
         /// <returns>Alle postnumre for den givne landekode.</returns>
         [OperationBehavior(TransactionScopeRequired = false)]
-        public IList<PostnummerView> PostnummerGetAllByLandekode(PostnummerGetByLandekodeQuery postnummerGetByLandekodeQuery)
+        public IEnumerable<PostnummerView> PostnummerGetAllByLandekode(PostnummerGetByLandekodeQuery postnummerGetByLandekodeQuery)
         {
             try
             {
                 return
-                    _queryBus.Query<PostnummerGetByLandekodeQuery, IList<PostnummerView>>(postnummerGetByLandekodeQuery);
+                    _queryBus.Query<PostnummerGetByLandekodeQuery, IEnumerable<PostnummerView>>(
+                        postnummerGetByLandekodeQuery);
             }
             catch (Exception ex)
             {
@@ -203,11 +204,12 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         /// <param name="adressegruppeGetAllQuery">Query til forespørgelse efter alle adressegrupper.</param>
         /// <returns>Alle adressegrupper.</returns>
         [OperationBehavior(TransactionScopeRequired = false)]
-        public IList<AdressegruppeView> AdressegruppeGetAll(AdressegruppeGetAllQuery adressegruppeGetAllQuery)
+        public IEnumerable<AdressegruppeView> AdressegruppeGetAll(AdressegruppeGetAllQuery adressegruppeGetAllQuery)
         {
             try
             {
-                return _queryBus.Query<AdressegruppeGetAllQuery, IList<AdressegruppeView>>(adressegruppeGetAllQuery);
+                return
+                    _queryBus.Query<AdressegruppeGetAllQuery, IEnumerable<AdressegruppeView>>(adressegruppeGetAllQuery);
             }
             catch (Exception ex)
             {
@@ -241,12 +243,12 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         /// <param name="betalingsbetingelseGetAllQuery">Query til forespørgelse efter alle betalingsbetingelser.</param>
         /// <returns>Alle betalingsbetingelser.</returns>
         [OperationBehavior(TransactionScopeRequired = false)]
-        public IList<BetalingsbetingelseView> BetalingsbetingelseGetAll(BetalingsbetingelseGetAllQuery betalingsbetingelseGetAllQuery)
+        public IEnumerable<BetalingsbetingelseView> BetalingsbetingelseGetAll(BetalingsbetingelseGetAllQuery betalingsbetingelseGetAllQuery)
         {
             try
             {
                 return
-                    _queryBus.Query<BetalingsbetingelseGetAllQuery, IList<BetalingsbetingelseView>>(
+                    _queryBus.Query<BetalingsbetingelseGetAllQuery, IEnumerable<BetalingsbetingelseView>>(
                         betalingsbetingelseGetAllQuery);
             }
             catch (Exception ex)

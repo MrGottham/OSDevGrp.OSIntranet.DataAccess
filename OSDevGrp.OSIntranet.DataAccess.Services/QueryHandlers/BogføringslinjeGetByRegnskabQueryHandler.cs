@@ -16,7 +16,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
     /// <summary>
     /// Queryhandler til håndtering af forespørgelsen: BogføringslinjeGetByRegnskabQuery.
     /// </summary>
-    public class BogføringslinjeGetByRegnskabQueryHandler : RegnskabQueryHandleBase, IQueryHandler<BogføringslinjeGetByRegnskabQuery, IList<BogføringslinjeView>>
+    public class BogføringslinjeGetByRegnskabQueryHandler : RegnskabQueryHandleBase, IQueryHandler<BogføringslinjeGetByRegnskabQuery, IEnumerable<BogføringslinjeView>>
     {
         #region Private variables
 
@@ -55,14 +55,14 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
 
         #endregion
 
-        #region IQueryHandler<BogføringslinjeGetByRegnskabQuery,IList<BogføringslinjeView>> Members
+        #region IQueryHandler<BogføringslinjeGetByRegnskabQuery,IEnumerable<BogføringslinjeView>> Members
 
         /// <summary>
         /// Udfører forespørgelse.
         /// </summary>
         /// <param name="query">Forespørgelse efter alle bogføringslinjer i et givent regnskab.</param>
         /// <returns>Alle bogføringslinjer i et givent regnskab.</returns>
-        public IList<BogføringslinjeView> Query(BogføringslinjeGetByRegnskabQuery query)
+        public IEnumerable<BogføringslinjeView> Query(BogføringslinjeGetByRegnskabQuery query)
         {
             if (query == null)
             {
@@ -88,7 +88,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
                 .SelectMany(m => m.Bogføringslinjer)
                 .OrderByDescending(m => m, comparer)
                 .ToArray();
-            return _objectMapper.Map<IList<Bogføringslinje>, IList<BogføringslinjeView>>(bogføringslinjer);
+            return _objectMapper.Map<IEnumerable<Bogføringslinje>, IEnumerable<BogføringslinjeView>>(bogføringslinjer);
         }
 
         #endregion

@@ -12,7 +12,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
     /// <summary>
     /// Queryhandler til håndtering af forespørgelsen: PostnummerGetAllQuery.
     /// </summary>
-    public class PostnummerGetAllQueryHandler : IQueryHandler<PostnummerGetAllQuery, IList<PostnummerView>>
+    public class PostnummerGetAllQueryHandler : IQueryHandler<PostnummerGetAllQuery, IEnumerable<PostnummerView>>
     {
         #region Private variables
 
@@ -44,21 +44,21 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
 
         #endregion
 
-        #region IQueryHandler<PostnummerGetAllQuery,IList<PostnummerView>> Members
+        #region IQueryHandler<PostnummerGetAllQuery,IEnumerable<PostnummerView>> Members
 
         /// <summary>
         /// Udfører forespørgelse.
         /// </summary>
         /// <param name="query">Forespørgelse efter alle postnumre.</param>
         /// <returns>Alle postnumre.</returns>
-        public IList<PostnummerView> Query(PostnummerGetAllQuery query)
+        public IEnumerable<PostnummerView> Query(PostnummerGetAllQuery query)
         {
             if (query == null)
             {
                 throw new ArgumentNullException("query");
             }
             var postnumre = _adresseRepository.PostnummerGetAll();
-            return _objectMapper.Map<IEnumerable<Postnummer>, IList<PostnummerView>>(postnumre);
+            return _objectMapper.Map<IEnumerable<Postnummer>, IEnumerable<PostnummerView>>(postnumre);
         }
 
         #endregion

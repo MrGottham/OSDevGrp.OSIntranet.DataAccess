@@ -18,7 +18,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         /// <returns>Alle personer.</returns>
         [OperationContract]
         [TransactionFlow(TransactionFlowOption.Allowed)]
-        IList<PersonView> PersonGetAll(PersonGetAllQuery personGetAllQuery);
+        IEnumerable<PersonView> PersonGetAll(PersonGetAllQuery personGetAllQuery);
 
         /// <summary>
         /// Henter en given person.
@@ -36,7 +36,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         /// <returns>Alle firmaer.</returns>
         [OperationContract]
         [TransactionFlow(TransactionFlowOption.Allowed)]
-        IList<FirmaView> FirmaGetAll(FirmaGetAllQuery firmaGetAllQuery);
+        IEnumerable<FirmaView> FirmaGetAll(FirmaGetAllQuery firmaGetAllQuery);
 
         /// <summary>
         /// Henter et givent firma.
@@ -54,7 +54,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         /// <returns>Alle adresser til en adresseliste.</returns>
         [OperationContract]
         [TransactionFlow(TransactionFlowOption.Allowed)]
-        IList<AdresselisteView> AdresselisteGetAll(AdresselisteGetAllQuery adresselisteGetAllQuery);
+        IEnumerable<AdresselisteView> AdresselisteGetAll(AdresselisteGetAllQuery adresselisteGetAllQuery);
 
         /// <summary>
         /// Henter alle postnumre.
@@ -63,7 +63,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         /// <returns>Alle postnumre.</returns>
         [OperationContract]
         [TransactionFlow(TransactionFlowOption.Allowed)]
-        IList<PostnummerView> PostnummerGetAll(PostnummerGetAllQuery postnummerGetAllQuery);
+        IEnumerable<PostnummerView> PostnummerGetAll(PostnummerGetAllQuery postnummerGetAllQuery);
 
         /// <summary>
         /// Henter alle postnumre for en given landekode.
@@ -72,7 +72,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         /// <returns>Alle postnumre for den givne landekode.</returns>
         [OperationContract]
         [TransactionFlow(TransactionFlowOption.Allowed)]
-        IList<PostnummerView> PostnummerGetAllByLandekode(PostnummerGetByLandekodeQuery postnummerGetByLandekodeQuery);
+        IEnumerable<PostnummerView> PostnummerGetAllByLandekode(PostnummerGetByLandekodeQuery postnummerGetByLandekodeQuery);
 
         /// <summary>
         /// Henter bynavnet til et givent postnummer på en given landekode.
@@ -90,7 +90,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         /// <returns>Alle adressegrupper.</returns>
         [OperationContract]
         [TransactionFlow(TransactionFlowOption.Allowed)]
-        IList<AdressegruppeView> AdressegruppeGetAll(AdressegruppeGetAllQuery adressegruppeGetAllQuery);
+        IEnumerable<AdressegruppeView> AdressegruppeGetAll(AdressegruppeGetAllQuery adressegruppeGetAllQuery);
 
         /// <summary>
         /// Henter en given adressegruppe.
@@ -108,7 +108,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         /// <returns>Alle betalingsbetingelser.</returns>
         [OperationContract]
         [TransactionFlow(TransactionFlowOption.Allowed)]
-        IList<BetalingsbetingelseView> BetalingsbetingelseGetAll(BetalingsbetingelseGetAllQuery betalingsbetingelseGetAllQuery);
+        IEnumerable<BetalingsbetingelseView> BetalingsbetingelseGetAll(BetalingsbetingelseGetAllQuery betalingsbetingelseGetAllQuery);
 
         /// <summary>
         /// Henter en given betalingsbetingelse.

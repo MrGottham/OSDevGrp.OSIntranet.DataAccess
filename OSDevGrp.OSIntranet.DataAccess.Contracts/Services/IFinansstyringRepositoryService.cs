@@ -19,7 +19,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         /// <returns>Alle regnskaber.</returns>
         [OperationContract]
         [TransactionFlow(TransactionFlowOption.Allowed)]
-        IList<RegnskabListeView> RegnskabGetAll(RegnskabGetAllQuery regnskabGetAllQuery);
+        IEnumerable<RegnskabListeView> RegnskabGetAll(RegnskabGetAllQuery regnskabGetAllQuery);
 
         /// <summary>
         /// Henter et givent regnskab.
@@ -37,7 +37,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         /// <returns>Alle konti i regnskabet.</returns>
         [OperationContract]
         [TransactionFlow(TransactionFlowOption.Allowed)]
-        IList<KontoListeView> KontoGetByRegnskab(KontoGetByRegnskabQuery kontoGetByRegnskabQuery);
+        IEnumerable<KontoListeView> KontoGetByRegnskab(KontoGetByRegnskabQuery kontoGetByRegnskabQuery);
 
         /// <summary>
         /// Henter en given konto i et givent regnskab.
@@ -55,7 +55,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         /// <returns>Alle budgetkonti i et givent regnskab.</returns>
         [OperationContract]
         [TransactionFlow(TransactionFlowOption.Allowed)]
-        IList<BudgetkontoListeView> BudgetkontoGetByRegnskab(BudgetkontoGetByRegnskabQuery budgetkontoGetByRegnskabQuery);
+        IEnumerable<BudgetkontoListeView> BudgetkontoGetByRegnskab(BudgetkontoGetByRegnskabQuery budgetkontoGetByRegnskabQuery);
 
         /// <summary>
         /// Henter en given budgetkonto i et givent regnskab.
@@ -73,7 +73,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         /// <returns>Alle bogføringslinjer for regnskabet.</returns>
         [OperationContract]
         [TransactionFlow(TransactionFlowOption.Allowed)]
-        IList<BogføringslinjeView> BogføringslinjeGetByRegnskab(BogføringslinjeGetByRegnskabQuery bogføringslinjeGetByRegnskabQuery);
+        IEnumerable<BogføringslinjeView> BogføringslinjeGetByRegnskab(BogføringslinjeGetByRegnskabQuery bogføringslinjeGetByRegnskabQuery);
 
         /// <summary>
         /// Tilføjer en bogføringslinje.
@@ -90,7 +90,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         /// <returns>Alle kontogrupper.</returns>
         [OperationContract]
         [TransactionFlow(TransactionFlowOption.Allowed)]
-        IList<KontogruppeView> KontogruppeGetAll(KontogruppeGetAllQuery kontogruppeGetAllQuery);
+        IEnumerable<KontogruppeView> KontogruppeGetAll(KontogruppeGetAllQuery kontogruppeGetAllQuery);
 
         /// <summary>
         /// Henter en given kontogruppe.
@@ -108,7 +108,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         /// <returns>Alle grupper for budgetkonti.</returns>
         [OperationContract]
         [TransactionFlow(TransactionFlowOption.Allowed)]
-        IList<BudgetkontogruppeView> BudgetkontogruppeGetAll(BudgetkontogruppeGetAllQuery budgetkontogruppeGetAllQuery);
+        IEnumerable<BudgetkontogruppeView> BudgetkontogruppeGetAll(BudgetkontogruppeGetAllQuery budgetkontogruppeGetAllQuery);
 
         /// <summary>
         /// Henter en given gruppe for budgetkonti.

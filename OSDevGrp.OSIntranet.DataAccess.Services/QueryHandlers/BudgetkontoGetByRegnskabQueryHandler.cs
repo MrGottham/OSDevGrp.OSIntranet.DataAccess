@@ -15,7 +15,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
     /// <summary>
     /// Queryhandler til håndtering af forespørgelsen: BudgetkontoGetByRegnskabQuery.
     /// </summary>
-    public class BudgetkontoGetByRegnskabQueryHandler : RegnskabQueryHandleBase, IQueryHandler<BudgetkontoGetByRegnskabQuery, IList<BudgetkontoListeView>>
+    public class BudgetkontoGetByRegnskabQueryHandler : RegnskabQueryHandleBase, IQueryHandler<BudgetkontoGetByRegnskabQuery, IEnumerable<BudgetkontoListeView>>
     {
         #region Private variables
 
@@ -54,14 +54,14 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
 
         #endregion
 
-        #region IQueryHandler<BudgetkontoGetByRegnskabQuery,IList<BudgetkontoListeView>> Members
+        #region IQueryHandler<BudgetkontoGetByRegnskabQuery,IEnumerable<BudgetkontoListeView>> Members
 
         /// <summary>
         /// Udfører forespørgelse.
         /// </summary>
         /// <param name="query">Forespørgelse efter alle budgetkonti i et givent regnskab.</param>
         /// <returns>Alle budgetkonti i et givent regnskab.</returns>
-        public IList<BudgetkontoListeView> Query(BudgetkontoGetByRegnskabQuery query)
+        public IEnumerable<BudgetkontoListeView> Query(BudgetkontoGetByRegnskabQuery query)
         {
             if (query == null)
             {
@@ -84,7 +84,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
                 .Where(m => m is Budgetkonto)
                 .Cast<Budgetkonto>()
                 .ToArray();
-            return _objectMapper.Map<IList<Budgetkonto>, IList<BudgetkontoListeView>>(konti);
+            return _objectMapper.Map<IEnumerable<Budgetkonto>, IEnumerable<BudgetkontoListeView>>(konti);
         }
 
         #endregion

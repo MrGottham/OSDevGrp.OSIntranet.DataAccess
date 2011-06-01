@@ -13,7 +13,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
     /// <summary>
     /// Queryhandler til håndtering af forespørgelsen: PersonGetAllQuery.
     /// </summary>
-    public class PersonGetAllQueryHandler : AdresseQueryHandlerBase, IQueryHandler<PersonGetAllQuery, IList<PersonView>>
+    public class PersonGetAllQueryHandler : AdresseQueryHandlerBase, IQueryHandler<PersonGetAllQuery, IEnumerable<PersonView>>
     {
         #region Private variables
 
@@ -52,14 +52,14 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
 
         #endregion
 
-        #region IQueryHandler<PersonGetAllQuery,IList<PersonView>> Members
+        #region IQueryHandler<PersonGetAllQuery,IEnumerable<PersonView>> Members
 
         /// <summary>
         /// Udfører forespørgelse.
         /// </summary>
         /// <param name="query">Forespørgelse efter alle personer.</param>
         /// <returns>Alle personer.</returns>
-        public IList<PersonView> Query(PersonGetAllQuery query)
+        public IEnumerable<PersonView> Query(PersonGetAllQuery query)
         {
             if (query == null)
             {
@@ -70,7 +70,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
                 .Where(m => m is Person)
                 .Cast<Person>()
                 .ToArray();
-            return _objectMapper.Map<IList<Person>, IList<PersonView>>(personer);
+            return _objectMapper.Map<IEnumerable<Person>, IEnumerable<PersonView>>(personer);
         }
 
         #endregion

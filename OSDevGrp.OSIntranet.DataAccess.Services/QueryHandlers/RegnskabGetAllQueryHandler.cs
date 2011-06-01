@@ -12,7 +12,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
     /// <summary>
     /// Queryhandler til håndtering af forespørgelsen: RegnskabGetAllQueryHandler.
     /// </summary>
-    public class RegnskabGetAllQueryHandler : RegnskabQueryHandleBase, IQueryHandler<RegnskabGetAllQuery, IList<RegnskabListeView>>
+    public class RegnskabGetAllQueryHandler : RegnskabQueryHandleBase, IQueryHandler<RegnskabGetAllQuery, IEnumerable<RegnskabListeView>>
     {
         #region Private variables
 
@@ -51,14 +51,14 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
 
         #endregion
 
-        #region IQueryHandler<RegnskabGetAllQuery,IList<RegnskabListeView>> Members
+        #region IQueryHandler<RegnskabGetAllQuery,IEnumerable<RegnskabListeView>> Members
 
         /// <summary>
         /// Udfører forespørgelse.
         /// </summary>
         /// <param name="query">Forespørgelse efter alle regnskaber.</param>
         /// <returns>Alle regnskaber.</returns>
-        public IList<RegnskabListeView> Query(RegnskabGetAllQuery query)
+        public IEnumerable<RegnskabListeView> Query(RegnskabGetAllQuery query)
         {
             if (query == null)
             {
@@ -66,7 +66,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
             }
             var adresser = _adresseRepository.AdresseGetAll();
             var regnskaber = _finansstyringRepository.RegnskabGetAll(r => MergeInformations(r, adresser));
-            return _objectMapper.Map<IEnumerable<Regnskab>, IList<RegnskabListeView>>(regnskaber);
+            return _objectMapper.Map<IEnumerable<Regnskab>, IEnumerable<RegnskabListeView>>(regnskaber);
         }
 
         #endregion
