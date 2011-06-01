@@ -10,6 +10,16 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Views
     public class RegnskabView : RegnskabListeView
     {
         /// <summary>
+        /// Brevhoved.
+        /// </summary>
+        [DataMember(IsRequired = false)]
+        public BrevhovedView Brevhoved
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Konti.
         /// </summary>
         [DataMember(IsRequired = true)]

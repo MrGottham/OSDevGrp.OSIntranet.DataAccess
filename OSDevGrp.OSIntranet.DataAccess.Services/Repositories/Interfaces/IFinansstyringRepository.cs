@@ -15,15 +15,17 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
         /// <summary>
         /// Henter alle regnskaber inklusiv konti, budgetkonti m.m.
         /// </summary>
+        /// <param name="getBrevhoved">Callbackmetode til hentning af brevhoved.</param>
         /// <returns>Liste indeholdende regnskaber inklusiv konti, budgetkonti m.m.</returns>
-        IEnumerable<Regnskab> RegnskabGetAll();
+        IEnumerable<Regnskab> RegnskabGetAll(Func<int, Brevhoved> getBrevhoved);
 
         /// <summary>
         /// Henter alle regnskaber inklusiv konti, budgetkonti m.m.
         /// </summary>
+        /// <param name="getBrevhoved">Callbackmetode til hentning af brevhoved.</param>
         /// <param name="callback">Callbackmetode, til behandling af de enkelte regnskaber.</param>
         /// <returns>Liste indeholdende regnskaber inklusiv konti, budgetkonti m.m.</returns>
-        IEnumerable<Regnskab> RegnskabGetAll(Action<Regnskab> callback);
+        IEnumerable<Regnskab> RegnskabGetAll(Func<int, Brevhoved> getBrevhoved, Action<Regnskab> callback);
 
         /// <summary>
         /// Henter alle kontogrupper.

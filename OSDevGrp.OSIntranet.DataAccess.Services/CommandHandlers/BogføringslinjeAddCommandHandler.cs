@@ -2,6 +2,7 @@
 using System.Linq;
 using OSDevGrp.OSIntranet.CommonLibrary.Domain.Adressekartotek;
 using OSDevGrp.OSIntranet.CommonLibrary.Domain.Finansstyring;
+using OSDevGrp.OSIntranet.CommonLibrary.Domain.Fælles;
 using OSDevGrp.OSIntranet.CommonLibrary.Infrastructure.Interfaces;
 using OSDevGrp.OSIntranet.CommonLibrary.Infrastructure.Interfaces.Core;
 using OSDevGrp.OSIntranet.DataAccess.Contracts.Commands;
@@ -20,6 +21,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.CommandHandlers
 
         private readonly IFinansstyringRepository _finansstyringRepository;
         private readonly IAdresseRepository _adresseRepository;
+        private readonly IFællesRepository _fællesRepository;
 
         #endregion
 
@@ -30,7 +32,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.CommandHandlers
         /// </summary>
         /// <param name="finansstyringRepository">Implementering af repository til finansstyring.</param>
         /// <param name="adresseRepository">Implementering af repository til adressekartotek.</param>
-        public BogføringslinjeAddCommandHandler(IFinansstyringRepository finansstyringRepository, IAdresseRepository adresseRepository)
+        /// <param name="fællesRepository">Implementering af repository til fælles elementer.</param>
+        public BogføringslinjeAddCommandHandler(IFinansstyringRepository finansstyringRepository, IAdresseRepository adresseRepository, IFællesRepository fællesRepository)
         {
             if (finansstyringRepository == null)
             {
@@ -40,8 +43,13 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.CommandHandlers
             {
                 throw new ArgumentNullException("adresseRepository");
             }
+            if (fællesRepository == null)
+            {
+                throw new ArgumentNullException("fællesRepository");
+            }
             _finansstyringRepository = finansstyringRepository;
             _adresseRepository = adresseRepository;
+            _fællesRepository = fællesRepository;
         }
 
         #endregion
@@ -61,7 +69,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.CommandHandlers
             Regnskab regnskab;
             try
             {
-                regnskab = _finansstyringRepository.RegnskabGetAll()
+                var getBrevhoved = new Func<int, Brevhoved>(nummer => _fællesRepository.BrevhovedGetByNummer(nummer));
+                regnskab = _finansstyringRepository.RegnskabGetAll(getBrevhoved)
                     .Single(m => m.Nummer == command.Regnskabsnummer);
             }
             catch (InvalidOperationException ex)

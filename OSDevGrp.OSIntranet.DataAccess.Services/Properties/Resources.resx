@@ -126,6 +126,9 @@
   <data name="EventLogFinansstyringRepositoryService" xml:space="preserve">
     <value>107</value>
   </data>
+  <data name="EventLogFællesRepositoryService" xml:space="preserve">
+    <value>109</value>
+  </data>
   <data name="EventLogName" xml:space="preserve">
     <value>OS Intranet - Data Access</value>
   </data>

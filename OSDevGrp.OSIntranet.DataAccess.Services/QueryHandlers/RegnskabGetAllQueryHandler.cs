@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using OSDevGrp.OSIntranet.CommonLibrary.Domain.Finansstyring;
+using OSDevGrp.OSIntranet.CommonLibrary.Domain.Fælles;
 using OSDevGrp.OSIntranet.CommonLibrary.Infrastructure.Interfaces;
 using OSDevGrp.OSIntranet.DataAccess.Contracts.Queries;
 using OSDevGrp.OSIntranet.DataAccess.Contracts.Views;
@@ -18,6 +19,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
 
         private readonly IFinansstyringRepository _finansstyringRepository;
         private readonly IAdresseRepository _adresseRepository;
+        private readonly IFællesRepository _fællesRepository;
         private readonly IObjectMapper _objectMapper;
 
         #endregion
@@ -29,8 +31,9 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
         /// </summary>
         /// <param name="finansstyringRepository">Implementering af repository til finansstyring.</param>
         /// <param name="adresseRepository">Implementering af repository til adressekartotek.</param>
+        /// <param name="fællesRepository">Implementering af repository til fælles elementer.</param>
         /// <param name="objectMapper">Implementering af objektmapper.</param>
-        public RegnskabGetAllQueryHandler(IFinansstyringRepository finansstyringRepository, IAdresseRepository adresseRepository, IObjectMapper objectMapper)
+        public RegnskabGetAllQueryHandler(IFinansstyringRepository finansstyringRepository, IAdresseRepository adresseRepository, IFællesRepository fællesRepository, IObjectMapper objectMapper)
         {
             if (finansstyringRepository == null)
             {
@@ -40,12 +43,17 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
             {
                 throw new ArgumentNullException("adresseRepository");
             }
+            if (fællesRepository == null)
+            {
+                throw new ArgumentNullException("fællesRepository");
+            }
             if (objectMapper == null)
             {
                 throw new ArgumentNullException("objectMapper");
             }
             _finansstyringRepository = finansstyringRepository;
             _adresseRepository = adresseRepository;
+            _fællesRepository = fællesRepository;
             _objectMapper = objectMapper;
         }
 
@@ -65,7 +73,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
                 throw new ArgumentNullException("query");
             }
             var adresser = _adresseRepository.AdresseGetAll();
-            var regnskaber = _finansstyringRepository.RegnskabGetAll(r => MergeInformations(r, adresser));
+            var getBrevhoved = new Func<int, Brevhoved>(nummer => _fællesRepository.BrevhovedGetByNummer(nummer));
+            var regnskaber = _finansstyringRepository.RegnskabGetAll(getBrevhoved, r => MergeInformations(r, adresser));
             return _objectMapper.Map<IEnumerable<Regnskab>, IEnumerable<RegnskabListeView>>(regnskaber);
         }
 

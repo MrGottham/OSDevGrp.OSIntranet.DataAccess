@@ -104,8 +104,11 @@
       <DependentUpon>DataAccessService.cs</DependentUpon>
     </Compile>
     <Compile Include="Domain\Adressereference.cs" />
+    <Compile Include="Implementations\FællesRepositoryService.cs" />
     <Compile Include="QueryHandlers\AdresseQueryHandlerBase.cs" />
     <Compile Include="QueryHandlers\BogføringslinjeGetByRegnskabQueryHandler.cs" />
+    <Compile Include="QueryHandlers\BrevhovedGetAllQueryHandler.cs" />
+    <Compile Include="QueryHandlers\BrevhovedGetByNummerQueryHandler.cs" />
     <Compile Include="QueryHandlers\BudgetkontoGetByRegnskabAndKontonummerQueryHandler.cs" />
     <Compile Include="QueryHandlers\BudgetkontoGetByRegnskabQueryHandler.cs" />
     <Compile Include="QueryHandlers\BudgetkontogruppeGetAllQueryHandler.cs" />
@@ -150,10 +153,12 @@
     <Compile Include="Repositories\AdresseRepository.cs" />
     <Compile Include="Repositories\DbAxRepositoryBase.cs" />
     <Compile Include="Repositories\DbAxConfiguration.cs" />
+    <Compile Include="Repositories\FællesRepository.cs" />
     <Compile Include="Repositories\Interfaces\IAdresseRepository.cs" />
     <Compile Include="Repositories\Interfaces\IDbAxConfiguration.cs" />
     <Compile Include="Repositories\Interfaces\IDbAxRepositoryCacher.cs" />
     <Compile Include="Repositories\Interfaces\IFinansstyringRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IFællesRepository.cs" />
     <Compile Include="Repositories\Interfaces\ILogRepository.cs" />
     <Compile Include="Repositories\Interfaces\IRepository.cs" />
     <Compile Include="Repositories\LogRepository.cs" />

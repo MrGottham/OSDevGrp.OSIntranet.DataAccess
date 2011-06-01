@@ -2,6 +2,7 @@
 using AutoMapper;
 using OSDevGrp.OSIntranet.CommonLibrary.Domain.Adressekartotek;
 using OSDevGrp.OSIntranet.CommonLibrary.Domain.Finansstyring;
+using OSDevGrp.OSIntranet.CommonLibrary.Domain.Fælles;
 using OSDevGrp.OSIntranet.DataAccess.Contracts.Views;
 using OSDevGrp.OSIntranet.DataAccess.Infrastructure.Interfaces.Exceptions;
 using OSDevGrp.OSIntranet.DataAccess.Resources;
@@ -182,6 +183,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
             Mapper.CreateMap<Regnskab, RegnskabView>()
                 .ForMember(x => x.Nummer, opt => opt.MapFrom(s => s.Nummer))
                 .ForMember(x => x.Navn, opt => opt.MapFrom(s => s.Navn))
+                .ForMember(x => x.Brevhoved, opt => opt.MapFrom(s => s.Brevhoved))
                 .ForMember(x => x.Konti, opt => opt.MapFrom(s => s.Konti.OfType<Konto>().ToArray()))
                 .ForMember(x => x.Budgetkonti, opt => opt.MapFrom(s => s.Konti.OfType<Budgetkonto>().ToArray()));
 
@@ -255,6 +257,17 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
             Mapper.CreateMap<Budgetkontogruppe, BudgetkontogruppeView>()
                 .ForMember(x => x.Nummer, opt => opt.MapFrom(s => s.Nummer))
                 .ForMember(x => x.Navn, opt => opt.MapFrom(s => s.Navn));
+
+            Mapper.CreateMap<Brevhoved, BrevhovedView>()
+                .ForMember(x => x.Nummer, opt => opt.MapFrom(s => s.Nummer))
+                .ForMember(x => x.Navn, opt => opt.MapFrom(s => s.Navn))
+                .ForMember(x => x.Linje1, opt => opt.MapFrom(s => s.Linje1))
+                .ForMember(x => x.Linje2, opt => opt.MapFrom(s => s.Linje2))
+                .ForMember(x => x.Linje3, opt => opt.MapFrom(s => s.Linje3))
+                .ForMember(x => x.Linje4, opt => opt.MapFrom(s => s.Linje4))
+                .ForMember(x => x.Linje5, opt => opt.MapFrom(s => s.Linje5))
+                .ForMember(x => x.Linje6, opt => opt.MapFrom(s => s.Linje6))
+                .ForMember(x => x.Linje7, opt => opt.MapFrom(s => s.Linje7));
 
             Mapper.AssertConfigurationIsValid();
         }

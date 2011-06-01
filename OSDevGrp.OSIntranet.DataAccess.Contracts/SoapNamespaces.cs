@@ -20,5 +20,10 @@
         /// Navn på service til finansstyring.
         /// </summary>
         public const string FinansstyringRepositoryServiceName = "FinansstyringRepositoryService";
+
+        /// <summary>
+        /// Navn på service til fælles elementer.
+        /// </summary>
+        public const string FællesRepositoryServiceName = "FællesRepositoryService";
     }
 }

@@ -60,6 +60,8 @@
     <Compile Include="Queries\BetalingsbetingelseGetAllQuery.cs" />
     <Compile Include="Queries\BetalingsbetingelseGetByNummerQuery.cs" />
     <Compile Include="Queries\BogføringslinjeGetByRegnskabQuery.cs" />
+    <Compile Include="Queries\BrevhovedGetAllQuery.cs" />
+    <Compile Include="Queries\BrevhovedGetByNummerQuery.cs" />
     <Compile Include="Queries\BudgetkontoGetByRegnskabAndKontonummerQuery.cs" />
     <Compile Include="Queries\BudgetkontoGetByRegnskabQuery.cs" />
     <Compile Include="Queries\BudgetkontogruppeGetAllQuery.cs" />
@@ -79,6 +81,7 @@
     <Compile Include="Queries\RegnskabGetByNummerQuery.cs" />
     <Compile Include="Services\IAdresseRepositoryService.cs" />
     <Compile Include="Services\IFinansstyringRepositoryService.cs" />
+    <Compile Include="Services\IFællesRepositoryService.cs" />
     <Compile Include="Services\IRepositoryService.cs" />
     <Compile Include="SoapNamespaces.cs" />
     <Compile Include="Views\AdressegruppeView.cs" />
@@ -87,6 +90,7 @@
     <Compile Include="Views\AdresseView.cs" />
     <Compile Include="Views\BetalingsbetingelseView.cs" />
     <Compile Include="Views\BogføringslinjeView.cs" />
+    <Compile Include="Views\BrevhovedView.cs" />
     <Compile Include="Views\BudgetkontogruppeView.cs" />
     <Compile Include="Views\BudgetkontoListeView.cs" />
     <Compile Include="Views\BudgetkontoView.cs" />

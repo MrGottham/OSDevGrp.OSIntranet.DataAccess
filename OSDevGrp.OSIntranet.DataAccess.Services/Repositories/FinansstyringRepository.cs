@@ -46,19 +46,25 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <summary>
         /// Henter alle regnskaber inklusiv konti, budgetkonti m.m.
         /// </summary>
+        /// <param name="getBrevhoved">Callbackmetode til hentning af brevhoved.</param>
         /// <returns>Liste indeholdende regnskaber inklusiv konti, budgetkonti m.m.</returns>
-        public IEnumerable<Regnskab> RegnskabGetAll()
+        public IEnumerable<Regnskab> RegnskabGetAll(Func<int, Brevhoved> getBrevhoved)
         {
-            return RegnskabGetAll(null);
+            return RegnskabGetAll(getBrevhoved, null);
         }
 
         /// <summary>
         /// Henter alle regnskaber inklusiv konti, budgetkonti m.m.
         /// </summary>
+        /// <param name="getBrevhoved">Callbackmetode til hentning af brevhoved.</param>
         /// <param name="callback">Callbackmetode, til behandling af de enkelte regnskaber.</param>
         /// <returns>Liste indeholdende regnskaber inklusiv konti, budgetkonti m.m.</returns>
-        public IEnumerable<Regnskab> RegnskabGetAll(Action<Regnskab> callback)
+        public IEnumerable<Regnskab> RegnskabGetAll(Func<int, Brevhoved> getBrevhoved, Action<Regnskab> callback)
         {
+            if (getBrevhoved == null)
+            {
+                throw new ArgumentNullException("getBrevhoved");
+            }
             lock (RegnskabCache)
             {
                 if (RegnskabCache.Count > 0)
@@ -77,8 +83,17 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                                                       GetFieldValueAsString(dbHandle,
                                                                                                             searchHandle,
                                                                                                             "Tekst");
+                                                                                  var brevhovednummer =
+                                                                                      GetFieldValueAsInt(dbHandle,
+                                                                                                         searchHandle,
+                                                                                                         "Brevhovednummer");
                                                                                   var regnskab = new Regnskab(nummer,
                                                                                                               navn);
+                                                                                  if (brevhovednummer != 0)
+                                                                                  {
+                                                                                      regnskab.SætBrevhoved(
+                                                                                          getBrevhoved(brevhovednummer));
+                                                                                  }
                                                                                   IndlæsRegnskab(regnskab, kontogrupper,
                                                                                                  budgetkontogrupper);
                                                                                   if (callback != null)
