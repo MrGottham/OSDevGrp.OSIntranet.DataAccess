@@ -80,8 +80,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
             try
             {
                 firma = _adresseRepository.AdresseGetAll(adresse => MergeInformations(adresse, regnskaber))
-                    .Where(m => m is Firma)
-                    .Cast<Firma>()
+                    .OfType<Firma>()
                     .ToArray()
                     .Single(m => m.Nummer == query.Nummer);
             }

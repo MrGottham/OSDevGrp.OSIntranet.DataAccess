@@ -90,8 +90,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
                                                  query.Regnskabsnummer), ex);
             }
             var konti = regnskab.Konti
-                .Where(m => m is Konto)
-                .Cast<Konto>()
+                .OfType<Konto>()
                 .ToArray();
             return _objectMapper.Map<IEnumerable<Konto>, IEnumerable<KontoListeView>>(konti);
         }

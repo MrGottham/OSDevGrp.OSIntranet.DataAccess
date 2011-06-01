@@ -313,6 +313,9 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                 var bogføringslinjer = channel.BogføringslinjeGetByRegnskab(query);
                 Assert.That(bogføringslinjer, Is.Not.Null);
                 Assert.That(bogføringslinjer.Count(), Is.GreaterThan(0));
+                Assert.That(bogføringslinjer.Where(m => m.Konto != null).Count(), Is.GreaterThan(0));
+                Assert.That(bogføringslinjer.Where(m => m.Budgetkonto != null).Count(), Is.GreaterThan(0));
+                Assert.That(bogføringslinjer.Where(m => m.Adresse != null).Count(), Is.GreaterThan(0));
             }
             finally
             {
@@ -323,7 +326,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
         /// <summary>
         /// Tester, at bogføringslinjer oprettes på et givent regnskab.
         /// </summary>
-        [Test]
+        [Ignore]
         public void TestAtBogføringslinjeOprettes()
         {
             var container = ContainerFactory.Create();

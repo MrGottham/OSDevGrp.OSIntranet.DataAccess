@@ -76,8 +76,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
             var getBrevhoved = new Func<int, Brevhoved>(nummer => _fællesRepository.BrevhovedGetByNummer(nummer));
             var regnskaber = _finansstyringRepository.RegnskabGetAll(getBrevhoved);
             var firmaer = _adresseRepository.AdresseGetAll(adresse => MergeInformations(adresse, regnskaber))
-                .Where(m => m is Firma)
-                .Cast<Firma>()
+                .OfType<Firma>()
                 .ToArray();
             return _objectMapper.Map<IEnumerable<Firma>, IEnumerable<FirmaView>>(firmaer);
         }

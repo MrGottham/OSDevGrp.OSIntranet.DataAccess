@@ -31,8 +31,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
             }
             var bogføringslinjer = regnskaber
                 .SelectMany(m => m.Konti)
-                .Where(m => m is Konto)
-                .Cast<Konto>()
+                .OfType<Konto>()
                 .SelectMany(m => m.Bogføringslinjer)
                 .Where(m => m.Adresse != null && m.Adresse is Adressereference && m.Adresse.Nummer == adresse.Nummer)
                 .ToArray();

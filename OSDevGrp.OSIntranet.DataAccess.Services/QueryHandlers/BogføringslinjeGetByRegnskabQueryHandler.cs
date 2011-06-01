@@ -92,10 +92,9 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
             }
             var comparer = new BogføringslinjeComparer();
             var bogføringslinjer = regnskab.Konti
-                .Where(m => m is Konto)
-                .Cast<Konto>()
+                .OfType<Konto>()
                 .SelectMany(m => m.Bogføringslinjer)
-                .OrderByDescending(m => m, comparer)
+                .OrderByDescending(n => n, comparer)
                 .ToArray();
             return _objectMapper.Map<IEnumerable<Bogføringslinje>, IEnumerable<BogføringslinjeView>>(bogføringslinjer);
         }

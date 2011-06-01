@@ -32,8 +32,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
                 throw new ArgumentNullException("adresser");
             }
             var bogføringslinjer = regnskab.Konti
-                .Where(m => m is Konto)
-                .Cast<Konto>()
+                .OfType<Konto>()
                 .SelectMany(m => m.Bogføringslinjer)
                 .Where(m => m.Adresse != null && m.Adresse is Adressereference)
                 .ToArray();

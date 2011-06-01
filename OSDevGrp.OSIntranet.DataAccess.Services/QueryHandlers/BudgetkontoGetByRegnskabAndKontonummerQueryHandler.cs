@@ -92,8 +92,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.QueryHandlers
             try
             {
                 budgetkonto = regnskab.Konti
-                    .Where(m => m is Budgetkonto)
-                    .Cast<Budgetkonto>()
+                    .OfType<Budgetkonto>()
                     .Single(m => m.Kontonummer.CompareTo(query.Kontonummer) == 0);
             }
             catch (InvalidOperationException ex)
