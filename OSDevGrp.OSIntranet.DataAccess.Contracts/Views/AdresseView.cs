@@ -134,7 +134,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Views
         /// Bogføringslinjer.
         /// </summary>
         [DataMember(IsRequired = false)]
-        public IList<BogføringslinjeView> Bogføringslinjer
+        public IEnumerable<BogføringslinjeView> Bogføringslinjer
         {
             get;
             set;

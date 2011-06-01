@@ -43,7 +43,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Views
         /// Personer.
         /// </summary>
         [DataMember(IsRequired = false)]
-        public IList<PersonView> Personer
+        public IEnumerable<PersonView> Personer
         {
             get;
             set;

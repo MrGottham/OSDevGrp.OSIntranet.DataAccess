@@ -13,7 +13,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Views
         /// Konti.
         /// </summary>
         [DataMember(IsRequired = true)]
-        public IList<KontoView> Konti
+        public IEnumerable<KontoView> Konti
         {
             get;
             set;
@@ -23,7 +23,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Views
         /// Budgetkonti.
         /// </summary>
         [DataMember(IsRequired = true)]
-        public IList<BudgetkontoView> Budgetkonti
+        public IEnumerable<BudgetkontoView> Budgetkonti
         {
             get;
             set;

@@ -13,7 +13,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Views
         /// Kreditoplysninger.
         /// </summary>
         [DataMember(IsRequired = false)]
-        public IList<KreditoplysningerView> Kreditoplysninger
+        public IEnumerable<KreditoplysningerView> Kreditoplysninger
         {
             get;
             set;
@@ -23,7 +23,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Views
         /// Bogføringslinjer.
         /// </summary>
         [DataMember(IsRequired = false)]
-        public IList<BogføringslinjeView> Bogføringslinjer
+        public IEnumerable<BogføringslinjeView> Bogføringslinjer
         {
             get;
             set;
