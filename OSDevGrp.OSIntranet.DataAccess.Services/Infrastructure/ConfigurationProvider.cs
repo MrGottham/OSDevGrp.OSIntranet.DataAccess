@@ -39,7 +39,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
                                    .BasedOn(typeof (ICommandHandler)).WithService.FromInterface(typeof (ICommandHandler)));
 
             container.Register(AllTypes.FromAssemblyNamed("OSDevGrp.OSIntranet.DataAccess.Services")
-                                   .BasedOn<IRepositoryService>());
+                                   .BasedOn(typeof (IRepositoryService)).WithService.FromInterface(typeof (IRepositoryService)));
         }
 
         #endregion
