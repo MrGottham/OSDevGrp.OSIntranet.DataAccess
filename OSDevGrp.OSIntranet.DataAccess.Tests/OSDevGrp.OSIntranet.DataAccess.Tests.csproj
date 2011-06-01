@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="Integrationstest\AdresseRepositoryServiceTests.cs" />
     <Compile Include="Integrationstest\FinansstyringRepositoryServiceTests.cs" />
+    <Compile Include="Integrationstest\FællesRepositoryServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

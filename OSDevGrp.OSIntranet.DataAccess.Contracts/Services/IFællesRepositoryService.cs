@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ServiceModel;
+using OSDevGrp.OSIntranet.DataAccess.Contracts.Commands;
 using OSDevGrp.OSIntranet.DataAccess.Contracts.Queries;
 using OSDevGrp.OSIntranet.DataAccess.Contracts.Views;
 
@@ -28,5 +29,21 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         [OperationContract]
         [TransactionFlow(TransactionFlowOption.Allowed)]
         BrevhovedView BrevhovedGetByNummer(BrevhovedGetByNummerQuery brevhovedGetByNummerQuery);
+
+        /// <summary>
+        /// Tilføjer et brevhoved.
+        /// </summary>
+        /// <param name="brevhovedAddCommand">Command til oprettelse af et brevhoved.</param>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        void BrevhovedAdd(BrevhovedAddCommand brevhovedAddCommand);
+
+        /// <summary>
+        /// Opdaterer et brevhoved.
+        /// </summary>
+        /// <param name="brevhovedModifyCommand">Command til opdatering af et givent brevhoved.</param>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        void BrevhovedModify(BrevhovedModifyCommand brevhovedModifyCommand);
     }
 }

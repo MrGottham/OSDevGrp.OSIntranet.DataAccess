@@ -97,6 +97,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandHandlers\BogføringslinjeAddCommandHandler.cs" />
+    <Compile Include="CommandHandlers\BrevhovedAddCommandHandler.cs" />
+    <Compile Include="CommandHandlers\BrevhovedModifyCommandHandler.cs" />
     <Compile Include="DataAccessService.cs">
       <SubType>Component</SubType>
     </Compile>

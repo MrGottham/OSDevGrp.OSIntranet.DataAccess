@@ -52,6 +52,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\BogføringslinjeAddCommand.cs" />
+    <Compile Include="Commands\BrevhovedAddCommand.cs" />
+    <Compile Include="Commands\BrevhovedModifyCommand.cs" />
     <Compile Include="Enums\KontogruppeType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\AdressegruppeGetAllQuery.cs" />
