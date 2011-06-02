@@ -77,7 +77,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.CommandHandlers
                 throw exception;
             }
             throw new DataAccessSystemException(
-                Resource.GetExceptionMessage(ExceptionMessage.ErrorInCommandHandler, typeof (BrevhovedModifyCommand),
+                Resource.GetExceptionMessage(ExceptionMessage.ErrorInCommandHandler, typeof (BrevhovedAddCommand),
                                              exception.Message), exception);
         }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.ServiceModel;
 using OSDevGrp.OSIntranet.CommonLibrary.Infrastructure.Interfaces;
+using OSDevGrp.OSIntranet.DataAccess.Contracts.Commands;
 using OSDevGrp.OSIntranet.DataAccess.Contracts.Queries;
 using OSDevGrp.OSIntranet.DataAccess.Contracts.Services;
 using OSDevGrp.OSIntranet.DataAccess.Contracts.Views;
@@ -17,6 +18,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
     {
         #region Private variables
 
+        private readonly ICommandBus _commandBus;
         private readonly IQueryBus _queryBus;
 
         #endregion
@@ -27,14 +29,20 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         /// Danner repositoryservice for addressekartoteket.
         /// </summary>
         /// <param name="logRepository">Implementering af logging repository.</param>
+        /// <param name="commandBus">Implementering af en CommandBus.</param>
         /// <param name="queryBus">Implementering af en QueryBus.</param>
-        public AdresseRepositoryService(ILogRepository logRepository, IQueryBus queryBus)
+        public AdresseRepositoryService(ILogRepository logRepository, ICommandBus commandBus, IQueryBus queryBus)
             : base(logRepository)
         {
+            if (commandBus == null)
+            {
+                throw new ArgumentNullException("commandBus");
+            }
             if (queryBus == null)
             {
                 throw new ArgumentNullException("queryBus");
             }
+            _commandBus = commandBus;
             _queryBus = queryBus;
         }
 
@@ -199,6 +207,42 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         }
 
         /// <summary>
+        /// Tilføjer et postnummer.
+        /// </summary>
+        /// <param name="postnummerAddCommand">Command til tilføjelse af et postnummer.</param>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public void PostnummerAdd(PostnummerAddCommand postnummerAddCommand)
+        {
+            try
+            {
+                _commandBus.Publish(postnummerAddCommand);
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogAdresseRepositoryService));
+            }
+        }
+
+        /// <summary>
+        /// Opdaterer et givent postnummer.
+        /// </summary>
+        /// <param name="postnummerModifyCommand">Command til opdatering af et givent postnummer.</param>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public void PostnummerModify(PostnummerModifyCommand postnummerModifyCommand)
+        {
+            try
+            {
+                _commandBus.Publish(postnummerModifyCommand);
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogAdresseRepositoryService));
+            }
+        }
+
+        /// <summary>
         /// Henter alle adressegrupper.
         /// </summary>
         /// <param name="adressegruppeGetAllQuery">Query til forespørgelse efter alle adressegrupper.</param>
@@ -229,6 +273,42 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
             try
             {
                 return _queryBus.Query<AdressegruppeGetByNummerQuery, AdressegruppeView>(adressegruppeGetByNummerQuery);
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogAdresseRepositoryService));
+            }
+        }
+
+        /// <summary>
+        /// Tilføjer en adressegruppe.
+        /// </summary>
+        /// <param name="adressegruppeAddCommand">Command til tilføjelse af en adressegruppe.</param>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public void AdressegruppeAdd(AdressegruppeAddCommand adressegruppeAddCommand)
+        {
+            try
+            {
+                _commandBus.Publish(adressegruppeAddCommand);
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogAdresseRepositoryService));
+            }
+        }
+
+        /// <summary>
+        /// Opdaterer en given adressegruppe.
+        /// </summary>
+        /// <param name="adressegruppeModifyCommand">Command til opdatering af en given adressegruppe.</param>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public void AdressegruppeModify(AdressegruppeModifyCommand adressegruppeModifyCommand)
+        {
+            try
+            {
+                _commandBus.Publish(adressegruppeModifyCommand);
             }
             catch (Exception ex)
             {
@@ -271,6 +351,42 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
                 return
                     _queryBus.Query<BetalingsbetingelseGetByNummerQuery, BetalingsbetingelseView>(
                         betalingsbetingelseGetByNummerQuery);
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogAdresseRepositoryService));
+            }
+        }
+
+        /// <summary>
+        /// Tilføjer en betalingsbetingelse.
+        /// </summary>
+        /// <param name="betalingsbetingelseAddCommand">Command til tilføjelse af en betalingsbetingelse.</param>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public void BetalingsbetingelseAdd(BetalingsbetingelseAddCommand betalingsbetingelseAddCommand)
+        {
+            try
+            {
+                _commandBus.Publish(betalingsbetingelseAddCommand);
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogAdresseRepositoryService));
+            }
+        }
+
+        /// <summary>
+        /// Opdaterer en given betalingsbetingelse.
+        /// </summary>
+        /// <param name="betalingsbetingelseModifyCommand">Command til opdatering af en given betalingsbetingelse.</param>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public void BetalingsbetingelseModify(BetalingsbetingelseModifyCommand betalingsbetingelseModifyCommand)
+        {
+            try
+            {
+                _commandBus.Publish(betalingsbetingelseModifyCommand);
             }
             catch (Exception ex)
             {

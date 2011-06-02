@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ServiceModel;
+using OSDevGrp.OSIntranet.DataAccess.Contracts.Commands;
 using OSDevGrp.OSIntranet.DataAccess.Contracts.Queries;
 using OSDevGrp.OSIntranet.DataAccess.Contracts.Views;
 
@@ -84,6 +85,22 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         PostnummerView BynavnGetByLandekodeAndPostnummre(BynavnGetByLandekodeAndPostnummerQuery bynavnGetByLandekodeAndPostnummerQuery);
 
         /// <summary>
+        /// Tilføjer et postnummer.
+        /// </summary>
+        /// <param name="postnummerAddCommand">Command til tilføjelse af et postnummer.</param>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        void PostnummerAdd(PostnummerAddCommand postnummerAddCommand);
+
+        /// <summary>
+        /// Opdaterer et givent postnummer.
+        /// </summary>
+        /// <param name="postnummerModifyCommand">Command til opdatering af et givent postnummer.</param>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        void PostnummerModify(PostnummerModifyCommand postnummerModifyCommand);
+
+        /// <summary>
         /// Henter alle adressegrupper.
         /// </summary>
         /// <param name="adressegruppeGetAllQuery">Query til forespørgelse efter alle adressegrupper.</param>
@@ -102,6 +119,22 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         AdressegruppeView AdressegruppeGetByNummer(AdressegruppeGetByNummerQuery adressegruppeGetByNummerQuery);
 
         /// <summary>
+        /// Tilføjer en adressegruppe.
+        /// </summary>
+        /// <param name="adressegruppeAddCommand">Command til tilføjelse af en adressegruppe.</param>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        void AdressegruppeAdd(AdressegruppeAddCommand adressegruppeAddCommand);
+
+        /// <summary>
+        /// Opdaterer en given adressegruppe.
+        /// </summary>
+        /// <param name="adressegruppeModifyCommand">Command til opdatering af en given adressegruppe.</param>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        void AdressegruppeModify(AdressegruppeModifyCommand adressegruppeModifyCommand);
+
+        /// <summary>
         /// Henter alle betalingsbetingelser.
         /// </summary>
         /// <param name="betalingsbetingelseGetAllQuery">Query til forespørgelse efter alle betalingsbetingelser.</param>
@@ -118,5 +151,21 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         [OperationContract]
         [TransactionFlow(TransactionFlowOption.Allowed)]
         BetalingsbetingelseView BetalingsbetingelseGetByNummer(BetalingsbetingelseGetByNummerQuery betalingsbetingelseGetByNummerQuery);
+
+        /// <summary>
+        /// Tilføjer en betalingsbetingelse.
+        /// </summary>
+        /// <param name="betalingsbetingelseAddCommand">Command til tilføjelse af en betalingsbetingelse.</param>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        void BetalingsbetingelseAdd(BetalingsbetingelseAddCommand betalingsbetingelseAddCommand);
+
+        /// <summary>
+        /// Opdaterer en given betalingsbetingelse.
+        /// </summary>
+        /// <param name="betalingsbetingelseModifyCommand">Command til opdatering af en given betalingsbetingelse.</param>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        void BetalingsbetingelseModify(BetalingsbetingelseModifyCommand betalingsbetingelseModifyCommand);
     }
 }

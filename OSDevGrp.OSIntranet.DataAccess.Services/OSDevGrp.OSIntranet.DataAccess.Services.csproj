@@ -96,9 +96,15 @@
     <Reference Include="System.ServiceProcess" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandHandlers\AdressegruppeAddCommandHandler.cs" />
+    <Compile Include="CommandHandlers\AdressegruppeModifyCommandHandler.cs" />
+    <Compile Include="CommandHandlers\BetalingsbetingelseAddCommandHandler.cs" />
+    <Compile Include="CommandHandlers\BetalingsbetingelseModifyCommandHandler.cs" />
     <Compile Include="CommandHandlers\BogføringslinjeAddCommandHandler.cs" />
     <Compile Include="CommandHandlers\BrevhovedAddCommandHandler.cs" />
     <Compile Include="CommandHandlers\BrevhovedModifyCommandHandler.cs" />
+    <Compile Include="CommandHandlers\PostnummerAddCommandHandler.cs" />
+    <Compile Include="CommandHandlers\PostnummerModifyCommandHandler.cs" />
     <Compile Include="DataAccessService.cs">
       <SubType>Component</SubType>
     </Compile>
