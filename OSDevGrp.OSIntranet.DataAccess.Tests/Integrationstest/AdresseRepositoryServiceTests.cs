@@ -4,6 +4,7 @@ using System.ServiceModel;
 using OSDevGrp.OSIntranet.CommonLibrary.IoC;
 using OSDevGrp.OSIntranet.CommonLibrary.Wcf;
 using OSDevGrp.OSIntranet.CommonLibrary.Wcf.ChannelFactory;
+using OSDevGrp.OSIntranet.DataAccess.Contracts.Commands;
 using OSDevGrp.OSIntranet.DataAccess.Contracts.Queries;
 using OSDevGrp.OSIntranet.DataAccess.Contracts.Services;
 using NUnit.Framework;
@@ -294,6 +295,232 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
         }
 
         /// <summary>
+        /// Tester, at postnummer oprettes.
+        /// </summary>
+        [Test]
+        [Ignore("Oprettelse af postnummer er testet.")]
+        public void TestAtPostnummerOprettes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var command = new PostnummerAddCommand
+                                  {
+                                      Landekode = "DK",
+                                      Postnummer = "_Test",
+                                      Bynavn = "_Test"
+                                  };
+                channel.PostnummerAdd(command);
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved oprettelse, hvis postnummer allerede findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOprettelseHvisPostnummerAlleredeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var command = new PostnummerAddCommand
+                                  {
+                                      Landekode = "DK",
+                                      Postnummer = "5700",
+                                      Bynavn = "_Test"
+                                  };
+                Assert.Throws<FaultException>(() => channel.PostnummerAdd(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved oprettelse, hvis landekoden er tomt.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOprettelseHvisLandekodePåPostnummerErEmpty()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var command = new PostnummerAddCommand
+                                  {
+                                      Landekode = string.Empty,
+                                      Postnummer = "_Test",
+                                      Bynavn = "_Test"
+                                  };
+                Assert.Throws<FaultException>(() => channel.PostnummerAdd(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved oprettelse, hvis postnummeret er tomt.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOprettelseHvisPostnummerPåPostnummerErEmpty()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var command = new PostnummerAddCommand
+                                  {
+                                      Landekode = "DK",
+                                      Postnummer = string.Empty,
+                                      Bynavn = "_Test"
+                                  };
+                Assert.Throws<FaultException>(() => channel.PostnummerAdd(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved oprettelse, hvis bynavnet er tomt.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOprettelseHvisBynavnPåPostnummerErEmpty()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var command = new PostnummerAddCommand
+                                  {
+                                      Landekode = "DK",
+                                      Postnummer = "_Test",
+                                      Bynavn = string.Empty
+                                  };
+                Assert.Throws<FaultException>(() => channel.PostnummerAdd(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at postnummer opdateres.
+        /// </summary>
+        [Test]
+        [Ignore("Opdatering af postnumre er testet.")]
+        public void TestAtPostnummerOpdateres()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var query = new PostnummerGetAllQuery();
+                var postnumre = channel.PostnummerGetAll(query);
+                Assert.That(postnumre, Is.Not.Null);
+                Assert.That(postnumre.Count(), Is.GreaterThan(0));
+
+                var postnummer = postnumre.SingleOrDefault(m => m.Landekode.CompareTo("DK") == 0 && m.Postnummer.CompareTo("7800") == 0);
+                Assert.That(postnummer, Is.Not.Null);
+
+                var command = new PostnummerModifyCommand
+                                  {
+                                      Landekode = postnummer.Landekode,
+                                      Postnummer = postnummer.Postnummer,
+                                      Bynavn = string.Format("_{0}", postnummer.Bynavn)
+                                  };
+                channel.PostnummerModify(command);
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved opdatering, hvis postnummer ikke findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOpdateringHvisPostnummerIkkeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var query = new PostnummerGetAllQuery();
+                var postnumre = channel.PostnummerGetAll(query);
+                Assert.That(postnumre, Is.Not.Null);
+                Assert.That(postnumre.Count(), Is.GreaterThan(0));
+
+                var postnummer = postnumre.SingleOrDefault(m => m.Landekode.CompareTo("DK") == 0 && m.Postnummer.CompareTo("7800") == 0);
+                Assert.That(postnummer, Is.Not.Null);
+
+                var command = new PostnummerModifyCommand
+                                  {
+                                      Landekode = postnummer.Landekode,
+                                      Postnummer = "XYZ",
+                                      Bynavn = string.Format("_{0}", postnummer.Bynavn)
+                                  };
+                Assert.Throws<FaultException>(() => channel.PostnummerModify(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, Tester, at der kastes en FaultException ved opdatering, hvis bynavnet er tomt.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOpdateringHvisBynavnPåPostnummerErEmpty()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var query = new PostnummerGetAllQuery();
+                var postnumre = channel.PostnummerGetAll(query);
+                Assert.That(postnumre, Is.Not.Null);
+                Assert.That(postnumre.Count(), Is.GreaterThan(0));
+
+                var postnummer = postnumre.SingleOrDefault(m => m.Landekode.CompareTo("DK") == 0 && m.Postnummer.CompareTo("7800") == 0);
+                Assert.That(postnummer, Is.Not.Null);
+
+                var command = new PostnummerModifyCommand
+                                  {
+                                      Landekode = postnummer.Landekode,
+                                      Postnummer = postnummer.Postnummer,
+                                      Bynavn = string.Empty
+                                  };
+                Assert.Throws<FaultException>(() => channel.PostnummerModify(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
         /// Tester, at adressegrupper hentes.
         /// </summary>
         [Test]
@@ -367,6 +594,182 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
         }
 
         /// <summary>
+        /// Tester, at adressegruppe oprettes.
+        /// </summary>
+        [Test]
+        [Ignore("Oprettelse af adressegruppe er testet.")]
+        public void TestAtAdressegruppeOprettes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var command = new AdressegruppeAddCommand
+                                  {
+                                      Nummer = 99,
+                                      Navn = "_Test",
+                                      AdressegruppeOswebdb = 99
+                                  };
+                channel.AdressegruppeAdd(command);
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved oprettelse, hvis adressegruppen allerede findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOprettelseHvisAdressegruppeAlleredeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var command = new AdressegruppeAddCommand
+                                  {
+                                      Nummer = 1,
+                                      Navn = "_Test",
+                                      AdressegruppeOswebdb = 1
+                                  };
+                Assert.Throws<FaultException>(() => channel.AdressegruppeAdd(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved oprettelse, hvis navnet er tomt.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOprettelseHvisNavnPåAdressegruppeErEmpty()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var command = new AdressegruppeAddCommand
+                                  {
+                                      Nummer = 99,
+                                      Navn = string.Empty,
+                                      AdressegruppeOswebdb = 99
+                                  };
+                Assert.Throws<FaultException>(() => channel.AdressegruppeAdd(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at adressegruppe opdateres.
+        /// </summary>
+        [Test]
+        [Ignore("Opdatering af adressegrupper er testet.")]
+        public void TestAtAdressegruppeOpdateres()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var query = new AdressegruppeGetAllQuery();
+                var adressegrupper = channel.AdressegruppeGetAll(query);
+                Assert.That(adressegrupper, Is.Not.Null);
+                Assert.That(adressegrupper.Count(), Is.GreaterThan(0));
+
+                var adressegruppe = adressegrupper.SingleOrDefault(m => m.Nummer == 1);
+                Assert.That(adressegruppe, Is.Not.Null);
+
+                var command = new AdressegruppeModifyCommand
+                                  {
+                                      Nummer = adressegruppe.Nummer,
+                                      Navn = string.Format("_{0}", adressegruppe.Navn),
+                                      AdressegruppeOswebdb = adressegruppe.AdressegruppeOswebdb
+                                  };
+                channel.AdressegruppeModify(command);
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved opdatering, hvis adressegruppe ikke findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOpdateringHvisAdressegruppeIkkeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var query = new AdressegruppeGetAllQuery();
+                var adressegrupper = channel.AdressegruppeGetAll(query);
+                Assert.That(adressegrupper, Is.Not.Null);
+                Assert.That(adressegrupper.Count(), Is.GreaterThan(0));
+
+                var adressegruppe = adressegrupper.SingleOrDefault(m => m.Nummer == 1);
+                Assert.That(adressegruppe, Is.Not.Null);
+
+                var command = new AdressegruppeModifyCommand
+                                  {
+                                      Nummer = -1,
+                                      Navn = string.Format("_{0}", adressegruppe.Navn),
+                                      AdressegruppeOswebdb = adressegruppe.AdressegruppeOswebdb
+                                  };
+                Assert.Throws<FaultException>(() => channel.AdressegruppeModify(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, Tester, at der kastes en FaultException ved opdatering, hvis navnet er tomt.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOpdateringHvisNavnPåAdressegruppeErEmpty()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var query = new AdressegruppeGetAllQuery();
+                var adressegrupper = channel.AdressegruppeGetAll(query);
+                Assert.That(adressegrupper, Is.Not.Null);
+                Assert.That(adressegrupper.Count(), Is.GreaterThan(0));
+
+                var adressegruppe = adressegrupper.SingleOrDefault(m => m.Nummer == 1);
+                Assert.That(adressegruppe, Is.Not.Null);
+
+                var command = new AdressegruppeModifyCommand
+                                  {
+                                      Nummer = adressegruppe.Nummer,
+                                      Navn = string.Empty,
+                                      AdressegruppeOswebdb = adressegruppe.AdressegruppeOswebdb
+                                  };
+                Assert.Throws<FaultException>(() => channel.AdressegruppeModify(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
         /// Tester, at betalingsbetingelser hentes.
         /// </summary>
         [Test]
@@ -431,6 +834,176 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                                     Nummer = -1
                                 };
                 Assert.Throws<FaultException>(() => channel.BetalingsbetingelseGetByNummer(query));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at betalingsbetingelse oprettes.
+        /// </summary>
+        [Test]
+        [Ignore("Oprettelse af betalingsbetingelse er testet.")]
+        public void TestAtBetalingsbetingelseOprettes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var command = new BetalingsbetingelseAddCommand
+                                  {
+                                      Nummer = 99,
+                                      Navn = "_Test"
+                                  };
+                channel.BetalingsbetingelseAdd(command);
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved oprettelse, hvis betalingsbetingelsen allerede findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOprettelseHvisBetalingsbetingelseAlleredeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var command = new BetalingsbetingelseAddCommand
+                                  {
+                                      Nummer = 1,
+                                      Navn = "_Test"
+                                  };
+                Assert.Throws<FaultException>(() => channel.BetalingsbetingelseAdd(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved oprettelse, hvis navnet er tomt.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOprettelseHvisNavnPåBetalingsbetingelseErEmpty()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var command = new BetalingsbetingelseAddCommand
+                                  {
+                                      Nummer = 99,
+                                      Navn = string.Empty
+                                  };
+                Assert.Throws<FaultException>(() => channel.BetalingsbetingelseAdd(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at betalingsbetingelse opdateres.
+        /// </summary>
+        [Test]
+        [Ignore("Opdatering af betalingsbetingelser er testet.")]
+        public void TestAtBetalingsbetingelseOpdateres()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var query = new BetalingsbetingelseGetAllQuery();
+                var betalingsbetingelser = channel.BetalingsbetingelseGetAll(query);
+                Assert.That(betalingsbetingelser, Is.Not.Null);
+                Assert.That(betalingsbetingelser.Count(), Is.GreaterThan(0));
+
+                var betalingsbetingelse = betalingsbetingelser.SingleOrDefault(m => m.Nummer == 1);
+                Assert.That(betalingsbetingelse, Is.Not.Null);
+
+                var command = new BetalingsbetingelseModifyCommand
+                                  {
+                                      Nummer = betalingsbetingelse.Nummer,
+                                      Navn = string.Format("_{0}", betalingsbetingelse.Navn)
+                                  };
+                channel.BetalingsbetingelseModify(command);
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved opdatering, hvis betalingsbetingelse ikke findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOpdateringHvisBetalingsbetingelseIkkeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var query = new BetalingsbetingelseGetAllQuery();
+                var betalingsbetingelser = channel.BetalingsbetingelseGetAll(query);
+                Assert.That(betalingsbetingelser, Is.Not.Null);
+                Assert.That(betalingsbetingelser.Count(), Is.GreaterThan(0));
+
+                var betalingsbetingelse = betalingsbetingelser.SingleOrDefault(m => m.Nummer == 1);
+                Assert.That(betalingsbetingelse, Is.Not.Null);
+
+                var command = new BetalingsbetingelseModifyCommand
+                                  {
+                                      Nummer = -1,
+                                      Navn = string.Format("_{0}", betalingsbetingelse.Navn)
+                                  };
+                Assert.Throws<FaultException>(() => channel.BetalingsbetingelseModify(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, Tester, at der kastes en FaultException ved opdatering, hvis navnet er tomt.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOpdateringHvisNavnPåBetalingsbetingelseErEmpty()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var query = new BetalingsbetingelseGetAllQuery();
+                var betalingsbetingelser = channel.BetalingsbetingelseGetAll(query);
+                Assert.That(betalingsbetingelser, Is.Not.Null);
+                Assert.That(betalingsbetingelser.Count(), Is.GreaterThan(0));
+
+                var betalingsbetingelse = betalingsbetingelser.SingleOrDefault(m => m.Nummer == 1);
+                Assert.That(betalingsbetingelse, Is.Not.Null);
+
+                var command = new BetalingsbetingelseModifyCommand
+                                  {
+                                      Nummer = betalingsbetingelse.Nummer,
+                                      Navn = string.Empty
+                                  };
+                Assert.Throws<FaultException>(() => channel.BetalingsbetingelseModify(command));
             }
             finally
             {
