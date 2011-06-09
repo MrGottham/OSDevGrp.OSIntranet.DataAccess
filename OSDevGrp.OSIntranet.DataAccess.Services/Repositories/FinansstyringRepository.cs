@@ -220,58 +220,42 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         }
 
         /// <summary>
-        /// Tilføjer et regnskab.
+        /// Tilføjer og returnerer et regnskab.
         /// </summary>
+        /// <param name="getBrevhoved">Callbackmetode til hentning af brevhoved.</param>
         /// <param name="nummer">Nummer på regnskabet.</param>
         /// <param name="navn">Navn på regnskabet.</param>
         /// <param name="brevhoved">Brevhoved til regnskabet.</param>
-        public void RegnskabAdd(int nummer, string navn, Brevhoved brevhoved)
+        /// <returns>Det tilføjede regnskab.</returns>
+        public Regnskab RegnskabAdd(Func<int, Brevhoved> getBrevhoved, int nummer, string navn, Brevhoved brevhoved)
         {
             CreateTableRecord(3000, nummer, navn,
                               (db, sh) =>
                               SetFieldValue(db, sh, "Brevhovednummer", brevhoved == null ? 0 : brevhoved.Nummer));
-            lock (RegnskabCache)
-            {
-                if (RegnskabCache.Count == 0)
-                {
-                    return;
-                }
-                var regnskab = new Regnskab(nummer, navn);
-                regnskab.SætBrevhoved(brevhoved);
-                if (RegnskabCache.SingleOrDefault(m => m.Nummer == regnskab.Nummer) != null)
-                {
-                    return;
-                }
-                RegnskabCache.Add(regnskab);
-            }
+            ClearCache();
+            return RegnskabGetAll(getBrevhoved).Single(m => m.Nummer == nummer);
         }
 
         /// <summary>
-        /// Opdaterer et givent regnskab.
+        /// Opdaterer og returnerer et givent regnskab.
         /// </summary>
+        /// <param name="getBrevhoved">Callbackmetode til hentning af brevhoved.</param>
         /// <param name="nummer">Nummer på regnskabet.</param>
         /// <param name="navn">Navn på regnskabet.</param>
         /// <param name="brevhoved">Brevhoved til regnskabet.</param>
-        public void RegnskabModify(int nummer, string navn, Brevhoved brevhoved)
+        /// <returns>Det opdaterede regnskab.</returns>
+        public Regnskab RegnskabModify(Func<int, Brevhoved> getBrevhoved, int nummer, string navn, Brevhoved brevhoved)
         {
             ModifyTableRecord<Regnskab>(3000, nummer, navn,
                                         (db, sh) =>
                                         SetFieldValue(db, sh, "Brevhovednummer",
                                                       brevhoved == null ? 0 : brevhoved.Nummer));
-            lock (RegnskabCache)
-            {
-                if (RegnskabCache.Count == 0)
-                {
-                    return;
-                }
-                var regnskab = RegnskabCache.Single(m => m.Nummer == nummer);
-                regnskab.SætNavn(navn);
-                regnskab.SætBrevhoved(brevhoved);
-            }
+            ClearCache();
+            return RegnskabGetAll(getBrevhoved).Single(m => m.Nummer == nummer);
         }
 
         /// <summary>
-        /// Tilføjer en konto til et givent regnskab.
+        /// Tilføjer og returnerer en konto til et givent regnskab.
         /// </summary>
         /// <param name="regnskab">Regnskab, som kontoen skal tilføjes.</param>
         /// <param name="kontonummer">Kontonummer.</param>
@@ -279,7 +263,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="beskrivelse">Beskrivelse</param>
         /// <param name="notat">Notat.</param>
         /// <param name="kontogruppe">Kontogruppe.</param>
-        public void KontoAdd(Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, Kontogruppe kontogruppe)
+        /// <returns>Den tilføjede konto.</returns>
+        public Konto KontoAdd(Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, Kontogruppe kontogruppe)
         {
             var kreditoplysninger = new List<Kreditoplysninger>(24);
             KontoBaseAdd(3010, regnskab, kontonummer, kontonavn, beskrivelse, notat, kontogruppe,
@@ -330,10 +315,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                  SetFieldValue(dbHandle, searchHandle, "Måned", kreditoplysning.Måned);
                                                  SetFieldValue(dbHandle, searchHandle, "Kredit", kreditoplysning.Kredit);
                                                  SetFieldValue(dbHandle, searchHandle, "LøbeNr", løbenr);
-                                                 SetFieldValue(dbHandle, searchHandle, "OpretBruger", Configuration.UserName);
+                                                 SetFieldValue(dbHandle, searchHandle, "OpretBruger", Configuration.UserName.ToUpper());
                                                  SetFieldValue(dbHandle, searchHandle, "OpretDato", ct);
                                                  SetFieldValue(dbHandle, searchHandle, "OpretTid", ct);
-                                                 SetFieldValue(dbHandle, searchHandle, "RetBruger", Configuration.UserName);
+                                                 SetFieldValue(dbHandle, searchHandle, "RetBruger", Configuration.UserName.ToUpper());
                                                  SetFieldValue(dbHandle, searchHandle, "RetDato", ct);
                                                  SetFieldValue(dbHandle, searchHandle, "RetTid", ct);
                                                  if (!dbHandle.IsRecOk(searchHandle))
@@ -368,36 +353,17 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                              });
             lock (RegnskabCache)
             {
-                if (RegnskabCache.Count == 0)
-                {
-                    return;
-                }
-                var konto = regnskab.Konti.OfType<Konto>().Single(m => m.Kontonummer.CompareTo(kontonummer) == 0);
-                if (konto == null)
-                {
-                    konto = new Konto(regnskab, kontonummer.ToUpper(), kontonavn, kontogruppe);
-                    konto.SætBeskrivelse(beskrivelse);
-                    konto.SætNote(notat);
-                    kreditoplysninger.ForEach(m => konto.TilføjKreditoplysninger(m));
-                    regnskab.TilføjKonto(konto);
-                    return;
-                }
-                kreditoplysninger.ForEach(m =>
-                                              {
-                                                  var kreditoplysning = konto.Kreditoplysninger
-                                                      .SingleOrDefault(n => n.År == m.År && n.Måned == m.Måned);
-                                                  if (kreditoplysning == null)
-                                                  {
-                                                      konto.TilføjKreditoplysninger(m);
-                                                      return;
-                                                  }
-                                                  kreditoplysning.SætKredit(m.Kredit);
-                                              });
+                var konto = new Konto(regnskab, kontonummer.ToUpper(), kontonavn, kontogruppe);
+                konto.SætBeskrivelse(beskrivelse);
+                konto.SætNote(notat);
+                kreditoplysninger.ForEach(konto.TilføjKreditoplysninger);
+                regnskab.TilføjKonto(konto);
+                return konto;
             }
         }
 
         /// <summary>
-        /// Opdaterer en konto i et givent regnskab.
+        /// Opdaterer og returnerer en konto i et givent regnskab.
         /// </summary>
         /// <param name="regnskab">Regnskab, hvori kontoen skal opdateres.</param>
         /// <param name="kontonummer">Kontonummer.</param>
@@ -405,25 +371,25 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="beskrivelse">Beskrivelse.</param>
         /// <param name="notat">Notat.</param>
         /// <param name="kontogruppe">Kontogruppe.</param>
-        public void KontoModify(Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, Kontogruppe kontogruppe)
+        /// <returns>Den opdaterede konto.</returns>
+        public Konto KontoModify(Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, Kontogruppe kontogruppe)
         {
             KontoBaseModify<Konto>(3010, regnskab, kontonummer, kontonavn, beskrivelse, notat, kontogruppe);
             lock (RegnskabCache)
             {
-                if (RegnskabCache.Count == 0)
-                {
-                    return;
-                }
-                var konto = regnskab.Konti.OfType<Konto>().Single(m => m.Kontonummer.CompareTo(kontonummer) == 0);
+                var konto = regnskab.Konti
+                    .OfType<Konto>()
+                    .Single(m => m.Kontonummer.CompareTo(kontonummer.ToUpper()) == 0);
                 konto.SætKontonavn(kontonavn);
                 konto.SætBeskrivelse(beskrivelse);
                 konto.SætNote(notat);
                 konto.SætKontogruppe(kontogruppe);
+                return konto;
             }
         }
 
         /// <summary>
-        /// Tilføjer en budgetkonto til et givent regnskab.
+        /// Tilføjer og returnerer en budgetkonto til et givent regnskab.
         /// </summary>
         /// <param name="regnskab">Regnskab, som kontoen skal tilføjes.</param>
         /// <param name="kontonummer">Kontonummer.</param>
@@ -431,7 +397,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="beskrivelse">Beskrivelse</param>
         /// <param name="notat">Notat.</param>
         /// <param name="budgetkontogruppe">Budgetkontogruppe.</param>
-        public void BudgetkontoAdd(Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, Budgetkontogruppe budgetkontogruppe)
+        /// <returns>Den tilføjede budgetkonto.</returns>
+        public Budgetkonto BudgetkontoAdd(Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, Budgetkontogruppe budgetkontogruppe)
         {
             var budgetoplysninger = new List<Budgetoplysninger>(24);
             KontoBaseAdd(3020, regnskab, kontonummer, kontonavn, beskrivelse, notat, budgetkontogruppe,
@@ -446,7 +413,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                  var dbHandle = OpenDatabase("KONTOLIN.DBD", false, false);
                                  try
                                  {
-                                     var databaseName = Path.GetFileNameWithoutExtension(Path.GetFileName(dbHandle.DbFile));
+                                     var databaseName =
+                                         Path.GetFileNameWithoutExtension(Path.GetFileName(dbHandle.DbFile));
                                      if (!dbHandle.BeginTTS())
                                      {
                                          throw new DataAccessSystemException(
@@ -476,16 +444,21 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                  }
                                                  SetFieldValue(dbHandle, searchHandle, "TabelNr", 3060);
                                                  SetFieldValue(dbHandle, searchHandle, "Regnskabnummer", regnskab.Nummer);
-                                                 SetFieldValue(dbHandle, searchHandle, "Kontonummer", kontonummer.ToUpper());
+                                                 SetFieldValue(dbHandle, searchHandle, "Kontonummer",
+                                                               kontonummer.ToUpper());
                                                  SetFieldValue(dbHandle, searchHandle, "År", budgetoplysning.År);
                                                  SetFieldValue(dbHandle, searchHandle, "Måned", budgetoplysning.Måned);
-                                                 SetFieldValue(dbHandle, searchHandle, "Indtægter", budgetoplysning.Indtægter);
-                                                 SetFieldValue(dbHandle, searchHandle, "Udgifter", budgetoplysning.Udgifter);
+                                                 SetFieldValue(dbHandle, searchHandle, "Indtægter",
+                                                               budgetoplysning.Indtægter);
+                                                 SetFieldValue(dbHandle, searchHandle, "Udgifter",
+                                                               budgetoplysning.Udgifter);
                                                  SetFieldValue(dbHandle, searchHandle, "LøbeNr", løbenr);
-                                                 SetFieldValue(dbHandle, searchHandle, "OpretBruger", Configuration.UserName);
+                                                 SetFieldValue(dbHandle, searchHandle, "OpretBruger",
+                                                               Configuration.UserName.ToUpper());
                                                  SetFieldValue(dbHandle, searchHandle, "OpretDato", ct);
                                                  SetFieldValue(dbHandle, searchHandle, "OpretTid", ct);
-                                                 SetFieldValue(dbHandle, searchHandle, "RetBruger", Configuration.UserName);
+                                                 SetFieldValue(dbHandle, searchHandle, "RetBruger",
+                                                               Configuration.UserName.ToUpper());
                                                  SetFieldValue(dbHandle, searchHandle, "RetDato", ct);
                                                  SetFieldValue(dbHandle, searchHandle, "RetTid", ct);
                                                  if (!dbHandle.IsRecOk(searchHandle))
@@ -520,39 +493,17 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                              });
             lock (RegnskabCache)
             {
-                if (RegnskabCache.Count == 0)
-                {
-                    return;
-                }
-                var budgetkonto = regnskab.Konti
-                    .OfType<Budgetkonto>()
-                    .Single(m => m.Kontonummer.CompareTo(kontonummer) == 0);
-                if (budgetkonto == null)
-                {
-                    budgetkonto = new Budgetkonto(regnskab, kontonummer.ToUpper(), kontonavn, budgetkontogruppe);
-                    budgetkonto.SætBeskrivelse(beskrivelse);
-                    budgetkonto.SætNote(notat);
-                    budgetoplysninger.ForEach(m => budgetkonto.TilføjBudgetoplysninger(m));
-                    regnskab.TilføjKonto(budgetkonto);
-                    return;
-                }
-                budgetoplysninger.ForEach(m =>
-                {
-                    var budgetoplysning = budgetkonto.Budgetoplysninger
-                        .SingleOrDefault(n => n.År == m.År && n.Måned == m.Måned);
-                    if (budgetoplysning == null)
-                    {
-                        budgetkonto.TilføjBudgetoplysninger(m);
-                        return;
-                    }
-                    budgetoplysning.SætIndtægter(m.Indtægter);
-                    budgetoplysning.SætUdgifter(m.Udgifter);
-                });
+                var budgetkonto = new Budgetkonto(regnskab, kontonummer.ToUpper(), kontonavn, budgetkontogruppe);
+                budgetkonto.SætBeskrivelse(beskrivelse);
+                budgetkonto.SætNote(notat);
+                budgetoplysninger.ForEach(budgetkonto.TilføjBudgetoplysninger);
+                regnskab.TilføjKonto(budgetkonto);
+                return budgetkonto;
             }
         }
 
         /// <summary>
-        /// Opdaterer en budgetkonto i et givent regnskab.
+        /// Opdaterer og returnerer en budgetkonto i et givent regnskab.
         /// </summary>
         /// <param name="regnskab">Regnskab, hvori kontoen skal opdateres.</param>
         /// <param name="kontonummer">Kontonummer.</param>
@@ -560,22 +511,20 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="beskrivelse">Beskrivelse.</param>
         /// <param name="notat">Notat.</param>
         /// <param name="budgetkontogruppe">Budgetkontogruppe.</param>
-        public void BudgetkontoModify(Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, Budgetkontogruppe budgetkontogruppe)
+        /// <returns>Den opdaterede budgetkonto.</returns>
+        public Budgetkonto BudgetkontoModify(Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, Budgetkontogruppe budgetkontogruppe)
         {
             KontoBaseModify<Budgetkonto>(3012, regnskab, kontonummer, kontonavn, beskrivelse, notat, budgetkontogruppe);
             lock (RegnskabCache)
             {
-                if (RegnskabCache.Count == 0)
-                {
-                    return;
-                }
                 var budgetkonto = regnskab.Konti
                     .OfType<Budgetkonto>()
-                    .Single(m => m.Kontonummer.CompareTo(kontonummer) == 0);
+                    .Single(m => m.Kontonummer.CompareTo(kontonummer.ToUpper()) == 0);
                 budgetkonto.SætKontonavn(kontonavn);
                 budgetkonto.SætBeskrivelse(beskrivelse);
                 budgetkonto.SætNote(notat);
                 budgetkonto.SætBudgetkontogruppe(budgetkontogruppe);
+                return budgetkonto;
             }
         }
 
@@ -586,7 +535,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="år">Årstal.</param>
         /// <param name="måned">Måned.</param>
         /// <param name="kredit">Kredit.</param>
-        public void KreditoplysningerModifyOrAdd(Konto konto, int år, int måned, decimal kredit)
+        /// <returns>De opdaterede eller tilføjede kreditoplysninger.</returns>
+        public Kreditoplysninger KreditoplysningerModifyOrAdd(Konto konto, int år, int måned, decimal kredit)
         {
             if (konto == null)
             {
@@ -596,17 +546,15 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                             (db, sh) => SetFieldValue(db, sh, "Kredit", kredit));
             lock (RegnskabCache)
             {
-                if (RegnskabCache.Count == 0)
-                {
-                    return;
-                }
                 var kreditoplysninger = konto.Kreditoplysninger.SingleOrDefault(m => m.År == år && m.Måned == måned);
                 if (kreditoplysninger != null)
                 {
                     kreditoplysninger.SætKredit(kredit);
-                    return;
+                    return kreditoplysninger;
                 }
-                konto.TilføjKreditoplysninger(new Kreditoplysninger(år, måned, kredit));
+                kreditoplysninger = new Kreditoplysninger(år, måned, kredit);
+                konto.TilføjKreditoplysninger(kreditoplysninger);
+                return kreditoplysninger;
             }
         }
 
@@ -618,7 +566,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="måned">Måned.</param>
         /// <param name="indtægter">Indtægter.</param>
         /// <param name="udgifter">Udgifter.</param>
-        public void BudgetoplysningerModifyOrAdd(Budgetkonto budgetkonto, int år, int måned, decimal indtægter, decimal udgifter)
+        /// <returns>De opdaterede eller tilføjede budgetoplysninger.</returns>
+        public Budgetoplysninger BudgetoplysningerModifyOrAdd(Budgetkonto budgetkonto, int år, int måned, decimal indtægter, decimal udgifter)
         {
             if (budgetkonto == null)
             {
@@ -637,23 +586,22 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                                                                         });
             lock (RegnskabCache)
             {
-                if (RegnskabCache.Count == 0)
-                {
-                    return;
-                }
-                var budgetoplysninger = budgetkonto.Budgetoplysninger.SingleOrDefault(m => m.År == år && m.Måned == måned);
+                var budgetoplysninger =
+                    budgetkonto.Budgetoplysninger.SingleOrDefault(m => m.År == år && m.Måned == måned);
                 if (budgetoplysninger != null)
                 {
                     budgetoplysninger.SætIndtægter(indtægter);
                     budgetoplysninger.SætUdgifter(udgifter);
-                    return;
+                    return budgetoplysninger;
                 }
-                budgetkonto.TilføjBudgetoplysninger(new Budgetoplysninger(år, måned, indtægter, udgifter));
+                budgetoplysninger = new Budgetoplysninger(år, måned, indtægter, udgifter);
+                budgetkonto.TilføjBudgetoplysninger(budgetoplysninger);
+                return budgetoplysninger;
             }
         }
 
         /// <summary>
-        /// Tilføjer en bogføringslinje.
+        /// Tilføjer og returnerer en bogføringslinje.
         /// </summary>
         /// <param name="bogføringsdato">Bogføringsdato.</param>
         /// <param name="bilag">Bilagsnummer.</param>
@@ -663,7 +611,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="debit">Debitbeløb.</param>
         /// <param name="kredit">Kreditbeløb.</param>
         /// <param name="adresse">Adressen, hvorpå kontolinjen skal bogføres.</param>
-        public void BogføringslinjeAdd(DateTime bogføringsdato, string bilag, Konto konto, string tekst, Budgetkonto budgetkonto, decimal debit, decimal kredit, AdresseBase adresse)
+        /// <returns>Den tilføjede bogføringslinje.</returns>
+        public Bogføringslinje BogføringslinjeAdd(DateTime bogføringsdato, string bilag, Konto konto, string tekst, Budgetkonto budgetkonto, decimal debit, decimal kredit, AdresseBase adresse)
         {
             if (konto == null)
             {
@@ -693,7 +642,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                          SetFieldValue(db, sh, "Dato", bogføringsdato);
                                                          if (!string.IsNullOrEmpty(bilag))
                                                          {
-                                                             SetFieldValue(db, sh, "Bilag", bilag);
+                                                             SetFieldValue(db, sh, "Bilag", bilag.ToUpper());
                                                          }
                                                          SetFieldValue(db, sh, "Tekst", tekst);
                                                          if (debit != 0M)
@@ -715,39 +664,41 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                                                      string.Format("{0}{1}", keyValue1,
                                                                                                    keyValue2));
                                                          SetFieldValue(db, sh, "LøbeNr", løbenr);
-                                                         SetFieldValue(db, sh, "OpretBruger", Configuration.UserName);
+                                                         SetFieldValue(db, sh, "OpretBruger",
+                                                                       Configuration.UserName.ToUpper());
                                                          SetFieldValue(db, sh, "OpretDato", creationTime);
                                                          SetFieldValue(db, sh, "OpretTid", creationTime);
-                                                         SetFieldValue(db, sh, "RetBruger", Configuration.UserName);
+                                                         SetFieldValue(db, sh, "RetBruger",
+                                                                       Configuration.UserName.ToUpper());
                                                          SetFieldValue(db, sh, "RetDato", creationTime);
                                                          SetFieldValue(db, sh, "RetTid", creationTime);
                                                      });
             lock (RegnskabCache)
             {
-                if (RegnskabCache.Count == 0)
-                {
-                    return;
-                }
                 var bogføringslinje = new Bogføringslinje(løbenr, bogføringsdato, bilag, tekst, debit, kredit);
                 konto.TilføjBogføringslinje(bogføringslinje);
+                konto.Calculate(bogføringslinje.Dato, bogføringslinje.Løbenummer);
                 if (budgetkonto != null)
                 {
                     budgetkonto.TilføjBogføringslinje(bogføringslinje);
+                    budgetkonto.Calculate(bogføringslinje.Dato, bogføringslinje.Løbenummer);
                 }
                 if (adresse != null)
                 {
                     adresse.TilføjBogføringslinje(bogføringslinje);
+                    adresse.Calculate(bogføringslinje.Dato, bogføringslinje.Løbenummer);
                 }
+                return bogføringslinje;
             }
         }
 
         /// <summary>
-        /// Tilføjer en kontogruppe.
+        /// Tilføjer og returnerer en kontogruppe.
         /// </summary>
         /// <param name="nummer">Unik identifikation af kontogruppen.</param>
         /// <param name="navn">Navn på kontogruppen.</param>
-        /// <param name="kontogruppeType">Typen for kontogruppen.</param>
-        public void KontogruppeAdd(int nummer, string navn, KontogruppeType kontogruppeType)
+        /// <param name="kontogruppeType">Den tilføjede kontogruppe.</param>
+        public Kontogruppe KontogruppeAdd(int nummer, string navn, KontogruppeType kontogruppeType)
         {
             CreateTableRecord(3030, nummer, navn, (db, sh) =>
                                                       {
@@ -769,28 +720,18 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                                           MethodBase.GetCurrentMethod().Name));
                                                           }
                                                       });
-            lock (KontogruppeCache)
-            {
-                if (KontogruppeCache.Count == 0)
-                {
-                    return;
-                }
-                var kontogruppe = new Kontogruppe(nummer, navn, kontogruppeType);
-                if (KontogruppeCache.SingleOrDefault(m => m.Nummer == kontogruppe.Nummer) != null)
-                {
-                    return;
-                }
-                KontogruppeCache.Add(kontogruppe);
-            }
+            ClearCache();
+            return KontogruppeGetAll().Single(m => m.Nummer == nummer);
         }
 
         /// <summary>
-        /// Opdaterer en given kontogruppe.
+        /// Opdaterer og returnerer en given kontogruppe.
         /// </summary>
         /// <param name="nummer">Unik identifikation af kontogruppen.</param>
         /// <param name="navn">Navn på kontogruppen.</param>
         /// <param name="kontogruppeType">Typen for kontogruppen.</param>
-        public void KontogruppeModify(int nummer, string navn, KontogruppeType kontogruppeType)
+        /// <returns>Den opdaterede kontogruppe.</returns>
+        public Kontogruppe KontogruppeModify(int nummer, string navn, KontogruppeType kontogruppeType)
         {
             ModifyTableRecord<Kontogruppe>(3030, nummer, navn, (db, sh) =>
                                                                    {
@@ -815,58 +756,34 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                                                            Name));
                                                                        }
                                                                    });
-            lock (KontogruppeCache)
-            {
-                if (KontogruppeCache.Count == 0)
-                {
-                    return;
-                }
-                var kontogruppe = KontogruppeCache.Single(m => m.Nummer == nummer);
-                kontogruppe.SætNavn(navn);
-                kontogruppe.SætKontogruppeType(kontogruppeType);
-            }
+            ClearCache();
+            return KontogruppeGetAll().Single(m => m.Nummer == nummer);
         }
 
         /// <summary>
-        /// Tilføjer en gruppe til budgetkonti.
+        /// Tilføjer og returnerer en gruppe til budgetkonti.
         /// </summary>
         /// <param name="nummer">Unik identifikation af gruppen til budgetkonti.</param>
         /// <param name="navn">Navn på gruppen til budgetkonti.</param>
-        public void BudgetkontogruppeAdd(int nummer, string navn)
+        /// <returns>Den tilføjede gruppe til budgetkonti.</returns>
+        public Budgetkontogruppe BudgetkontogruppeAdd(int nummer, string navn)
         {
             CreateTableRecord(3040, nummer, navn);
-            lock (BudgetkontogruppeCache)
-            {
-                if (BudgetkontogruppeCache.Count == 0)
-                {
-                    return;
-                }
-                var budgetkontogruppe = new Budgetkontogruppe(nummer, navn);
-                if (BudgetkontogruppeCache.SingleOrDefault(m => m.Nummer == budgetkontogruppe.Nummer) != null)
-                {
-                    return;
-                }
-                BudgetkontogruppeCache.Add(budgetkontogruppe);
-            }
+            ClearCache();
+            return BudgetkontogrupperGetAll().Single(m => m.Nummer == nummer);
         }
 
         /// <summary>
-        /// Opdaterer en given gruppe til budgetkonti.
+        /// Opdaterer og returnerer en given gruppe til budgetkonti.
         /// </summary>
         /// <param name="nummer">Unik identifikation af gruppen til budgetkonti.</param>
         /// <param name="navn">Navn på gruppen til budgetkonti.</param>
-        public void BudgetkontogruppeModify(int nummer, string navn)
+        /// <returns>Den opdaterede gruppe til budgetkonti.</returns>
+        public Budgetkontogruppe BudgetkontogruppeModify(int nummer, string navn)
         {
             ModifyTableRecord<Budgetkontogruppe>(3040, nummer, navn);
-            lock (BudgetkontogruppeCache)
-            {
-                if (BudgetkontogruppeCache.Count == 0)
-                {
-                    return;
-                }
-                var budgetkontogruppe = BudgetkontogruppeCache.Single(m => m.Nummer == nummer);
-                budgetkontogruppe.SætNavn(navn);
-            }
+            ClearCache();
+            return BudgetkontogrupperGetAll().Single(m => m.Nummer == nummer);
         }
 
         #endregion
@@ -1274,10 +1191,12 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                       SetFieldValue(db, sh, "Beskrivelse", beskrivelse);
                                                       SetFieldValue(db, sh, "Note", notat);
                                                       SetFieldValue(db, sh, "Gruppenummer", kontogruppeBase.Nummer);
-                                                      SetFieldValue(db, sh, "OpretBruger", Configuration.UserName);
+                                                      SetFieldValue(db, sh, "OpretBruger",
+                                                                    Configuration.UserName.ToUpper());
                                                       SetFieldValue(db, sh, "OpretDato", creationTime);
                                                       SetFieldValue(db, sh, "OpretTid", creationTime);
-                                                      SetFieldValue(db, sh, "RetBruger", Configuration.UserName);
+                                                      SetFieldValue(db, sh, "RetBruger",
+                                                                    Configuration.UserName.ToUpper());
                                                       SetFieldValue(db, sh, "RetDato", creationTime);
                                                       SetFieldValue(db, sh, "RetTid", creationTime);
                                                       onCreate(db, sh, creationTime);
@@ -1323,7 +1242,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                                                              db.GetFieldLength(
                                                                                                  db.GetFieldNoByName(
                                                                                                      "Regnskabnummer")));
-                                                                var keyValue3 = db.KeyStrAlpha(kontonummer, false,
+                                                                var keyValue3 = db.KeyStrAlpha(kontonummer.ToUpper(),
+                                                                                               false,
                                                                                                db.GetFieldLength(
                                                                                                    db.GetFieldNoByName(
                                                                                                        "Kontonummer")));
@@ -1355,7 +1275,9 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                                                                             "RetBruger",
                                                                                                             Configuration
                                                                                                                 .
-                                                                                                                UserName);
+                                                                                                                UserName
+                                                                                                                .ToUpper
+                                                                                                                ());
                                                                                               SetFieldValue(db, sh,
                                                                                                             "RetDato",
                                                                                                             modifyTime);
@@ -1364,7 +1286,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                                                                             modifyTime);
                                                                                           });
         }
-        
+
         /// <summary>
         /// Opdaterer eller tilføjer månedsoplysninger til en given konto.
         /// </summary>
@@ -1399,11 +1321,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                                                              db.GetFieldLength(
                                                                                                  db.GetFieldNoByName(
                                                                                                      "Regnskabnummer")));
-                                                                var keyValue3 = db.KeyStrAlpha(kontoBase.Kontonummer,
-                                                                                               false,
-                                                                                               db.GetFieldLength(
-                                                                                                   db.GetFieldNoByName(
-                                                                                                       "Kontonummer")));
+                                                                var keyValue3 =
+                                                                    db.KeyStrAlpha(kontoBase.Kontonummer.ToUpper(),
+                                                                                   false,
+                                                                                   db.GetFieldLength(
+                                                                                       db.GetFieldNoByName("Kontonummer")));
                                                                 var keyValue4 = db.KeyStrInt(år,
                                                                                              db.GetFieldLength(
                                                                                                  db.GetFieldNoByName(
@@ -1423,8 +1345,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                                {
                                                                    throw new DataAccessSystemException(
                                                                        Resource.GetExceptionMessage(
-                                                                           ExceptionMessage.CantCreateRecord,
-                                                                           "KONTOLIN"));
+                                                                           ExceptionMessage.CantCreateRecord, "KONTOLIN"));
                                                                }
                                                                SetFieldValue(db, sh, "TabelNr", tabelNummer);
                                                                SetFieldValue(db, sh, "Regnskabnummer",
@@ -1448,7 +1369,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                                                                              keyValue2));
                                                                SetFieldValue(db, sh, "LøbeNr", løbenr);
                                                                SetFieldValue(db, sh, "OpretBruger",
-                                                                             Configuration.UserName);
+                                                                             Configuration.UserName.ToUpper());
                                                                SetFieldValue(db, sh, "OpretDato", creationTime);
                                                                SetFieldValue(db, sh, "OpretTid", creationTime);
                                                            });
@@ -1460,7 +1381,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                           {
                                                               return;
                                                           }
-                                                          SetFieldValue(db, sh, "RetBruger", Configuration.UserName);
+                                                          SetFieldValue(db, sh, "RetBruger",
+                                                                        Configuration.UserName.ToUpper());
                                                           SetFieldValue(db, sh, "RetDato", modifyTime);
                                                           SetFieldValue(db, sh, "RetTid", modifyTime);
                                                       });

@@ -40,23 +40,27 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
         IEnumerable<Budgetkontogruppe> BudgetkontogrupperGetAll();
 
         /// <summary>
-        /// Tilføjer et regnskab.
+        /// Tilføjer og returnerer et regnskab.
         /// </summary>
+        /// <param name="getBrevhoved">Callbackmetode til hentning af brevhoved.</param>
         /// <param name="nummer">Nummer på regnskabet.</param>
         /// <param name="navn">Navn på regnskabet.</param>
         /// <param name="brevhoved">Brevhoved til regnskabet.</param>
-        void RegnskabAdd(int nummer, string navn, Brevhoved brevhoved);
+        /// <returns>Det tilføjede regnskab.</returns>
+        Regnskab RegnskabAdd(Func<int, Brevhoved> getBrevhoved, int nummer, string navn, Brevhoved brevhoved);
 
         /// <summary>
-        /// Opdaterer et givent regnskab.
+        /// Opdaterer og returnerer et givent regnskab.
         /// </summary>
+        /// <param name="getBrevhoved">Callbackmetode til hentning af brevhoved.</param>
         /// <param name="nummer">Nummer på regnskabet.</param>
         /// <param name="navn">Navn på regnskabet.</param>
         /// <param name="brevhoved">Brevhoved til regnskabet.</param>
-        void RegnskabModify(int nummer, string navn, Brevhoved brevhoved);
+        /// <returns>Det opdaterede regnskab.</returns>
+        Regnskab RegnskabModify(Func<int, Brevhoved> getBrevhoved, int nummer, string navn, Brevhoved brevhoved);
 
         /// <summary>
-        /// Tilføjer en konto til et givent regnskab.
+        /// Tilføjer og returnerer en konto til et givent regnskab.
         /// </summary>
         /// <param name="regnskab">Regnskab, som kontoen skal tilføjes.</param>
         /// <param name="kontonummer">Kontonummer.</param>
@@ -64,10 +68,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
         /// <param name="beskrivelse">Beskrivelse</param>
         /// <param name="notat">Notat.</param>
         /// <param name="kontogruppe">Kontogruppe.</param>
-        void KontoAdd(Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, Kontogruppe kontogruppe);
+        /// <returns>Den tilføjede konto.</returns>
+        Konto KontoAdd(Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, Kontogruppe kontogruppe);
 
         /// <summary>
-        /// Opdaterer en konto i et givent regnskab.
+        /// Opdaterer og returnerer en konto i et givent regnskab.
         /// </summary>
         /// <param name="regnskab">Regnskab, hvori kontoen skal opdateres.</param>
         /// <param name="kontonummer">Kontonummer.</param>
@@ -75,10 +80,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
         /// <param name="beskrivelse">Beskrivelse.</param>
         /// <param name="notat">Notat.</param>
         /// <param name="kontogruppe">Kontogruppe.</param>
-        void KontoModify(Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, Kontogruppe kontogruppe);
+        /// <returns>Den opdaterede konto.</returns>
+        Konto KontoModify(Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, Kontogruppe kontogruppe);
 
         /// <summary>
-        /// Tilføjer en budgetkonto til et givent regnskab.
+        /// Tilføjer og returnerer en budgetkonto til et givent regnskab.
         /// </summary>
         /// <param name="regnskab">Regnskab, som kontoen skal tilføjes.</param>
         /// <param name="kontonummer">Kontonummer.</param>
@@ -86,10 +92,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
         /// <param name="beskrivelse">Beskrivelse</param>
         /// <param name="notat">Notat.</param>
         /// <param name="budgetkontogruppe">Budgetkontogruppe.</param>
-        void BudgetkontoAdd(Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, Budgetkontogruppe budgetkontogruppe);
+        /// <returns>Den tilføjede budgetkonto.</returns>
+        Budgetkonto BudgetkontoAdd(Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, Budgetkontogruppe budgetkontogruppe);
 
         /// <summary>
-        /// Opdaterer en budgetkonto i et givent regnskab.
+        /// Opdaterer og returnerer en budgetkonto i et givent regnskab.
         /// </summary>
         /// <param name="regnskab">Regnskab, hvori kontoen skal opdateres.</param>
         /// <param name="kontonummer">Kontonummer.</param>
@@ -97,7 +104,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
         /// <param name="beskrivelse">Beskrivelse.</param>
         /// <param name="notat">Notat.</param>
         /// <param name="budgetkontogruppe">Budgetkontogruppe.</param>
-        void BudgetkontoModify(Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, Budgetkontogruppe budgetkontogruppe);
+        /// <returns>Den opdaterede budgetkonto.</returns>
+        Budgetkonto BudgetkontoModify(Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, Budgetkontogruppe budgetkontogruppe);
 
         /// <summary>
         /// Opdaterer eller tilføjer kreditoplysninger til en given konto.
@@ -106,7 +114,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
         /// <param name="år">Årstal.</param>
         /// <param name="måned">Måned.</param>
         /// <param name="kredit">Kredit.</param>
-        void KreditoplysningerModifyOrAdd(Konto konto, int år, int måned, decimal kredit);
+        /// <returns>De opdaterede eller tilføjede kreditoplysninger.</returns>
+        Kreditoplysninger KreditoplysningerModifyOrAdd(Konto konto, int år, int måned, decimal kredit);
 
         /// <summary>
         /// Opdaterer eller tilføjer budgetoplysninger til en given budgetkonto.
@@ -116,10 +125,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
         /// <param name="måned">Måned.</param>
         /// <param name="indtægter">Indtægter.</param>
         /// <param name="udgifter">Udgifter.</param>
-        void BudgetoplysningerModifyOrAdd(Budgetkonto budgetkonto, int år, int måned, decimal indtægter, decimal udgifter);
+        /// <returns>De opdaterede eller tilføjede budgetoplysninger.</returns>
+        Budgetoplysninger BudgetoplysningerModifyOrAdd(Budgetkonto budgetkonto, int år, int måned, decimal indtægter, decimal udgifter);
         
         /// <summary>
-        /// Tilføjer en bogføringslinje.
+        /// Tilføjer og returnerer en bogføringslinje.
         /// </summary>
         /// <param name="bogføringsdato">Bogføringsdato.</param>
         /// <param name="bilag">Bilagsnummer.</param>
@@ -129,36 +139,41 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
         /// <param name="debit">Debitbeløb.</param>
         /// <param name="kredit">Kreditbeløb.</param>
         /// <param name="adresse">Adressen, hvorpå kontolinjen skal bogføres.</param>
-        void BogføringslinjeAdd(DateTime bogføringsdato, string bilag, Konto konto, string tekst, Budgetkonto budgetkonto, decimal debit, decimal kredit, AdresseBase adresse);
+        /// <returns>Den tilføjede bogføringslinje.</returns>
+        Bogføringslinje BogføringslinjeAdd(DateTime bogføringsdato, string bilag, Konto konto, string tekst, Budgetkonto budgetkonto, decimal debit, decimal kredit, AdresseBase adresse);
 
         /// <summary>
-        /// Tilføjer en kontogruppe.
+        /// Tilføjer og returnerer en kontogruppe.
         /// </summary>
         /// <param name="nummer">Unik identifikation af kontogruppen.</param>
         /// <param name="navn">Navn på kontogruppen.</param>
         /// <param name="kontogruppeType">Typen for kontogruppen.</param>
-        void KontogruppeAdd(int nummer, string navn, KontogruppeType kontogruppeType);
+        /// <returns>Den tilføjede kontogruppe.</returns>
+        Kontogruppe KontogruppeAdd(int nummer, string navn, KontogruppeType kontogruppeType);
 
         /// <summary>
-        /// Opdaterer en given kontogruppe.
+        /// Opdaterer og returnerer en given kontogruppe.
         /// </summary>
         /// <param name="nummer">Unik identifikation af kontogruppen.</param>
         /// <param name="navn">Navn på kontogruppen.</param>
         /// <param name="kontogruppeType">Typen for kontogruppen.</param>
-        void KontogruppeModify(int nummer, string navn, KontogruppeType kontogruppeType);
+        /// <returns>Den opdaterede kontogruppe.</returns>
+        Kontogruppe KontogruppeModify(int nummer, string navn, KontogruppeType kontogruppeType);
 
         /// <summary>
-        /// Tilføjer en gruppe til budgetkonti.
+        /// Tilføjer og returnerer en gruppe til budgetkonti.
         /// </summary>
         /// <param name="nummer">Unik identifikation af gruppen til budgetkonti.</param>
         /// <param name="navn">Navn på gruppen til budgetkonti.</param>
-        void BudgetkontogruppeAdd(int nummer, string navn);
+        /// <returns>Den tilføjede gruppe til budgetkonti.</returns>
+        Budgetkontogruppe BudgetkontogruppeAdd(int nummer, string navn);
 
         /// <summary>
-        /// Opdaterer en given gruppe til budgetkonti.
+        /// Opdaterer og returnerer en given gruppe til budgetkonti.
         /// </summary>
         /// <param name="nummer">Unik identifikation af gruppen til budgetkonti.</param>
         /// <param name="navn">Navn på gruppen til budgetkonti.</param>
-        void BudgetkontogruppeModify(int nummer, string navn);
+        /// <returns>Den opdaterede gruppe til budgetkonti.</returns>
+        Budgetkontogruppe BudgetkontogruppeModify(int nummer, string navn);
     }
 }

@@ -4,6 +4,8 @@ using OSDevGrp.OSIntranet.CommonLibrary.Domain.Adressekartotek;
 using OSDevGrp.OSIntranet.CommonLibrary.Infrastructure.Interfaces;
 using OSDevGrp.OSIntranet.CommonLibrary.Infrastructure.Interfaces.Core;
 using OSDevGrp.OSIntranet.DataAccess.Contracts.Commands;
+using OSDevGrp.OSIntranet.DataAccess.Contracts.Views;
+using OSDevGrp.OSIntranet.DataAccess.Infrastructure.Interfaces;
 using OSDevGrp.OSIntranet.DataAccess.Infrastructure.Interfaces.Exceptions;
 using OSDevGrp.OSIntranet.DataAccess.Resources;
 using OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces;
@@ -13,11 +15,12 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.CommandHandlers
     /// <summary>
     /// Commandhandler til håndtering af kommandoen: AdressegruppeModifyCommand.
     /// </summary>
-    public class AdressegruppeModifyCommandHandler : CommandHandlerTransactionalBase, ICommandHandler<AdressegruppeModifyCommand>
+    public class AdressegruppeModifyCommandHandler : CommandHandlerTransactionalBase, ICommandHandler<AdressegruppeModifyCommand, AdressegruppeView>
     {
         #region Private variables
 
         private readonly IAdresseRepository _adresseRepository;
+        private readonly IObjectMapper _objectMapper;
 
         #endregion
 
@@ -27,24 +30,31 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.CommandHandlers
         /// Danner commandhandler til håndtering af kommandoen: AdressegruppeModifyCommand.
         /// </summary>
         /// <param name="adresseRepository">Implementering af repository til adressekartotek.</param>
-        public AdressegruppeModifyCommandHandler(IAdresseRepository adresseRepository)
+        /// <param name="objectMapper">Implementering af en objectmapper.</param>
+        public AdressegruppeModifyCommandHandler(IAdresseRepository adresseRepository, IObjectMapper objectMapper)
         {
             if (adresseRepository == null)
             {
                 throw new ArgumentNullException("adresseRepository");
             }
+            if (objectMapper == null)
+            {
+                throw new ArgumentNullException("objectMapper");
+            }
             _adresseRepository = adresseRepository;
+            _objectMapper = objectMapper;
         }
 
         #endregion
 
-        #region ICommandHandler<AdressegruppeModifyCommand> Members
+        #region ICommandHandler<AdressegruppeModifyCommand, AdressegruppeView> Members
 
         /// <summary>
         /// Udførelse af kommandoen.
         /// </summary>
         /// <param name="command">Command til opdatering af en given adressegruppe.</param>
-        public void Execute(AdressegruppeModifyCommand command)
+        /// <returns>Opdateret adressegruppe.</returns>
+        public AdressegruppeView Execute(AdressegruppeModifyCommand command)
         {
             if (command == null)
             {
@@ -65,8 +75,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.CommandHandlers
             adressegruppe.SætNavn(command.Navn);
             adressegruppe.SætAdressegruppeOswebdb(command.AdressegruppeOswebdb);
 
-            _adresseRepository.AdressegruppeModify(adressegruppe.Nummer, adressegruppe.Navn,
-                                                   adressegruppe.AdressegruppeOswebdb);
+            var opdateretAdressegruppe = _adresseRepository.AdressegruppeModify(adressegruppe.Nummer, adressegruppe.Navn,
+                                                                                adressegruppe.AdressegruppeOswebdb);
+
+            return _objectMapper.Map<Adressegruppe, AdressegruppeView>(opdateretAdressegruppe);
         }
 
         /// <summary>

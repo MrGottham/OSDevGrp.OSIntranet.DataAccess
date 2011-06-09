@@ -22,7 +22,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
         Brevhoved BrevhovedGetByNummer(int nummer);
 
         /// <summary>
-        /// Tilføjer et brevhoved.
+        /// Tilføjer og returnerer et brevhoved.
         /// </summary>
         /// <param name="nummer">Unik identifikation af brevhovedet.</param>
         /// <param name="navn">Navn på brevhovedet.</param>
@@ -33,10 +33,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
         /// <param name="linje5">Brevhovedets 5. linje.</param>
         /// <param name="linje6">Brevhovedets 6. linje.</param>
         /// <param name="linje7">Brevhovedets 7. linje.</param>
-        void BrevhovedAdd(int nummer, string navn, string linje1, string linje2, string linje3, string linje4, string linje5, string linje6, string linje7);
+        /// <returns>Det tilføjede brevhoved.</returns>
+        Brevhoved BrevhovedAdd(int nummer, string navn, string linje1, string linje2, string linje3, string linje4, string linje5, string linje6, string linje7);
 
         /// <summary>
-        /// Opdaterer et givent brevhoved.
+        /// Opdaterer og returnerer et givent brevhoved.
         /// </summary>
         /// <param name="nummer">Unik identifikation af brevhovedet.</param>
         /// <param name="navn">Navn på brevhovedet.</param>
@@ -47,6 +48,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
         /// <param name="linje5">Brevhovedets 5. linje.</param>
         /// <param name="linje6">Brevhovedets 6. linje.</param>
         /// <param name="linje7">Brevhovedets 7. linje.</param>
-        void BrevhovedModify(int nummer, string navn, string linje1, string linje2, string linje3, string linje4, string linje5, string linje6, string linje7);
+        /// <returns>Det opdaterede brevhoved.</returns>
+        Brevhoved BrevhovedModify(int nummer, string navn, string linje1, string linje2, string linje3, string linje4, string linje5, string linje6, string linje7);
     }
 }

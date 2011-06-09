@@ -153,10 +153,12 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                       {
                                                           onCreate(db, sh);
                                                       }
-                                                      SetFieldValue(db, sh, "OpretBruger", Configuration.UserName);
+                                                      SetFieldValue(db, sh, "OpretBruger",
+                                                                    Configuration.UserName.ToUpper());
                                                       SetFieldValue(db, sh, "OpretDato", creationTime);
                                                       SetFieldValue(db, sh, "OpretTid", creationTime);
-                                                      SetFieldValue(db, sh, "RetBruger", Configuration.UserName);
+                                                      SetFieldValue(db, sh, "RetBruger",
+                                                                    Configuration.UserName.ToUpper());
                                                       SetFieldValue(db, sh, "RetDato", creationTime);
                                                       SetFieldValue(db, sh, "RetTid", creationTime);
                                                   });
@@ -278,7 +280,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                                                      }
                                                                                      SetFieldValue(db, sh, "RetBruger",
                                                                                                    Configuration.
-                                                                                                       UserName);
+                                                                                                       UserName.ToUpper());
                                                                                      SetFieldValue(db, sh, "RetDato",
                                                                                                    modifyTime);
                                                                                      SetFieldValue(db, sh, "RetTid",

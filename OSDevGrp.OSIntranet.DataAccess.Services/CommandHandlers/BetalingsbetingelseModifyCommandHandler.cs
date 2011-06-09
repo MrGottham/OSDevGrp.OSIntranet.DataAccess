@@ -4,6 +4,8 @@ using OSDevGrp.OSIntranet.CommonLibrary.Domain.Adressekartotek;
 using OSDevGrp.OSIntranet.CommonLibrary.Infrastructure.Interfaces;
 using OSDevGrp.OSIntranet.CommonLibrary.Infrastructure.Interfaces.Core;
 using OSDevGrp.OSIntranet.DataAccess.Contracts.Commands;
+using OSDevGrp.OSIntranet.DataAccess.Contracts.Views;
+using OSDevGrp.OSIntranet.DataAccess.Infrastructure.Interfaces;
 using OSDevGrp.OSIntranet.DataAccess.Infrastructure.Interfaces.Exceptions;
 using OSDevGrp.OSIntranet.DataAccess.Resources;
 using OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces;
@@ -13,11 +15,12 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.CommandHandlers
     /// <summary>
     /// Commandhandler til håndtering af kommandoen: BetalingsbetingelseModifyCommand.
     /// </summary>
-    public class BetalingsbetingelseModifyCommandHandler : CommandHandlerTransactionalBase, ICommandHandler<BetalingsbetingelseModifyCommand>
+    public class BetalingsbetingelseModifyCommandHandler : CommandHandlerTransactionalBase, ICommandHandler<BetalingsbetingelseModifyCommand, BetalingsbetingelseView>
     {
         #region Private variables
 
         private readonly IAdresseRepository _adresseRepository;
+        private readonly IObjectMapper _objectMapper;
 
         #endregion
 
@@ -27,24 +30,31 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.CommandHandlers
         /// Danner commandhandler til håndtering af kommandoen: BetalingsbetingelseModifyCommand.
         /// </summary>
         /// <param name="adresseRepository">Implementering af repository til adressekartotek.</param>
-        public BetalingsbetingelseModifyCommandHandler(IAdresseRepository adresseRepository)
+        /// <param name="objectMapper">Implementering af en objectmapper.</param>
+        public BetalingsbetingelseModifyCommandHandler(IAdresseRepository adresseRepository, IObjectMapper objectMapper)
         {
             if (adresseRepository == null)
             {
                 throw new ArgumentNullException("adresseRepository");
             }
+            if (objectMapper == null)
+            {
+                throw new ArgumentNullException("objectMapper");
+            }
             _adresseRepository = adresseRepository;
+            _objectMapper = objectMapper;
         }
 
         #endregion
 
-        #region ICommandHandler<BetalingsbetingelseModifyCommand> Members
+        #region ICommandHandler<BetalingsbetingelseModifyCommand, BetalingsbetingelseView> Members
 
         /// <summary>
         /// Udførelse af kommandoen.
         /// </summary>
         /// <param name="command">Command til opdatering af en given betalingsbetingelse.</param>
-        public void Execute(BetalingsbetingelseModifyCommand command)
+        /// <returns>Opdateret betalingsbetingelse.</returns>
+        public BetalingsbetingelseView Execute(BetalingsbetingelseModifyCommand command)
         {
             if (command == null)
             {
@@ -65,7 +75,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.CommandHandlers
             }
             betalingsbetingelse.SætNavn(command.Navn);
 
-            _adresseRepository.BetalingsbetingelseModify(betalingsbetingelse.Nummer, betalingsbetingelse.Navn);
+            var opdateretBetalingsbetingelse = _adresseRepository.BetalingsbetingelseModify(betalingsbetingelse.Nummer,
+                                                                                            betalingsbetingelse.Navn);
+
+            return _objectMapper.Map<Betalingsbetingelse, BetalingsbetingelseView>(opdateretBetalingsbetingelse);
         }
 
         /// <summary>

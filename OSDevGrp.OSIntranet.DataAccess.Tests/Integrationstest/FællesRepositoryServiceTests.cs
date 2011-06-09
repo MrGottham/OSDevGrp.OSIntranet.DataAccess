@@ -98,7 +98,18 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                                       Linje6 = "_Test 6",
                                       Linje7 = "_Test 7",
                                   };
-                channel.BrevhovedAdd(command);
+                var result = channel.BrevhovedAdd(command);
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Nummer, Is.EqualTo(command.Nummer));
+                Assert.That(result.Navn, Is.Not.Null);
+                Assert.That(result.Navn, Is.EqualTo(command.Navn));
+                Assert.That(result.Linje1, Is.EqualTo(command.Linje1));
+                Assert.That(result.Linje2, Is.EqualTo(command.Linje2));
+                Assert.That(result.Linje3, Is.EqualTo(command.Linje3));
+                Assert.That(result.Linje4, Is.EqualTo(command.Linje4));
+                Assert.That(result.Linje5, Is.EqualTo(command.Linje5));
+                Assert.That(result.Linje6, Is.EqualTo(command.Linje6));
+                Assert.That(result.Linje7, Is.EqualTo(command.Linje7));
             }
             finally
             {
@@ -200,7 +211,18 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                                       Linje6 = brevhoved.Linje6,
                                       Linje7 = brevhoved.Linje7,
                                   };
-                channel.BrevhovedModify(command);
+                var result = channel.BrevhovedModify(command);
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Nummer, Is.EqualTo(command.Nummer));
+                Assert.That(result.Navn, Is.Not.Null);
+                Assert.That(result.Navn, Is.EqualTo(command.Navn));
+                Assert.That(result.Linje1, Is.EqualTo(command.Linje1));
+                Assert.That(result.Linje2, Is.EqualTo(command.Linje2));
+                Assert.That(result.Linje3, Is.EqualTo(command.Linje3));
+                Assert.That(result.Linje4, Is.EqualTo(command.Linje4));
+                Assert.That(result.Linje5, Is.EqualTo(command.Linje5));
+                Assert.That(result.Linje6, Is.EqualTo(command.Linje6));
+                Assert.That(result.Linje7, Is.EqualTo(command.Linje7));
             }
             finally
             {

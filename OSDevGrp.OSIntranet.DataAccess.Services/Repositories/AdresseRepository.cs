@@ -302,7 +302,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         }
 
         /// <summary>
-        /// Tilføjer en person.
+        /// Tilføjer og returnerer en person.
         /// </summary>
         /// <param name="navn">Navn på personen.</param>
         /// <param name="adresse1">Adresse (linje 1).</param>
@@ -319,7 +319,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="udlånsfrist">Udlånsfrist.</param>
         /// <param name="filofaxAdresselabel">Markering for Filofax adresselabel.</param>
         /// <param name="firma">Firmatilknytning.</param>
-        public void PersonAdd(string navn, string adresse1, string adresse2, string postnrBy, string telefon, string mobil, DateTime? fødselsdato, Adressegruppe adressegruppe, string bekendtskab, string mailadresse, string webadresse, Betalingsbetingelse betalingsbetingelse, int udlånsfrist, bool filofaxAdresselabel, Firma firma)
+        /// <returns>Den tilføjede person.</returns>
+        public Person PersonAdd(string navn, string adresse1, string adresse2, string postnrBy, string telefon, string mobil, DateTime? fødselsdato, Adressegruppe adressegruppe, string bekendtskab, string mailadresse, string webadresse, Betalingsbetingelse betalingsbetingelse, int udlånsfrist, bool filofaxAdresselabel, Firma firma)
         {
             var ident = 0;
             AdresseBaseAdd(1000, navn, adresse1, adresse2, postnrBy, adressegruppe, bekendtskab, mailadresse, webadresse,
@@ -327,8 +328,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                            (db, sh) =>
                                {
                                    ident = GetFieldValueAsInt(db, sh, "Ident");
-                                   SetFieldValue(db, sh, "Telefon", telefon);
-                                   SetFieldValue(db, sh, "Telefon2", mobil);
+                                   SetFieldValue(db, sh, "Telefon", telefon == null ? null : telefon.ToUpper());
+                                   SetFieldValue(db, sh, "Telefon2", mobil == null ? null : mobil.ToUpper());
                                    if (!fødselsdato.HasValue)
                                    {
                                        SetFieldValue(db, sh, "Fødselsdato", null);
@@ -342,36 +343,12 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                    }
                                    SetFieldValue(db, sh, "Firmaident", firma == null ? 0 : firma.Nummer);
                                });
-            lock (AdresseCache)
-            {
-                if (AdresseCache.Count == 0)
-                {
-                    return;
-                }
-                var person = new Person(ident, navn, adressegruppe);
-                person.SætAdresseoplysninger(adresse1, adresse2, postnrBy);
-                person.SætTelefon(telefon, mobil);
-                person.SætFødselsdato(fødselsdato);
-                person.SætBekendtskab(bekendtskab);
-                person.SætMailadresse(mailadresse);
-                person.SætWebadresse(webadresse);
-                person.SætBetalingsbetingelse(betalingsbetingelse);
-                person.SætUdlånsfrist(udlånsfrist);
-                person.SætFilofaxAdresselabel(filofaxAdresselabel);
-                if (AdresseCache.OfType<Person>().SingleOrDefault(m => m.Nummer == person.Nummer) != null)
-                {
-                    return;
-                }
-                if (firma != null)
-                {
-                    firma.TilføjPerson(person);
-                }
-                AdresseCache.Add(person);
-            }
+            ClearCache();
+            return AdresseGetAll().OfType<Person>().Single(m => m.Nummer == ident);
         }
 
         /// <summary>
-        /// Opdaterer en given person.
+        /// Opdaterer og returnerer en given person.
         /// </summary>
         /// <param name="nummer">Unik identifikation af personen.</param>
         /// <param name="navn">Navn på personen.</param>
@@ -389,14 +366,15 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="udlånsfrist">Udlånsfrist.</param>
         /// <param name="filofaxAdresselabel">Markering for Filofax adresselabel.</param>
         /// <param name="firma">Firmatilknytning.</param>
-        public void PersonModify(int nummer, string navn, string adresse1, string adresse2, string postnrBy, string telefon, string mobil, DateTime? fødselsdato, Adressegruppe adressegruppe, string bekendtskab, string mailadresse, string webadresse, Betalingsbetingelse betalingsbetingelse, int udlånsfrist, bool filofaxAdresselabel, Firma firma)
+        /// <returns>Den opdaterede person.</returns>
+        public Person PersonModify(int nummer, string navn, string adresse1, string adresse2, string postnrBy, string telefon, string mobil, DateTime? fødselsdato, Adressegruppe adressegruppe, string bekendtskab, string mailadresse, string webadresse, Betalingsbetingelse betalingsbetingelse, int udlånsfrist, bool filofaxAdresselabel, Firma firma)
         {
             AdresseBaseModify<Person>(1000, nummer, navn, adresse1, adresse2, postnrBy, adressegruppe, bekendtskab,
                                       mailadresse, webadresse, betalingsbetingelse, udlånsfrist, filofaxAdresselabel,
                                       (db, sh) =>
                                           {
-                                              SetFieldValue(db, sh, "Telefon", telefon);
-                                              SetFieldValue(db, sh, "Telefon2", mobil);
+                                              SetFieldValue(db, sh, "Telefon", telefon == null ? null : telefon.ToUpper());
+                                              SetFieldValue(db, sh, "Telefon2", mobil == null ? null : mobil.ToUpper());
                                               if (!fødselsdato.HasValue)
                                               {
                                                   SetFieldValue(db, sh, "Fødselsdato", null);
@@ -410,27 +388,12 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                               }
                                               SetFieldValue(db, sh, "Firmaident", firma == null ? 0 : firma.Nummer);
                                           });
-            lock (AdresseCache)
-            {
-                if (AdresseCache.Count == 0)
-                {
-                    return;
-                }
-                var person = AdresseCache.OfType<Person>().Single(m => m.Nummer == nummer);
-                person.SætAdresseoplysninger(adresse1, adresse2, postnrBy);
-                person.SætTelefon(telefon, mobil);
-                person.SætFødselsdato(fødselsdato);
-                person.SætBekendtskab(bekendtskab);
-                person.SætMailadresse(mailadresse);
-                person.SætWebadresse(webadresse);
-                person.SætBetalingsbetingelse(betalingsbetingelse);
-                person.SætUdlånsfrist(udlånsfrist);
-                person.SætFilofaxAdresselabel(filofaxAdresselabel);
-            }
+            ClearCache();
+            return AdresseGetAll().OfType<Person>().Single(m => m.Nummer == nummer);
         }
 
         /// <summary>
-        /// Tilføjer et firmat.
+        /// Tilføjer og returnerer et firma.
         /// </summary>
         /// <param name="navn">Navn på firmaet.</param>
         /// <param name="adresse1">Adresse (linje 1).</param>
@@ -446,7 +409,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="betalingsbetingelse">Betalingsbetingelse.</param>
         /// <param name="udlånsfrist">Udlånsfrist.</param>
         /// <param name="filofaxAdresselabel">Markering for Filofax adresselabel.</param>
-        public void FirmaAdd(string navn, string adresse1, string adresse2, string postnrBy, string telefon1, string telefon2, string telefax, Adressegruppe adressegruppe, string bekendtskab, string mailadresse, string webadresse, Betalingsbetingelse betalingsbetingelse, int udlånsfrist, bool filofaxAdresselabel)
+        /// <returns>Det tilføjede firma.</returns>
+        public Firma FirmaAdd(string navn, string adresse1, string adresse2, string postnrBy, string telefon1, string telefon2, string telefax, Adressegruppe adressegruppe, string bekendtskab, string mailadresse, string webadresse, Betalingsbetingelse betalingsbetingelse, int udlånsfrist, bool filofaxAdresselabel)
         {
             var ident = 0;
             AdresseBaseAdd(1010, navn, adresse1, adresse2, postnrBy, adressegruppe, bekendtskab, mailadresse, webadresse,
@@ -454,35 +418,16 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                            (db, sh) =>
                                {
                                    ident = GetFieldValueAsInt(db, sh, "Ident");
-                                   SetFieldValue(db, sh, "Telefon", telefon1);
-                                   SetFieldValue(db, sh, "Telefon2", telefon2);
-                                   SetFieldValue(db, sh, "Telefon3", telefax);
+                                   SetFieldValue(db, sh, "Telefon", telefon1 == null ? null : telefon1.ToUpper());
+                                   SetFieldValue(db, sh, "Telefon2", telefon2 == null ? null : telefon2.ToUpper());
+                                   SetFieldValue(db, sh, "Telefon3", telefax == null ? null : telefax.ToUpper());
                                });
-            lock (AdresseCache)
-            {
-                if (AdresseCache.Count == 0)
-                {
-                    return;
-                }
-                var firma = new Firma(ident, navn, adressegruppe);
-                firma.SætAdresseoplysninger(adresse1, adresse2, postnrBy);
-                firma.SætTelefon(telefon1, telefon2, telefax);
-                firma.SætBekendtskab(bekendtskab);
-                firma.SætMailadresse(mailadresse);
-                firma.SætWebadresse(webadresse);
-                firma.SætBetalingsbetingelse(betalingsbetingelse);
-                firma.SætUdlånsfrist(udlånsfrist);
-                firma.SætFilofaxAdresselabel(filofaxAdresselabel);
-                if (AdresseCache.OfType<Firma>().SingleOrDefault(m => m.Nummer == firma.Nummer) != null)
-                {
-                    return;
-                }
-                AdresseCache.Add(firma);
-            }
+            ClearCache();
+            return AdresseGetAll().OfType<Firma>().Single(m => m.Nummer == ident);
         }
 
         /// <summary>
-        /// Opdaterer et givent firma.
+        /// Opdaterer og returnerer et givent firma.
         /// </summary>
         /// <param name="nummer">Unik identifikation af firmaet.</param>
         /// <param name="navn">Navn på firmaet.</param>
@@ -499,41 +444,29 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="betalingsbetingelse">Betalingsbetingelse.</param>
         /// <param name="udlånsfrist">Udlånsfrist.</param>
         /// <param name="filofaxAdresselabel">Markering for Filofax adresselabel.</param>
-        public void FirmaModify(int nummer, string navn, string adresse1, string adresse2, string postnrBy, string telefon1, string telefon2, string telefax, Adressegruppe adressegruppe, string bekendtskab, string mailadresse, string webadresse, Betalingsbetingelse betalingsbetingelse, int udlånsfrist, bool filofaxAdresselabel)
+        /// <returns>Det opdaterede firma.</returns>
+        public Firma FirmaModify(int nummer, string navn, string adresse1, string adresse2, string postnrBy, string telefon1, string telefon2, string telefax, Adressegruppe adressegruppe, string bekendtskab, string mailadresse, string webadresse, Betalingsbetingelse betalingsbetingelse, int udlånsfrist, bool filofaxAdresselabel)
         {
             AdresseBaseModify<Firma>(1000, nummer, navn, adresse1, adresse2, postnrBy, adressegruppe, bekendtskab,
                                      mailadresse, webadresse, betalingsbetingelse, udlånsfrist, filofaxAdresselabel,
                                      (db, sh) =>
                                          {
-                                             SetFieldValue(db, sh, "Telefon", telefon1);
-                                             SetFieldValue(db, sh, "Telefon2", telefon2);
-                                             SetFieldValue(db, sh, "Telefon3", telefax);
+                                             SetFieldValue(db, sh, "Telefon", telefon1 == null ? null : telefon1.ToUpper());
+                                             SetFieldValue(db, sh, "Telefon2", telefon2 == null ? null : telefon2.ToUpper());
+                                             SetFieldValue(db, sh, "Telefon3", telefax == null ? null : telefax.ToUpper());
                                          });
-            lock (AdresseCache)
-            {
-                if (AdresseCache.Count == 0)
-                {
-                    return;
-                }
-                var firma = AdresseCache.OfType<Firma>().Single(m => m.Nummer == nummer);
-                firma.SætAdresseoplysninger(adresse1, adresse2, postnrBy);
-                firma.SætTelefon(telefon1, telefon2, telefax);
-                firma.SætBekendtskab(bekendtskab);
-                firma.SætMailadresse(mailadresse);
-                firma.SætWebadresse(webadresse);
-                firma.SætBetalingsbetingelse(betalingsbetingelse);
-                firma.SætUdlånsfrist(udlånsfrist);
-                firma.SætFilofaxAdresselabel(filofaxAdresselabel);
-            }
+            ClearCache();
+            return AdresseGetAll().OfType<Firma>().Single(m => m.Nummer == nummer);
         }
 
         /// <summary>
-        /// Tilføjer et postnummer.
+        /// Tilføjer og returnerer et postnummer.
         /// </summary>
         /// <param name="landekode">Landekode.</param>
         /// <param name="postnr">Postnummer.</param>
         /// <param name="by">Bynavn.</param>
-        public void PostnummerAdd(string landekode, string postnr, string by)
+        /// <returns>Det tilføjede postnummer.</returns>
+        public Postnummer PostnummerAdd(string landekode, string postnr, string by)
         {
             if (string.IsNullOrEmpty(landekode))
             {
@@ -550,38 +483,30 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
             CreateDatabaseRecord("POSTNR.DBD", (db, sh) =>
                                                    {
                                                        var creationTime = DateTime.Now;
-                                                       SetFieldValue(db, sh, "Landekode", landekode);
-                                                       SetFieldValue(db, sh, "Postnummer", postnr);
+                                                       SetFieldValue(db, sh, "Landekode", landekode.ToUpper());
+                                                       SetFieldValue(db, sh, "Postnummer", postnr.ToUpper());
                                                        SetFieldValue(db, sh, "By", by);
-                                                       SetFieldValue(db, sh, "OpretBruger", Configuration.UserName);
+                                                       SetFieldValue(db, sh, "OpretBruger", Configuration.UserName.ToUpper());
                                                        SetFieldValue(db, sh, "OpretDato", creationTime);
                                                        SetFieldValue(db, sh, "OpretTid", creationTime);
-                                                       SetFieldValue(db, sh, "RetBruger", Configuration.UserName);
+                                                       SetFieldValue(db, sh, "RetBruger", Configuration.UserName.ToUpper());
                                                        SetFieldValue(db, sh, "RetDato", creationTime);
                                                        SetFieldValue(db, sh, "RetTid", creationTime);
                                                    });
-            lock (PostnummerCache)
-            {
-                if (PostnummerCache.Count == 0)
-                {
-                    return;
-                }
-                var postnummer = new Postnummer(landekode, postnr, by);
-                if (PostnummerCache.SingleOrDefault(m => m.Landekode.CompareTo(landekode) == 0 && m.Postnr.CompareTo(postnr) == 0) != null)
-                {
-                    return;
-                }
-                PostnummerCache.Add(postnummer);
-            }
+            ClearCache();
+            return PostnummerGetAll().Single(m =>
+                                             m.Landekode.CompareTo(landekode.ToUpper()) == 0 &&
+                                             m.Postnr.CompareTo(postnr.ToUpper()) == 0);
         }
 
         /// <summary>
-        /// Opdaterer et givent postnummer.
+        /// Opdaterer og returnerer et givent postnummer.
         /// </summary>
         /// <param name="landekode">Landekode.</param>
         /// <param name="postnr">Postnummer.</param>
         /// <param name="by">Bynavn.</param>
-        public void PostnummerModify(string landekode, string postnr, string by)
+        /// <returns>Det opdaterede postnummer.</returns>
+        public Postnummer PostnummerModify(string landekode, string postnr, string by)
         {
             if (string.IsNullOrEmpty(landekode))
             {
@@ -597,11 +522,12 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
             }
             var getUniqueId = new Func<IDsiDbX, string>(db =>
                                                             {
-                                                                var keyValue1 = db.KeyStrAlpha(landekode, false,
+                                                                var keyValue1 = db.KeyStrAlpha(landekode.ToUpper(),
+                                                                                               false,
                                                                                                db.GetFieldLength(
                                                                                                    db.GetFieldNoByName(
                                                                                                        "Landekode")));
-                                                                var keyValue2 = db.KeyStrAlpha(postnr, false,
+                                                                var keyValue2 = db.KeyStrAlpha(postnr.ToUpper(), false,
                                                                                                db.GetFieldLength(
                                                                                                    db.GetFieldNoByName(
                                                                                                        "Postnummer")));
@@ -621,7 +547,9 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                                                                             "RetBruger",
                                                                                                             Configuration
                                                                                                                 .
-                                                                                                                UserName);
+                                                                                                                UserName
+                                                                                                                .ToUpper
+                                                                                                                ());
                                                                                               SetFieldValue(db, sh,
                                                                                                             "RetDato",
                                                                                                             modifyTime);
@@ -629,87 +557,53 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                                                                             "RetTid",
                                                                                                             modifyTime);
                                                                                           });
-            lock (PostnummerCache)
-            {
-                if (PostnummerCache.Count == 0)
-                {
-                    return;
-                }
-                var postnummer = PostnummerCache.Single(m =>
-                                                        m.Landekode.CompareTo(landekode) == 0 &&
-                                                        m.Postnr.CompareTo(postnr) == 0);
-                postnummer.SætBy(by);
-            }
+            ClearCache();
+            return PostnummerGetAll().Single(m =>
+                                             m.Landekode.CompareTo(landekode.ToUpper()) == 0 &&
+                                             m.Postnr.CompareTo(postnr.ToUpper()) == 0);
         }
 
         /// <summary>
-        /// Tilføjer en adressegruppe.
+        /// Tilføjer og returnerer en adressegruppe.
         /// </summary>
         /// <param name="nummer">Unik identifikation af adressegruppen.</param>
         /// <param name="navn">Navn på adressegruppen.</param>
         /// <param name="adressegruppeOswebdb">Nummer på den tilsvarende adressegruppe i OSWEBDB.</param>
-        public void AdressegruppeAdd(int nummer, string navn, int adressegruppeOswebdb)
+        /// <returns>Den tilføjede adressegruppe.</returns>
+        public Adressegruppe AdressegruppeAdd(int nummer, string navn, int adressegruppeOswebdb)
         {
             CreateTableRecord(1030, nummer, navn,
                               (db, sh) => SetFieldValue(db, sh, "Adressegruppe", adressegruppeOswebdb));
-            lock (AdressegruppeCache)
-            {
-                if (AdressegruppeCache.Count == 0)
-                {
-                    return;
-                }
-                var adressegruppe = new Adressegruppe(nummer, navn, adressegruppeOswebdb);
-                if (AdressegruppeCache.SingleOrDefault(m => m.Nummer == adressegruppe.Nummer) != null)
-                {
-                    return;
-                }
-                AdressegruppeCache.Add(adressegruppe);
-            }
+            ClearCache();
+            return AdressegruppeGetAll().Single(m => m.Nummer == nummer);
         }
 
         /// <summary>
-        /// Opdaterer en given adressegruppe.
+        /// Opdaterer og returnerer en given adressegruppe.
         /// </summary>
         /// <param name="nummer">Unik identifikation af adressegruppen.</param>
         /// <param name="navn">Navn på adressegruppen.</param>
         /// <param name="adressegruppeOswebdb">Nummer på den tilsvarende adressegruppe i OSWEBDB.</param>
-        public void AdressegruppeModify(int nummer, string navn, int adressegruppeOswebdb)
+        /// <returns>Den opdaterede adressegruppe.</returns>
+        public Adressegruppe AdressegruppeModify(int nummer, string navn, int adressegruppeOswebdb)
         {
             ModifyTableRecord<Adressegruppe>(1030, nummer, navn,
                                              (db, sh) => SetFieldValue(db, sh, "Adressegruppe", adressegruppeOswebdb));
-            lock (AdressegruppeCache)
-            {
-                if (AdressegruppeCache.Count == 0)
-                {
-                    return;
-                }
-                var adressegruppe = AdressegruppeCache.Single(m => m.Nummer == nummer);
-                adressegruppe.SætNavn(navn);
-                adressegruppe.SætAdressegruppeOswebdb(adressegruppeOswebdb);
-            }
+            ClearCache();
+            return AdressegruppeGetAll().Single(m => m.Nummer == nummer);
         }
 
         /// <summary>
-        /// Tilføjer en betalingsbetingelse.
+        /// Tilføjer og returnerer en betalingsbetingelse.
         /// </summary>
         /// <param name="nummer">Unik identifikation af betalingsbetingelsen.</param>
         /// <param name="navn">Navn på betalingsbetingelsen.</param>
-        public void BetalingsbetingelseAdd(int nummer, string navn)
+        /// <returns>Den tilføjede betalingsbetingelse.</returns>
+        public Betalingsbetingelse BetalingsbetingelseAdd(int nummer, string navn)
         {
             CreateTableRecord(1040, nummer, navn, null);
-            lock (BetalingsbetingelseCache)
-            {
-                if (BetalingsbetingelseCache.Count == 0)
-                {
-                    return;
-                }
-                var betalingsbetingelse = new Betalingsbetingelse(nummer, navn);
-                if (BetalingsbetingelseCache.SingleOrDefault(m => m.Nummer == betalingsbetingelse.Nummer) != null)
-                {
-                    return;
-                }
-                BetalingsbetingelseCache.Add(betalingsbetingelse);
-            }
+            ClearCache();
+            return BetalingsbetingelserGetAll().Single(m => m.Nummer == nummer);
         }
 
         /// <summary>
@@ -717,18 +611,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// </summary>
         /// <param name="nummer">Unik identifikation af betalingsbetingelsen.</param>
         /// <param name="navn">Navn på betalingsbetingelsen.</param>
-        public void BetalingsbetingelseModify(int nummer, string navn)
+        public Betalingsbetingelse BetalingsbetingelseModify(int nummer, string navn)
         {
             ModifyTableRecord<Betalingsbetingelse>(1040, nummer, navn);
-            lock (BetalingsbetingelseCache)
-            {
-                if (BetalingsbetingelseCache.Count == 0)
-                {
-                    return;
-                }
-                var betalingsbetingelse = BetalingsbetingelseCache.Single(m => m.Nummer == nummer);
-                betalingsbetingelse.SætNavn(navn);
-            }
+            ClearCache();
+            return BetalingsbetingelserGetAll().Single(m => m.Nummer == nummer);
         }
 
         #endregion
@@ -986,10 +873,12 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                         }
                                                         SetFieldValue(db, sh, "Andet", andet);
                                                         onCreate(db, sh);
-                                                        SetFieldValue(db, sh, "OpretBruger", Configuration.UserName);
+                                                        SetFieldValue(db, sh, "OpretBruger",
+                                                                      Configuration.UserName.ToUpper());
                                                         SetFieldValue(db, sh, "OpretDato", creationTime);
                                                         SetFieldValue(db, sh, "OpretTid", creationTime);
-                                                        SetFieldValue(db, sh, "RetBruger", Configuration.UserName);
+                                                        SetFieldValue(db, sh, "RetBruger",
+                                                                      Configuration.UserName.ToUpper());
                                                         SetFieldValue(db, sh, "RetDato", creationTime);
                                                         SetFieldValue(db, sh, "RetTid", creationTime);
                                                     });
@@ -1061,7 +950,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                        {
                                                            return;
                                                        }
-                                                       SetFieldValue(db, sh, "RetBruger", Configuration.UserName);
+                                                       SetFieldValue(db, sh, "RetBruger",
+                                                                     Configuration.UserName.ToUpper());
                                                        SetFieldValue(db, sh, "RetDato", modifyTime);
                                                        SetFieldValue(db, sh, "RetTid", modifyTime);
                                                    });

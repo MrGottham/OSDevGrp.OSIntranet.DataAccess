@@ -4,6 +4,8 @@ using OSDevGrp.OSIntranet.CommonLibrary.Domain.Fælles;
 using OSDevGrp.OSIntranet.CommonLibrary.Infrastructure.Interfaces;
 using OSDevGrp.OSIntranet.CommonLibrary.Infrastructure.Interfaces.Core;
 using OSDevGrp.OSIntranet.DataAccess.Contracts.Commands;
+using OSDevGrp.OSIntranet.DataAccess.Contracts.Views;
+using OSDevGrp.OSIntranet.DataAccess.Infrastructure.Interfaces;
 using OSDevGrp.OSIntranet.DataAccess.Infrastructure.Interfaces.Exceptions;
 using OSDevGrp.OSIntranet.DataAccess.Resources;
 using OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces;
@@ -13,11 +15,12 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.CommandHandlers
     /// <summary>
     /// Commandhandler til håndtering af kommandoen: BrevhovedModifyCommand.
     /// </summary>
-    public class BrevhovedModifyCommandHandler : CommandHandlerTransactionalBase, ICommandHandler<BrevhovedModifyCommand>
+    public class BrevhovedModifyCommandHandler : CommandHandlerTransactionalBase, ICommandHandler<BrevhovedModifyCommand, BrevhovedView>
     {
         #region Private variables
 
         private readonly IFællesRepository _fællesRepository;
+        private readonly IObjectMapper _objectMapper;
 
         #endregion
 
@@ -27,24 +30,31 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.CommandHandlers
         /// Danner commandhandler til håndtering af kommandoen: BrevhovedModifyCommand.
         /// </summary>
         /// <param name="fællesRepository">Implementering af repository til fælles elementer.</param>
-        public BrevhovedModifyCommandHandler(IFællesRepository fællesRepository)
+        /// <param name="objectMapper">Implementering af en objectmapper.</param>
+        public BrevhovedModifyCommandHandler(IFællesRepository fællesRepository, IObjectMapper objectMapper)
         {
             if (fællesRepository == null)
             {
                 throw new ArgumentNullException("fællesRepository");
             }
+            if (objectMapper == null)
+            {
+                throw new ArgumentNullException("objectMapper");
+            }
             _fællesRepository = fællesRepository;
+            _objectMapper = objectMapper;
         }
 
         #endregion
 
-        #region ICommandHandler<BrevhovedModifyCommand> Members
+        #region ICommandHandler<BrevhovedModifyCommand, BrevhovedView> Members
 
         /// <summary>
         /// Udførelse af kommandoen.
         /// </summary>
         /// <param name="command">Command til opdatering af et givent brevhoved.</param>
-        public void Execute(BrevhovedModifyCommand command)
+        /// <returns>Opdateret brevhoved.</returns>
+        public BrevhovedView Execute(BrevhovedModifyCommand command)
         {
             if (command == null)
             {
@@ -71,9 +81,13 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.CommandHandlers
             brevhoved.SætLinje6(command.Linje6);
             brevhoved.SætLinje7(command.Linje7);
 
-            _fællesRepository.BrevhovedModify(brevhoved.Nummer, brevhoved.Navn, brevhoved.Linje1, brevhoved.Linje2,
-                                              brevhoved.Linje3, brevhoved.Linje4, brevhoved.Linje5, brevhoved.Linje6,
-                                              brevhoved.Linje7);
+            var opdateretBrevhoved = _fællesRepository.BrevhovedModify(brevhoved.Nummer, brevhoved.Navn,
+                                                                       brevhoved.Linje1, brevhoved.Linje2,
+                                                                       brevhoved.Linje3, brevhoved.Linje4,
+                                                                       brevhoved.Linje5, brevhoved.Linje6,
+                                                                       brevhoved.Linje7);
+
+            return _objectMapper.Map<Brevhoved, BrevhovedView>(opdateretBrevhoved);
         }
 
         /// <summary>

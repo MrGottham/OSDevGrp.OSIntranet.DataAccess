@@ -4,6 +4,8 @@ using OSDevGrp.OSIntranet.CommonLibrary.Domain.Adressekartotek;
 using OSDevGrp.OSIntranet.CommonLibrary.Infrastructure.Interfaces;
 using OSDevGrp.OSIntranet.CommonLibrary.Infrastructure.Interfaces.Core;
 using OSDevGrp.OSIntranet.DataAccess.Contracts.Commands;
+using OSDevGrp.OSIntranet.DataAccess.Contracts.Views;
+using OSDevGrp.OSIntranet.DataAccess.Infrastructure.Interfaces;
 using OSDevGrp.OSIntranet.DataAccess.Infrastructure.Interfaces.Exceptions;
 using OSDevGrp.OSIntranet.DataAccess.Resources;
 using OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces;
@@ -13,11 +15,12 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.CommandHandlers
     /// <summary>
     /// Commandhandler til håndtering af kommandoen: PostnummerModifyCommand.
     /// </summary>
-    public class PostnummerModifyCommandHandler : CommandHandlerTransactionalBase, ICommandHandler<PostnummerModifyCommand>
+    public class PostnummerModifyCommandHandler : CommandHandlerTransactionalBase, ICommandHandler<PostnummerModifyCommand, PostnummerView>
     {
         #region Private variables
 
         private readonly IAdresseRepository _adresseRepository;
+        private readonly IObjectMapper _objectMapper;
 
         #endregion
 
@@ -27,24 +30,31 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.CommandHandlers
         /// Danner commandhandler til håndtering af kommandoen: PostnummerModifyCommand.
         /// </summary>
         /// <param name="adresseRepository">Implementering af repository til adressekartotek.</param>
-        public PostnummerModifyCommandHandler(IAdresseRepository adresseRepository)
+        /// <param name="objectMapper">Implementering af en objectmapper.</param>
+        public PostnummerModifyCommandHandler(IAdresseRepository adresseRepository, IObjectMapper objectMapper)
         {
             if (adresseRepository == null)
             {
                 throw new ArgumentNullException("adresseRepository");
             }
+            if (objectMapper == null)
+            {
+                throw new ArgumentNullException("objectMapper");
+            }
             _adresseRepository = adresseRepository;
+            _objectMapper = objectMapper;
         }
 
         #endregion
 
-        #region ICommandHandler<PostnummerModifyCommand> Members
+        #region ICommandHandler<PostnummerModifyCommand, PostnummerView> Members
 
         /// <summary>
         /// Udførelse af kommandoen.
         /// </summary>
         /// <param name="command">Command til opdatering af et givent postnummer.</param>
-        public void Execute(PostnummerModifyCommand command)
+        /// <returns>Opdateret postnummer.</returns>
+        public PostnummerView Execute(PostnummerModifyCommand command)
         {
             if (command == null)
             {
@@ -67,7 +77,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.CommandHandlers
             }
             postnummer.SætBy(command.Bynavn);
 
-            _adresseRepository.PostnummerModify(postnummer.Landekode, postnummer.Postnr, postnummer.By);
+            var opdateretPostnummer = _adresseRepository.PostnummerModify(postnummer.Landekode, postnummer.Postnr,
+                                                                          postnummer.By);
+
+            return _objectMapper.Map<Postnummer, PostnummerView>(opdateretPostnummer);
         }
 
         /// <summary>

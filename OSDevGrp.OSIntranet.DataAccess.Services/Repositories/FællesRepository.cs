@@ -118,7 +118,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         }
 
         /// <summary>
-        /// Tilføjer et brevhoved.
+        /// Tilføjer og returnerer et brevhoved.
         /// </summary>
         /// <param name="nummer">Unik identifikation af brevhovedet.</param>
         /// <param name="navn">Navn på brevhovedet.</param>
@@ -129,12 +129,9 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="linje5">Brevhovedets 5. linje.</param>
         /// <param name="linje6">Brevhovedets 6. linje.</param>
         /// <param name="linje7">Brevhovedets 7. linje.</param>
-        public void BrevhovedAdd(int nummer, string navn, string linje1, string linje2, string linje3, string linje4, string linje5, string linje6, string linje7)
+        /// <returns>Det tilføjede brevhoved.</returns>
+        public Brevhoved BrevhovedAdd(int nummer, string navn, string linje1, string linje2, string linje3, string linje4, string linje5, string linje6, string linje7)
         {
-            if (string.IsNullOrEmpty(navn))
-            {
-                throw new ArgumentNullException("navn");
-            }
             CreateTableRecord(2020, nummer, navn,
                               (db, sh) =>
                                   {
@@ -146,30 +143,12 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                       SetFieldValue(db, sh, "BrevhovedLinie6", linje6);
                                       SetFieldValue(db, sh, "BrevhovedLinie7", linje7);
                                   });
-            lock (BrevhovedCache)
-            {
-                if (BrevhovedCache.Count == 0)
-                {
-                    return;
-                }
-                var brevhoved = new Brevhoved(nummer, navn);
-                brevhoved.SætLinje1(linje1);
-                brevhoved.SætLinje2(linje2);
-                brevhoved.SætLinje3(linje3);
-                brevhoved.SætLinje4(linje4);
-                brevhoved.SætLinje5(linje5);
-                brevhoved.SætLinje6(linje6);
-                brevhoved.SætLinje7(linje7);
-                if (BrevhovedCache.SingleOrDefault(m => m.Nummer == brevhoved.Nummer) != null)
-                {
-                    return;
-                }
-                BrevhovedCache.Add(brevhoved);
-            }
+            ClearCache();
+            return BrevhovedGetAll().Single(m => m.Nummer == nummer);
         }
 
         /// <summary>
-        /// Opdaterer et givent brevhoved.
+        /// Opdaterer og returnerer et givent brevhoved.
         /// </summary>
         /// <param name="nummer">Unik identifikation af brevhovedet.</param>
         /// <param name="navn">Navn på brevhovedet.</param>
@@ -180,12 +159,9 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="linje5">Brevhovedets 5. linje.</param>
         /// <param name="linje6">Brevhovedets 6. linje.</param>
         /// <param name="linje7">Brevhovedets 7. linje.</param>
-        public void BrevhovedModify(int nummer, string navn, string linje1, string linje2, string linje3, string linje4, string linje5, string linje6, string linje7)
+        /// <returns>Det opdaterede brevhoved.</returns>
+        public Brevhoved BrevhovedModify(int nummer, string navn, string linje1, string linje2, string linje3, string linje4, string linje5, string linje6, string linje7)
         {
-            if (string.IsNullOrEmpty(navn))
-            {
-                throw new ArgumentNullException("navn");
-            }
             ModifyTableRecord<Brevhoved>(2020, nummer, navn,
                                          (db, sh) =>
                                              {
@@ -197,22 +173,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                  SetFieldValue(db, sh, "BrevhovedLinie6", linje6);
                                                  SetFieldValue(db, sh, "BrevhovedLinie7", linje7);
                                              });
-            lock (BrevhovedCache)
-            {
-                if (BrevhovedCache.Count == 0)
-                {
-                    return;
-                }
-                var brevhoved = BrevhovedCache.Single(m => m.Nummer == nummer);
-                brevhoved.SætNavn(navn);
-                brevhoved.SætLinje1(linje1);
-                brevhoved.SætLinje2(linje2);
-                brevhoved.SætLinje3(linje3);
-                brevhoved.SætLinje4(linje4);
-                brevhoved.SætLinje5(linje5);
-                brevhoved.SætLinje6(linje6);
-                brevhoved.SætLinje7(linje7);
-            }
+            ClearCache();
+            return BrevhovedGetAll().Single(m => m.Nummer == nummer);
         }
 
         #endregion

@@ -34,16 +34,18 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         /// Tilføjer et brevhoved.
         /// </summary>
         /// <param name="brevhovedAddCommand">Command til oprettelse af et brevhoved.</param>
+        /// <returns>Tilføjet brevhoved.</returns>
         [OperationContract]
         [TransactionFlow(TransactionFlowOption.Allowed)]
-        void BrevhovedAdd(BrevhovedAddCommand brevhovedAddCommand);
+        BrevhovedView BrevhovedAdd(BrevhovedAddCommand brevhovedAddCommand);
 
         /// <summary>
         /// Opdaterer et brevhoved.
         /// </summary>
         /// <param name="brevhovedModifyCommand">Command til opdatering af et givent brevhoved.</param>
+        /// <returns>Opdateret brevhoved.</returns>
         [OperationContract]
         [TransactionFlow(TransactionFlowOption.Allowed)]
-        void BrevhovedModify(BrevhovedModifyCommand brevhovedModifyCommand);
+        BrevhovedView BrevhovedModify(BrevhovedModifyCommand brevhovedModifyCommand);
     }
 }

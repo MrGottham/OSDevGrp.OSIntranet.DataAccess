@@ -92,12 +92,13 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         /// Tilføjer et brevhoved.
         /// </summary>
         /// <param name="brevhovedAddCommand">Command til oprettelse af et brevhoved.</param>
+        /// <returns>Tilføjet brevhoved.</returns>
         [OperationBehavior(TransactionScopeRequired = false)]
-        public void BrevhovedAdd(BrevhovedAddCommand brevhovedAddCommand)
+        public BrevhovedView BrevhovedAdd(BrevhovedAddCommand brevhovedAddCommand)
         {
             try
             {
-                _commandBus.Publish(brevhovedAddCommand);
+                return _commandBus.Publish<BrevhovedAddCommand, BrevhovedView>(brevhovedAddCommand);
             }
             catch (Exception ex)
             {
@@ -110,12 +111,13 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         /// Opdaterer et brevhoved.
         /// </summary>
         /// <param name="brevhovedModifyCommand">Command til opdatering af et givent brevhoved.</param>
+        /// <returns>Opdateret brevhoved.</returns>
         [OperationBehavior(TransactionScopeRequired = false)]
-        public void BrevhovedModify(BrevhovedModifyCommand brevhovedModifyCommand)
+        public BrevhovedView BrevhovedModify(BrevhovedModifyCommand brevhovedModifyCommand)
         {
             try
             {
-                _commandBus.Publish(brevhovedModifyCommand);
+                return _commandBus.Publish<BrevhovedModifyCommand, BrevhovedView>(brevhovedModifyCommand);
             }
             catch (Exception ex)
             {
