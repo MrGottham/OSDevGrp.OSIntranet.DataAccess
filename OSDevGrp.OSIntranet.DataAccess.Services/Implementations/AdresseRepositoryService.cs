@@ -363,12 +363,15 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         /// Tilføjer en betalingsbetingelse.
         /// </summary>
         /// <param name="betalingsbetingelseAddCommand">Command til tilføjelse af en betalingsbetingelse.</param>
+        /// <returns>Tilføjet betalingsbetingelse.</returns>
         [OperationBehavior(TransactionScopeRequired = false)]
-        public void BetalingsbetingelseAdd(BetalingsbetingelseAddCommand betalingsbetingelseAddCommand)
+        public BetalingsbetingelseView BetalingsbetingelseAdd(BetalingsbetingelseAddCommand betalingsbetingelseAddCommand)
         {
             try
             {
-                _commandBus.Publish(betalingsbetingelseAddCommand);
+                return
+                    _commandBus.Publish<BetalingsbetingelseAddCommand, BetalingsbetingelseView>(
+                        betalingsbetingelseAddCommand);
             }
             catch (Exception ex)
             {
@@ -381,12 +384,15 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         /// Opdaterer en given betalingsbetingelse.
         /// </summary>
         /// <param name="betalingsbetingelseModifyCommand">Command til opdatering af en given betalingsbetingelse.</param>
+        /// <returns>Opdateret betalingsbetingelse.</returns>
         [OperationBehavior(TransactionScopeRequired = false)]
-        public void BetalingsbetingelseModify(BetalingsbetingelseModifyCommand betalingsbetingelseModifyCommand)
+        public BetalingsbetingelseView BetalingsbetingelseModify(BetalingsbetingelseModifyCommand betalingsbetingelseModifyCommand)
         {
             try
             {
-                _commandBus.Publish(betalingsbetingelseModifyCommand);
+                return
+                    _commandBus.Publish<BetalingsbetingelseModifyCommand, BetalingsbetingelseView>(
+                        betalingsbetingelseModifyCommand);
             }
             catch (Exception ex)
             {

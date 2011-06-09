@@ -156,16 +156,18 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         /// Tilføjer en betalingsbetingelse.
         /// </summary>
         /// <param name="betalingsbetingelseAddCommand">Command til tilføjelse af en betalingsbetingelse.</param>
+        /// <returns>Tilføjet betalingsbetingelse.</returns>
         [OperationContract]
         [TransactionFlow(TransactionFlowOption.Allowed)]
-        void BetalingsbetingelseAdd(BetalingsbetingelseAddCommand betalingsbetingelseAddCommand);
+        BetalingsbetingelseView BetalingsbetingelseAdd(BetalingsbetingelseAddCommand betalingsbetingelseAddCommand);
 
         /// <summary>
         /// Opdaterer en given betalingsbetingelse.
         /// </summary>
         /// <param name="betalingsbetingelseModifyCommand">Command til opdatering af en given betalingsbetingelse.</param>
+        /// <returns>Opdateret betalingsbetingelse.</returns>
         [OperationContract]
         [TransactionFlow(TransactionFlowOption.Allowed)]
-        void BetalingsbetingelseModify(BetalingsbetingelseModifyCommand betalingsbetingelseModifyCommand);
+        BetalingsbetingelseView BetalingsbetingelseModify(BetalingsbetingelseModifyCommand betalingsbetingelseModifyCommand);
     }
 }

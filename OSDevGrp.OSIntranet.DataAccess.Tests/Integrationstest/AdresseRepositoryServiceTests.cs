@@ -858,7 +858,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                                       Nummer = 99,
                                       Navn = "_Test"
                                   };
-                channel.BetalingsbetingelseAdd(command);
+                var result = channel.BetalingsbetingelseAdd(command);
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Nummer, Is.EqualTo(command.Nummer));
+                Assert.That(result.Navn, Is.Not.Null);
+                Assert.That(result.Navn, Is.EqualTo(command.Navn));
             }
             finally
             {
@@ -939,7 +943,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                                       Nummer = betalingsbetingelse.Nummer,
                                       Navn = string.Format("_{0}", betalingsbetingelse.Navn)
                                   };
-                channel.BetalingsbetingelseModify(command);
+                var result = channel.BetalingsbetingelseModify(command);
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Nummer, Is.EqualTo(command.Nummer));
+                Assert.That(result.Navn, Is.Not.Null);
+                Assert.That(result.Navn, Is.EqualTo(command.Navn));
             }
             finally
             {
