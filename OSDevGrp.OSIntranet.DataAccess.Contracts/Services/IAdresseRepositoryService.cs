@@ -88,17 +88,19 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         /// Tilføjer et postnummer.
         /// </summary>
         /// <param name="postnummerAddCommand">Command til tilføjelse af et postnummer.</param>
+        /// <returns>Tilføjet postnummer.</returns>
         [OperationContract]
         [TransactionFlow(TransactionFlowOption.Allowed)]
-        void PostnummerAdd(PostnummerAddCommand postnummerAddCommand);
+        PostnummerView PostnummerAdd(PostnummerAddCommand postnummerAddCommand);
 
         /// <summary>
         /// Opdaterer et givent postnummer.
         /// </summary>
         /// <param name="postnummerModifyCommand">Command til opdatering af et givent postnummer.</param>
+        /// <returns>Opdateret postnummer.</returns>
         [OperationContract]
         [TransactionFlow(TransactionFlowOption.Allowed)]
-        void PostnummerModify(PostnummerModifyCommand postnummerModifyCommand);
+        PostnummerView PostnummerModify(PostnummerModifyCommand postnummerModifyCommand);
 
         /// <summary>
         /// Henter alle adressegrupper.
@@ -122,17 +124,19 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         /// Tilføjer en adressegruppe.
         /// </summary>
         /// <param name="adressegruppeAddCommand">Command til tilføjelse af en adressegruppe.</param>
+        /// <returns>Tilføjet adressegruppe.</returns>
         [OperationContract]
         [TransactionFlow(TransactionFlowOption.Allowed)]
-        void AdressegruppeAdd(AdressegruppeAddCommand adressegruppeAddCommand);
+        AdressegruppeView AdressegruppeAdd(AdressegruppeAddCommand adressegruppeAddCommand);
 
         /// <summary>
         /// Opdaterer en given adressegruppe.
         /// </summary>
         /// <param name="adressegruppeModifyCommand">Command til opdatering af en given adressegruppe.</param>
+        /// <returns>Opdateret adressegruppe.</returns>
         [OperationContract]
         [TransactionFlow(TransactionFlowOption.Allowed)]
-        void AdressegruppeModify(AdressegruppeModifyCommand adressegruppeModifyCommand);
+        AdressegruppeView AdressegruppeModify(AdressegruppeModifyCommand adressegruppeModifyCommand);
 
         /// <summary>
         /// Henter alle betalingsbetingelser.

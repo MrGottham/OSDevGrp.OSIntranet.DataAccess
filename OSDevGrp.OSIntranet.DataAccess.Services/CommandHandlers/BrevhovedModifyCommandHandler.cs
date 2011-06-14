@@ -80,12 +80,13 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.CommandHandlers
             brevhoved.SætLinje5(command.Linje5);
             brevhoved.SætLinje6(command.Linje6);
             brevhoved.SætLinje7(command.Linje7);
+            brevhoved.SætCvrNr(command.CvrNr);
 
             var opdateretBrevhoved = _fællesRepository.BrevhovedModify(brevhoved.Nummer, brevhoved.Navn,
                                                                        brevhoved.Linje1, brevhoved.Linje2,
                                                                        brevhoved.Linje3, brevhoved.Linje4,
                                                                        brevhoved.Linje5, brevhoved.Linje6,
-                                                                       brevhoved.Linje7);
+                                                                       brevhoved.Linje7, brevhoved.CvrNr);
 
             return _objectMapper.Map<Brevhoved, BrevhovedView>(opdateretBrevhoved);
         }

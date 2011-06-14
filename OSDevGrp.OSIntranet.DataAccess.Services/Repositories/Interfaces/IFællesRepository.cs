@@ -33,8 +33,9 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
         /// <param name="linje5">Brevhovedets 5. linje.</param>
         /// <param name="linje6">Brevhovedets 6. linje.</param>
         /// <param name="linje7">Brevhovedets 7. linje.</param>
+        /// <param name="cvrNr">CVR-nummer.</param>
         /// <returns>Det tilføjede brevhoved.</returns>
-        Brevhoved BrevhovedAdd(int nummer, string navn, string linje1, string linje2, string linje3, string linje4, string linje5, string linje6, string linje7);
+        Brevhoved BrevhovedAdd(int nummer, string navn, string linje1, string linje2, string linje3, string linje4, string linje5, string linje6, string linje7, string cvrNr);
 
         /// <summary>
         /// Opdaterer og returnerer et givent brevhoved.
@@ -48,7 +49,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces
         /// <param name="linje5">Brevhovedets 5. linje.</param>
         /// <param name="linje6">Brevhovedets 6. linje.</param>
         /// <param name="linje7">Brevhovedets 7. linje.</param>
+        /// <param name="cvrNr">CVR-nummer.</param>
         /// <returns>Det opdaterede brevhoved.</returns>
-        Brevhoved BrevhovedModify(int nummer, string navn, string linje1, string linje2, string linje3, string linje4, string linje5, string linje6, string linje7);
+        Brevhoved BrevhovedModify(int nummer, string navn, string linje1, string linje2, string linje3, string linje4, string linje5, string linje6, string linje7, string cvrNr);
     }
 }

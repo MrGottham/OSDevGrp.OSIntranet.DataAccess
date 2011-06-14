@@ -309,10 +309,17 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                 var command = new PostnummerAddCommand
                                   {
                                       Landekode = "DK",
-                                      Postnummer = "_Test",
+                                      Postnummer = "_TEST",
                                       Bynavn = "_Test"
                                   };
-                channel.PostnummerAdd(command);
+                var result = channel.PostnummerAdd(command);
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Landekode, Is.Not.Null);
+                Assert.That(result.Landekode, Is.EqualTo(command.Landekode));
+                Assert.That(result.Postnummer, Is.Not.Null);
+                Assert.That(result.Postnummer, Is.EqualTo(command.Postnummer));
+                Assert.That(result.Bynavn, Is.Not.Null);
+                Assert.That(result.Bynavn, Is.EqualTo(command.Bynavn));
             }
             finally
             {
@@ -446,7 +453,14 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                                       Postnummer = postnummer.Postnummer,
                                       Bynavn = string.Format("_{0}", postnummer.Bynavn)
                                   };
-                channel.PostnummerModify(command);
+                var result = channel.PostnummerModify(command);
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Landekode, Is.Not.Null);
+                Assert.That(result.Landekode, Is.EqualTo(command.Landekode));
+                Assert.That(result.Postnummer, Is.Not.Null);
+                Assert.That(result.Postnummer, Is.EqualTo(command.Postnummer));
+                Assert.That(result.Bynavn, Is.Not.Null);
+                Assert.That(result.Bynavn, Is.EqualTo(command.Bynavn));
             }
             finally
             {
@@ -611,7 +625,12 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                                       Navn = "_Test",
                                       AdressegruppeOswebdb = 99
                                   };
-                channel.AdressegruppeAdd(command);
+                var result = channel.AdressegruppeAdd(command);
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Nummer, Is.EqualTo(command.Nummer));
+                Assert.That(result.Navn, Is.Not.Null);
+                Assert.That(result.Navn, Is.EqualTo(command.Navn));
+                Assert.That(result.AdressegruppeOswebdb, Is.EqualTo(command.AdressegruppeOswebdb));
             }
             finally
             {
@@ -695,7 +714,12 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                                       Navn = string.Format("_{0}", adressegruppe.Navn),
                                       AdressegruppeOswebdb = adressegruppe.AdressegruppeOswebdb
                                   };
-                channel.AdressegruppeModify(command);
+                var result = channel.AdressegruppeModify(command);
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Nummer, Is.EqualTo(command.Nummer));
+                Assert.That(result.Navn, Is.Not.Null);
+                Assert.That(result.Navn, Is.EqualTo(command.Navn));
+                Assert.That(result.AdressegruppeOswebdb, Is.EqualTo(command.AdressegruppeOswebdb));
             }
             finally
             {

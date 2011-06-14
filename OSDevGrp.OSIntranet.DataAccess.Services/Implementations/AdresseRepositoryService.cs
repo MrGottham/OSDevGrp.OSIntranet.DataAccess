@@ -210,12 +210,13 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         /// Tilføjer et postnummer.
         /// </summary>
         /// <param name="postnummerAddCommand">Command til tilføjelse af et postnummer.</param>
+        /// <returns>Tilføjet postnummer.</returns>
         [OperationBehavior(TransactionScopeRequired = false)]
-        public void PostnummerAdd(PostnummerAddCommand postnummerAddCommand)
+        public PostnummerView PostnummerAdd(PostnummerAddCommand postnummerAddCommand)
         {
             try
             {
-                _commandBus.Publish(postnummerAddCommand);
+                return _commandBus.Publish<PostnummerAddCommand, PostnummerView>(postnummerAddCommand);
             }
             catch (Exception ex)
             {
@@ -228,12 +229,13 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         /// Opdaterer et givent postnummer.
         /// </summary>
         /// <param name="postnummerModifyCommand">Command til opdatering af et givent postnummer.</param>
+        /// <returns>Opdateret postnummer.</returns>
         [OperationBehavior(TransactionScopeRequired = false)]
-        public void PostnummerModify(PostnummerModifyCommand postnummerModifyCommand)
+        public PostnummerView PostnummerModify(PostnummerModifyCommand postnummerModifyCommand)
         {
             try
             {
-                _commandBus.Publish(postnummerModifyCommand);
+                return _commandBus.Publish<PostnummerModifyCommand, PostnummerView>(postnummerModifyCommand);
             }
             catch (Exception ex)
             {
@@ -285,12 +287,13 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         /// Tilføjer en adressegruppe.
         /// </summary>
         /// <param name="adressegruppeAddCommand">Command til tilføjelse af en adressegruppe.</param>
+        /// <returns>Tilføjet adressegruppe.</returns>
         [OperationBehavior(TransactionScopeRequired = false)]
-        public void AdressegruppeAdd(AdressegruppeAddCommand adressegruppeAddCommand)
+        public AdressegruppeView AdressegruppeAdd(AdressegruppeAddCommand adressegruppeAddCommand)
         {
             try
             {
-                _commandBus.Publish(adressegruppeAddCommand);
+                return _commandBus.Publish<AdressegruppeAddCommand, AdressegruppeView>(adressegruppeAddCommand);
             }
             catch (Exception ex)
             {
@@ -303,12 +306,13 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         /// Opdaterer en given adressegruppe.
         /// </summary>
         /// <param name="adressegruppeModifyCommand">Command til opdatering af en given adressegruppe.</param>
+        /// <returns>Opdateret adressegruppe.</returns>
         [OperationBehavior(TransactionScopeRequired = false)]
-        public void AdressegruppeModify(AdressegruppeModifyCommand adressegruppeModifyCommand)
+        public AdressegruppeView AdressegruppeModify(AdressegruppeModifyCommand adressegruppeModifyCommand)
         {
             try
             {
-                _commandBus.Publish(adressegruppeModifyCommand);
+                return _commandBus.Publish<AdressegruppeModifyCommand, AdressegruppeView>(adressegruppeModifyCommand);
             }
             catch (Exception ex)
             {

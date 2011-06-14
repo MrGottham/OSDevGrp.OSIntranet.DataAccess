@@ -86,6 +86,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                                                         GetFieldValueAsString(dbHandle,
                                                                                                               searchHandle,
                                                                                                               "BrevhovedLinie7"));
+                                                                                    brevhoved.SætCvrNr(
+                                                                                        GetFieldValueAsString(dbHandle,
+                                                                                                              searchHandle,
+                                                                                                              "BrevhovedCVR"));
                                                                                     list.Add(brevhoved);
                                                                                 });
                 BrevhovedCache.Clear();
@@ -129,8 +133,9 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="linje5">Brevhovedets 5. linje.</param>
         /// <param name="linje6">Brevhovedets 6. linje.</param>
         /// <param name="linje7">Brevhovedets 7. linje.</param>
+        /// <param name="cvrNr">CVR-nummer.</param>
         /// <returns>Det tilføjede brevhoved.</returns>
-        public Brevhoved BrevhovedAdd(int nummer, string navn, string linje1, string linje2, string linje3, string linje4, string linje5, string linje6, string linje7)
+        public Brevhoved BrevhovedAdd(int nummer, string navn, string linje1, string linje2, string linje3, string linje4, string linje5, string linje6, string linje7, string cvrNr)
         {
             CreateTableRecord(2020, nummer, navn,
                               (db, sh) =>
@@ -142,6 +147,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                       SetFieldValue(db, sh, "BrevhovedLinie5", linje5);
                                       SetFieldValue(db, sh, "BrevhovedLinie6", linje6);
                                       SetFieldValue(db, sh, "BrevhovedLinie7", linje7);
+                                      SetFieldValue(db, sh, "BrevhovedCVR", cvrNr);
                                   });
             ClearCache();
             return BrevhovedGetAll().Single(m => m.Nummer == nummer);
@@ -159,8 +165,9 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="linje5">Brevhovedets 5. linje.</param>
         /// <param name="linje6">Brevhovedets 6. linje.</param>
         /// <param name="linje7">Brevhovedets 7. linje.</param>
+        /// <param name="cvrNr">CVR-nummer.</param>
         /// <returns>Det opdaterede brevhoved.</returns>
-        public Brevhoved BrevhovedModify(int nummer, string navn, string linje1, string linje2, string linje3, string linje4, string linje5, string linje6, string linje7)
+        public Brevhoved BrevhovedModify(int nummer, string navn, string linje1, string linje2, string linje3, string linje4, string linje5, string linje6, string linje7, string cvrNr)
         {
             ModifyTableRecord<Brevhoved>(2020, nummer, navn,
                                          (db, sh) =>
@@ -172,6 +179,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
                                                  SetFieldValue(db, sh, "BrevhovedLinie5", linje5);
                                                  SetFieldValue(db, sh, "BrevhovedLinie6", linje6);
                                                  SetFieldValue(db, sh, "BrevhovedLinie7", linje7);
+                                                 SetFieldValue(db, sh, "BrevhovedCVR", cvrNr);
                                              });
             ClearCache();
             return BrevhovedGetAll().Single(m => m.Nummer == nummer);

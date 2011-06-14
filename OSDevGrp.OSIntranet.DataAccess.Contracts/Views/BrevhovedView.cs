@@ -77,5 +77,15 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Views
             get;
             set;
         }
+
+        /// <summary>
+        /// CVR-nummer.
+        /// </summary>
+        [DataMember(IsRequired = false)]
+        public string CvrNr
+        {
+            get;
+            set;
+        }
     }
 }

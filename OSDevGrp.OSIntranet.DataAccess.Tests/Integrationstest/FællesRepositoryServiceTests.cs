@@ -97,6 +97,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                                       Linje5 = "_Test 5",
                                       Linje6 = "_Test 6",
                                       Linje7 = "_Test 7",
+                                      CvrNr = "_Test CVR"
                                   };
                 var result = channel.BrevhovedAdd(command);
                 Assert.That(result, Is.Not.Null);
@@ -110,6 +111,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                 Assert.That(result.Linje5, Is.EqualTo(command.Linje5));
                 Assert.That(result.Linje6, Is.EqualTo(command.Linje6));
                 Assert.That(result.Linje7, Is.EqualTo(command.Linje7));
+                Assert.That(result.CvrNr, Is.EqualTo(command.CvrNr));
             }
             finally
             {
@@ -210,6 +212,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                                       Linje5 = brevhoved.Linje5,
                                       Linje6 = brevhoved.Linje6,
                                       Linje7 = brevhoved.Linje7,
+                                      CvrNr = brevhoved.CvrNr
                                   };
                 var result = channel.BrevhovedModify(command);
                 Assert.That(result, Is.Not.Null);
@@ -223,6 +226,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                 Assert.That(result.Linje5, Is.EqualTo(command.Linje5));
                 Assert.That(result.Linje6, Is.EqualTo(command.Linje6));
                 Assert.That(result.Linje7, Is.EqualTo(command.Linje7));
+                Assert.That(result.CvrNr, Is.EqualTo(command.CvrNr));
             }
             finally
             {
