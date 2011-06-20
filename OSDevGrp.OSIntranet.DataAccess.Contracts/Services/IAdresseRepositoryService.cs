@@ -31,6 +31,24 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         PersonView PersonGetByNummer(PersonGetByNummerQuery personGetByNummerQuery);
 
         /// <summary>
+        /// Tilføjer en person.
+        /// </summary>
+        /// <param name="personAddCommand">Command til tilføjelse af en person.</param>
+        /// <returns>Tilføjet person.</returns>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        PersonView PersonAdd(PersonAddCommand personAddCommand);
+
+        /// <summary>
+        /// Opdaterer en given person.
+        /// </summary>
+        /// <param name="personModifyCommand">Command til opdatering af en given person.</param>
+        /// <returns>Opdateret person.</returns>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        PersonView PersonModify(PersonModifyCommand personModifyCommand);
+
+        /// <summary>
         /// Henter alle firmaer.
         /// </summary>
         /// <param name="firmaGetAllQuery">Query til forespørgelse efter alle firmaer.</param>
@@ -47,6 +65,24 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         [OperationContract]
         [TransactionFlow(TransactionFlowOption.Allowed)]
         FirmaView FirmaGetByNummer(FirmaGetByNummerQuery firmaGetByNummerQuery);
+
+        /// <summary>
+        /// Tilføjer et firma.
+        /// </summary>
+        /// <param name="firmaAddCommand">Command til tilføjelse af et firma.</param>
+        /// <returns>Tilføjet firma.</returns>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        FirmaView FirmaAdd(FirmaAddCommand firmaAddCommand);
+
+        /// <summary>
+        /// Opdaterer et givent firma.
+        /// </summary>
+        /// <param name="firmaModifyCommand">Command til opdatering af et givent firma.</param>
+        /// <returns>Opdateret firma.</returns>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        FirmaView FirmaModify(FirmaModifyCommand firmaModifyCommand);
 
         /// <summary>
         /// Henter alle adresser til en adresseliste.

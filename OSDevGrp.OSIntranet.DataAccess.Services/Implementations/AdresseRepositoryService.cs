@@ -89,6 +89,44 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         }
 
         /// <summary>
+        /// Tilføjer en person.
+        /// </summary>
+        /// <param name="personAddCommand">Command til tilføjelse af en person.</param>
+        /// <returns>Tilføjet person.</returns>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public PersonView PersonAdd(PersonAddCommand personAddCommand)
+        {
+            try
+            {
+                return _commandBus.Publish<PersonAddCommand, PersonView>(personAddCommand);
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogAdresseRepositoryService));
+            }
+        }
+
+        /// <summary>
+        /// Opdaterer en given person.
+        /// </summary>
+        /// <param name="personModifyCommand">Command til opdatering af en given person.</param>
+        /// <returns>Opdateret person.</returns>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public PersonView PersonModify(PersonModifyCommand personModifyCommand)
+        {
+            try
+            {
+                return _commandBus.Publish<PersonModifyCommand, PersonView>(personModifyCommand);
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogAdresseRepositoryService));
+            }
+        }
+
+        /// <summary>
         /// Henter alle firmaer.
         /// </summary>
         /// <param name="firmaGetAllQuery">Query til forespørgelse efter alle firmaer.</param>
@@ -118,6 +156,44 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
             try
             {
                 return _queryBus.Query<FirmaGetByNummerQuery, FirmaView>(firmaGetByNummerQuery);
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogAdresseRepositoryService));
+            }
+        }
+
+        /// <summary>
+        /// Tilføjer et firma.
+        /// </summary>
+        /// <param name="firmaAddCommand">Command til tilføjelse af et firma.</param>
+        /// <returns>Tilføjet firma.</returns>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public FirmaView FirmaAdd(FirmaAddCommand firmaAddCommand)
+        {
+            try
+            {
+                return _commandBus.Publish<FirmaAddCommand, FirmaView>(firmaAddCommand);
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogAdresseRepositoryService));
+            }
+        }
+
+        /// <summary>
+        /// Opdaterer et givent firma.
+        /// </summary>
+        /// <param name="firmaModifyCommand">Command til opdatering af et givent firma.</param>
+        /// <returns>Opdateret firma.</returns>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public FirmaView FirmaModify(FirmaModifyCommand firmaModifyCommand)
+        {
+            try
+            {
+                return _commandBus.Publish<FirmaModifyCommand, FirmaView>(firmaModifyCommand);
             }
             catch (Exception ex)
             {

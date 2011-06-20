@@ -95,6 +95,475 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
         }
 
         /// <summary>
+        /// Tester, at person oprettes.
+        /// </summary>
+        [Test]
+        [Ignore("Oprettelse af person er testet.")]
+        public void TestAtPersonOprettes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var command = new PersonAddCommand
+                                  {
+                                      Navn = "_Navn",
+                                      Adresse1 = "_Adresse 1",
+                                      Adresse2 = "_Adresse 2",
+                                      PostnummerBy = "_Postnummer og bynavn",
+                                      Telefon = "_Telefon",
+                                      Mobil = "_Mobil",
+                                      Fødselsdato = DateTime.Now.AddYears(-7).AddDays(-7),
+                                      Adressegruppe = 1,
+                                      Bekendtskab = "_Bekendtskab",
+                                      Mailadresse = "_Mailadresse",
+                                      Webadresse = "_Webadresse",
+                                      Betalingsbetingelse = 1,
+                                      Udlånsfrist = 7,
+                                      FilofaxAdresselabel = true,
+                                      Firma = 48
+                                  };
+                var result = channel.PersonAdd(command);
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Nummer, Is.GreaterThan(0));
+                Assert.That(result.Navn, Is.Not.Null);
+                Assert.That(result.Navn, Is.EqualTo(command.Navn));
+                Assert.That(result.Adresse1, Is.EqualTo(command.Adresse1));
+                Assert.That(result.Adresse2, Is.EqualTo(command.Adresse2));
+                Assert.That(result.PostnummerBy, Is.EqualTo(command.PostnummerBy));
+                Assert.That(result.Telefon, Is.EqualTo(command.Telefon.ToUpper()));
+                Assert.That(result.Mobil, Is.EqualTo(command.Mobil.ToUpper()));
+                Assert.That(result.Fødselsdato, Is.EqualTo(command.Fødselsdato).Within(1).Days);
+                Assert.That(result.Adressegruppe, Is.Not.Null);
+                Assert.That(result.Adressegruppe.Nummer, Is.EqualTo(command.Adressegruppe));
+                Assert.That(result.Adressegruppe.Nummer, Is.EqualTo(command.Adressegruppe));
+                Assert.That(result.Bekendtskab, Is.EqualTo(command.Bekendtskab));
+                Assert.That(result.Mailadresse, Is.EqualTo(command.Mailadresse));
+                Assert.That(result.Webadresse, Is.EqualTo(command.Webadresse));
+                Assert.That(result.Betalingsbetingelse, Is.Not.Null);
+                Assert.That(result.Betalingsbetingelse.Nummer, Is.EqualTo(command.Betalingsbetingelse));
+                Assert.That(result.Udlånsfrist, Is.EqualTo(command.Udlånsfrist));
+                Assert.That(result.FilofaxAdresselabel, Is.EqualTo(command.FilofaxAdresselabel));
+                Assert.That(result.Firma, Is.Not.Null);
+                Assert.That(result.Firma.Nummer, Is.EqualTo(command.Firma));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved oprettelse, hvis navnet er tomt.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOprettelseAfPersonHvisNavnErEmpty()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var command = new PersonAddCommand
+                                  {
+                                      Navn = string.Empty,
+                                      Adresse1 = "_Adresse 1",
+                                      Adresse2 = "_Adresse 2",
+                                      PostnummerBy = "_Postnummer og bynavn",
+                                      Telefon = "_Telefon",
+                                      Mobil = "_Mobil",
+                                      Fødselsdato = DateTime.Now.AddYears(-7).AddDays(-7),
+                                      Adressegruppe = 1,
+                                      Bekendtskab = "_Bekendtskab",
+                                      Mailadresse = "_Mailadresse",
+                                      Webadresse = "_Webadresse",
+                                      Betalingsbetingelse = 1,
+                                      Udlånsfrist = 7,
+                                      FilofaxAdresselabel = true,
+                                      Firma = 48
+                                  };
+                Assert.Throws<FaultException>(() => channel.PersonAdd(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved oprettelse, hvis adressegruppen ikke findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOprettelseAfPersonHvisAdressegruppeIkkeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var command = new PersonAddCommand
+                                  {
+                                      Navn = "_Navn",
+                                      Adresse1 = "_Adresse 1",
+                                      Adresse2 = "_Adresse 2",
+                                      PostnummerBy = "_Postnummer og bynavn",
+                                      Telefon = "_Telefon",
+                                      Mobil = "_Mobil",
+                                      Fødselsdato = DateTime.Now.AddYears(-7).AddDays(-7),
+                                      Adressegruppe = -1,
+                                      Bekendtskab = "_Bekendtskab",
+                                      Mailadresse = "_Mailadresse",
+                                      Webadresse = "_Webadresse",
+                                      Betalingsbetingelse = 1,
+                                      Udlånsfrist = 7,
+                                      FilofaxAdresselabel = true,
+                                      Firma = 48
+                                  };
+                Assert.Throws<FaultException>(() => channel.PersonAdd(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved oprettelse, hvis betalingsbetingelsen ikke findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOprettelseAfPersonHvisBetalingsbetingelseIkkeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var command = new PersonAddCommand
+                                  {
+                                      Navn = "_Navn",
+                                      Adresse1 = "_Adresse 1",
+                                      Adresse2 = "_Adresse 2",
+                                      PostnummerBy = "_Postnummer og bynavn",
+                                      Telefon = "_Telefon",
+                                      Mobil = "_Mobil",
+                                      Fødselsdato = DateTime.Now.AddYears(-7).AddDays(-7),
+                                      Adressegruppe = 1,
+                                      Bekendtskab = "_Bekendtskab",
+                                      Mailadresse = "_Mailadresse",
+                                      Webadresse = "_Webadresse",
+                                      Betalingsbetingelse = -1,
+                                      Udlånsfrist = 7,
+                                      FilofaxAdresselabel = true,
+                                      Firma = 48
+                                  };
+                Assert.Throws<FaultException>(() => channel.PersonAdd(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved oprettelse, hvis firmaet ikke findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOprettelseAfPersonHvisFirmaIkkeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var command = new PersonAddCommand
+                                  {
+                                      Navn = "_Navn",
+                                      Adresse1 = "_Adresse 1",
+                                      Adresse2 = "_Adresse 2",
+                                      PostnummerBy = "_Postnummer og bynavn",
+                                      Telefon = "_Telefon",
+                                      Mobil = "_Mobil",
+                                      Fødselsdato = DateTime.Now.AddYears(-7).AddDays(-7),
+                                      Adressegruppe = 1,
+                                      Bekendtskab = "_Bekendtskab",
+                                      Mailadresse = "_Mailadresse",
+                                      Webadresse = "_Webadresse",
+                                      Betalingsbetingelse = 1,
+                                      Udlånsfrist = 7,
+                                      FilofaxAdresselabel = true,
+                                      Firma = -1
+                                  };
+                Assert.Throws<FaultException>(() => channel.PersonAdd(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at person opdateres.
+        /// </summary>
+        [Test]
+        [Ignore("Opdatering af personer er testet.")]
+        public void TestAtPersonOpdateres()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var query = new PersonGetByNummerQuery
+                                {
+                                    Nummer = 1
+                                };
+                var person = channel.PersonGetByNummer(query);
+                Assert.That(person, Is.Not.Null);
+                Assert.That(person.Nummer, Is.EqualTo(query.Nummer));
+
+                var command = new PersonModifyCommand
+                                  {
+                                      Nummer = person.Nummer,
+                                      Navn = string.Format("_{0}", person.Navn),
+                                      Adresse1 = person.Adresse1,
+                                      Adresse2 = person.Adresse2,
+                                      PostnummerBy = person.PostnummerBy,
+                                      Telefon = person.Telefon,
+                                      Mobil = person.Mobil,
+                                      Fødselsdato = person.Fødselsdato,
+                                      Adressegruppe = person.Adressegruppe.Nummer,
+                                      Bekendtskab = person.Bekendtskab,
+                                      Mailadresse = person.Mailadresse,
+                                      Webadresse = person.Webadresse,
+                                      Betalingsbetingelse = person.Betalingsbetingelse == null
+                                                                ? 0
+                                                                : person.Betalingsbetingelse.Nummer,
+                                      Udlånsfrist = person.Udlånsfrist,
+                                      FilofaxAdresselabel = person.FilofaxAdresselabel,
+                                      Firma = person.Firma == null ? 0 : person.Firma.Nummer
+                                  };
+                var result = channel.PersonModify(command);
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Nummer, Is.EqualTo(command.Nummer));
+                Assert.That(result.Navn, Is.Not.Null);
+                Assert.That(result.Navn, Is.EqualTo(command.Navn));
+                Assert.That(result.Adresse1, Is.EqualTo(command.Adresse1));
+                Assert.That(result.Adresse2, Is.EqualTo(command.Adresse2));
+                Assert.That(result.PostnummerBy, Is.EqualTo(command.PostnummerBy));
+                Assert.That(result.Telefon, Is.EqualTo(command.Telefon.ToUpper()));
+                Assert.That(result.Mobil, Is.EqualTo(command.Mobil.ToUpper()));
+                Assert.That(result.Fødselsdato, Is.EqualTo(command.Fødselsdato).Within(1).Days);
+                Assert.That(result.Adressegruppe, Is.Not.Null);
+                Assert.That(result.Adressegruppe.Nummer, Is.EqualTo(command.Adressegruppe));
+                Assert.That(result.Adressegruppe.Nummer, Is.EqualTo(command.Adressegruppe));
+                Assert.That(result.Bekendtskab, Is.EqualTo(command.Bekendtskab));
+                Assert.That(result.Mailadresse, Is.EqualTo(command.Mailadresse));
+                Assert.That(result.Webadresse, Is.EqualTo(command.Webadresse));
+                Assert.That(result.Betalingsbetingelse, Is.Not.Null);
+                Assert.That(result.Betalingsbetingelse.Nummer, Is.EqualTo(command.Betalingsbetingelse));
+                Assert.That(result.Udlånsfrist, Is.EqualTo(command.Udlånsfrist));
+                Assert.That(result.FilofaxAdresselabel, Is.EqualTo(command.FilofaxAdresselabel));
+                Assert.That(result.Firma, Is.Not.Null);
+                Assert.That(result.Firma.Nummer, Is.EqualTo(command.Firma));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved opdatering, hvis navnet er tomt
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOpdateringAfPersonHvisNavnErEmpty()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var query = new PersonGetByNummerQuery
+                                {
+                                    Nummer = 1
+                                };
+                var person = channel.PersonGetByNummer(query);
+                Assert.That(person, Is.Not.Null);
+                Assert.That(person.Nummer, Is.EqualTo(query.Nummer));
+
+                var command = new PersonModifyCommand
+                                  {
+                                      Nummer = person.Nummer,
+                                      Navn = string.Empty,
+                                      Adresse1 = person.Adresse1,
+                                      Adresse2 = person.Adresse2,
+                                      PostnummerBy = person.PostnummerBy,
+                                      Telefon = person.Telefon,
+                                      Mobil = person.Mobil,
+                                      Fødselsdato = person.Fødselsdato,
+                                      Adressegruppe = person.Adressegruppe.Nummer,
+                                      Bekendtskab = person.Bekendtskab,
+                                      Mailadresse = person.Mailadresse,
+                                      Webadresse = person.Webadresse,
+                                      Betalingsbetingelse = person.Betalingsbetingelse == null
+                                                                ? 0
+                                                                : person.Betalingsbetingelse.Nummer,
+                                      Udlånsfrist = person.Udlånsfrist,
+                                      FilofaxAdresselabel = person.FilofaxAdresselabel,
+                                      Firma = person.Firma == null ? 0 : person.Firma.Nummer
+                                  };
+                Assert.Throws<FaultException>(() => channel.PersonModify(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved opdatering, hvis adressegruppen ikke findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOpdateringAfPersonHvisAdressegruppeIkkeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var query = new PersonGetByNummerQuery
+                {
+                    Nummer = 1
+                };
+                var person = channel.PersonGetByNummer(query);
+                Assert.That(person, Is.Not.Null);
+                Assert.That(person.Nummer, Is.EqualTo(query.Nummer));
+
+                var command = new PersonModifyCommand
+                                  {
+                                      Nummer = person.Nummer,
+                                      Navn = person.Navn,
+                                      Adresse1 = person.Adresse1,
+                                      Adresse2 = person.Adresse2,
+                                      PostnummerBy = person.PostnummerBy,
+                                      Telefon = person.Telefon,
+                                      Mobil = person.Mobil,
+                                      Fødselsdato = person.Fødselsdato,
+                                      Adressegruppe = -1,
+                                      Bekendtskab = person.Bekendtskab,
+                                      Mailadresse = person.Mailadresse,
+                                      Webadresse = person.Webadresse,
+                                      Betalingsbetingelse = person.Betalingsbetingelse == null
+                                                                ? 0
+                                                                : person.Betalingsbetingelse.Nummer,
+                                      Udlånsfrist = person.Udlånsfrist,
+                                      FilofaxAdresselabel = person.FilofaxAdresselabel,
+                                      Firma = person.Firma == null ? 0 : person.Firma.Nummer
+                                  };
+                Assert.Throws<FaultException>(() => channel.PersonModify(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved opdatering, hvis betalingsbetingelsen ikke findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOpdateringAfPersonHvisBetalingsbetingelseIkkeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var query = new PersonGetByNummerQuery
+                                {
+                                    Nummer = 1
+                                };
+                var person = channel.PersonGetByNummer(query);
+                Assert.That(person, Is.Not.Null);
+                Assert.That(person.Nummer, Is.EqualTo(query.Nummer));
+
+                var command = new PersonModifyCommand
+                                  {
+                                      Nummer = person.Nummer,
+                                      Navn = person.Navn,
+                                      Adresse1 = person.Adresse1,
+                                      Adresse2 = person.Adresse2,
+                                      PostnummerBy = person.PostnummerBy,
+                                      Telefon = person.Telefon,
+                                      Mobil = person.Mobil,
+                                      Fødselsdato = person.Fødselsdato,
+                                      Adressegruppe = person.Adressegruppe.Nummer,
+                                      Bekendtskab = person.Bekendtskab,
+                                      Mailadresse = person.Mailadresse,
+                                      Webadresse = person.Webadresse,
+                                      Betalingsbetingelse = -1,
+                                      Udlånsfrist = person.Udlånsfrist,
+                                      FilofaxAdresselabel = person.FilofaxAdresselabel,
+                                      Firma = person.Firma == null ? 0 : person.Firma.Nummer
+                                  };
+                Assert.Throws<FaultException>(() => channel.PersonModify(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved opdatering, hvis firmaet ikke findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOpdateringAfPersonHvisFirmaIkkeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var query = new PersonGetByNummerQuery
+                                {
+                                    Nummer = 1
+                                };
+                var person = channel.PersonGetByNummer(query);
+                Assert.That(person, Is.Not.Null);
+                Assert.That(person.Nummer, Is.EqualTo(query.Nummer));
+
+                var command = new PersonModifyCommand
+                                  {
+                                      Nummer = person.Nummer,
+                                      Navn = person.Navn,
+                                      Adresse1 = person.Adresse1,
+                                      Adresse2 = person.Adresse2,
+                                      PostnummerBy = person.PostnummerBy,
+                                      Telefon = person.Telefon,
+                                      Mobil = person.Mobil,
+                                      Fødselsdato = person.Fødselsdato,
+                                      Adressegruppe = person.Adressegruppe.Nummer,
+                                      Bekendtskab = person.Bekendtskab,
+                                      Mailadresse = person.Mailadresse,
+                                      Webadresse = person.Webadresse,
+                                      Betalingsbetingelse = person.Betalingsbetingelse == null
+                                                                ? 0
+                                                                : person.Betalingsbetingelse.Nummer,
+                                      Udlånsfrist = person.Udlånsfrist,
+                                      FilofaxAdresselabel = person.FilofaxAdresselabel,
+                                      Firma = -1
+                                  };
+                Assert.Throws<FaultException>(() => channel.PersonModify(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
         /// Tester, at firmaer hentes.
         /// </summary>
         [Test]
@@ -163,6 +632,378 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                                     Nummer = -1
                                 };
                 Assert.Throws<FaultException>(() => channel.FirmaGetByNummer(query));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved oprettelse, hvis navnet er tomt.
+        /// </summary>
+        [Test]
+        [Ignore("Oprettelse af firma er testet.")]
+        public void TestAtFirmaOprettes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var command = new FirmaAddCommand
+                                  {
+                                      Navn = "_Navn",
+                                      Adresse1 = "_Adresse 1",
+                                      Adresse2 = "_Adresse 2",
+                                      PostnummerBy = "_Postnummer og bynavn",
+                                      Telefon1 = "_Telefon 1",
+                                      Telefon2 = "_Telefon 2",
+                                      Telefax = "_Telefax",
+                                      Adressegruppe = 1,
+                                      Bekendtskab = "_Bekendtskab",
+                                      Mailadresse = "_Mailadresse",
+                                      Webadresse = "_Webadresse",
+                                      Betalingsbetingelse = 1,
+                                      Udlånsfrist = 7,
+                                      FilofaxAdresselabel = true
+                                  };
+                var result = channel.FirmaAdd(command);
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Nummer, Is.GreaterThan(0));
+                Assert.That(result.Navn, Is.Not.Null);
+                Assert.That(result.Navn, Is.EqualTo(command.Navn));
+                Assert.That(result.Adresse1, Is.EqualTo(command.Adresse1));
+                Assert.That(result.Adresse2, Is.EqualTo(command.Adresse2));
+                Assert.That(result.PostnummerBy, Is.EqualTo(command.PostnummerBy));
+                Assert.That(result.Telefon1, Is.EqualTo(command.Telefon1.ToUpper()));
+                Assert.That(result.Telefon2, Is.EqualTo(command.Telefon2.ToUpper()));
+                Assert.That(result.Telefax, Is.EqualTo(command.Telefax.ToUpper()));
+                Assert.That(result.Adressegruppe, Is.Not.Null);
+                Assert.That(result.Adressegruppe.Nummer, Is.EqualTo(command.Adressegruppe));
+                Assert.That(result.Adressegruppe.Nummer, Is.EqualTo(command.Adressegruppe));
+                Assert.That(result.Bekendtskab, Is.EqualTo(command.Bekendtskab));
+                Assert.That(result.Mailadresse, Is.EqualTo(command.Mailadresse));
+                Assert.That(result.Webadresse, Is.EqualTo(command.Webadresse));
+                Assert.That(result.Betalingsbetingelse, Is.Not.Null);
+                Assert.That(result.Betalingsbetingelse.Nummer, Is.EqualTo(command.Betalingsbetingelse));
+                Assert.That(result.Udlånsfrist, Is.EqualTo(command.Udlånsfrist));
+                Assert.That(result.FilofaxAdresselabel, Is.EqualTo(command.FilofaxAdresselabel));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved oprettelse, hvis navnet er tomt.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOprettelseAfFirmaHvisNavnErEmpty()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var command = new FirmaAddCommand
+                                  {
+                                      Navn = string.Empty,
+                                      Adresse1 = "_Adresse 1",
+                                      Adresse2 = "_Adresse 2",
+                                      PostnummerBy = "_Postnummer og bynavn",
+                                      Telefon1 = "_Telefon 1",
+                                      Telefon2 = "_Telefon 2",
+                                      Telefax = "_Telefax",
+                                      Adressegruppe = 1,
+                                      Bekendtskab = "_Bekendtskab",
+                                      Mailadresse = "_Mailadresse",
+                                      Webadresse = "_Webadresse",
+                                      Betalingsbetingelse = 1,
+                                      Udlånsfrist = 7,
+                                      FilofaxAdresselabel = true
+                                  };
+                Assert.Throws<FaultException>(() => channel.FirmaAdd(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved oprettelse, hvis adressegruppen ikke findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOprettelseAfFirmaHvisAdressegruppeIkkeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var command = new FirmaAddCommand
+                                  {
+                                      Navn = "_Navn",
+                                      Adresse1 = "_Adresse 1",
+                                      Adresse2 = "_Adresse 2",
+                                      PostnummerBy = "_Postnummer og bynavn",
+                                      Telefon1 = "_Telefon 1",
+                                      Telefon2 = "_Telefon 2",
+                                      Telefax = "_Telefax",
+                                      Adressegruppe = -1,
+                                      Bekendtskab = "_Bekendtskab",
+                                      Mailadresse = "_Mailadresse",
+                                      Webadresse = "_Webadresse",
+                                      Betalingsbetingelse = 1,
+                                      Udlånsfrist = 7,
+                                      FilofaxAdresselabel = true
+                                  };
+                Assert.Throws<FaultException>(() => channel.FirmaAdd(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved oprettelse, hvis betalingsbetingelsen ikke findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOprettelseAfFirmaHvisBetalingsbetingelseIkkeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var command = new FirmaAddCommand
+                                  {
+                                      Navn = "_Navn",
+                                      Adresse1 = "_Adresse 1",
+                                      Adresse2 = "_Adresse 2",
+                                      PostnummerBy = "_Postnummer og bynavn",
+                                      Telefon1 = "_Telefon 1",
+                                      Telefon2 = "_Telefon 2",
+                                      Telefax = "_Telefax",
+                                      Adressegruppe = 1,
+                                      Bekendtskab = "_Bekendtskab",
+                                      Mailadresse = "_Mailadresse",
+                                      Webadresse = "_Webadresse",
+                                      Betalingsbetingelse = -1,
+                                      Udlånsfrist = 7,
+                                      FilofaxAdresselabel = true
+                                  };
+                Assert.Throws<FaultException>(() => channel.FirmaAdd(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at firma opdateres.
+        /// </summary>
+        [Test]
+        [Ignore("Opdatering af firmaer er testet.")]
+        public void TestAtFirmaOpdateres()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var query = new FirmaGetByNummerQuery
+                                {
+                                    Nummer = 48
+                                };
+                var firma = channel.FirmaGetByNummer(query);
+                Assert.That(firma, Is.Not.Null);
+                Assert.That(firma.Nummer, Is.EqualTo(query.Nummer));
+
+                var command = new FirmaModifyCommand
+                                  {
+                                      Nummer = firma.Nummer,
+                                      Navn = string.Format("_{0}", firma.Navn),
+                                      Adresse1 = firma.Adresse1,
+                                      Adresse2 = firma.Adresse2,
+                                      PostnummerBy = firma.PostnummerBy,
+                                      Telefon1 = firma.Telefon1,
+                                      Telefon2 = firma.Telefon2,
+                                      Telefax = firma.Telefax,
+                                      Adressegruppe = firma.Adressegruppe.Nummer,
+                                      Bekendtskab = firma.Bekendtskab,
+                                      Mailadresse = firma.Mailadresse,
+                                      Webadresse = firma.Webadresse,
+                                      Betalingsbetingelse = firma.Betalingsbetingelse == null
+                                                                ? 0
+                                                                : firma.Betalingsbetingelse.Nummer,
+                                      Udlånsfrist = firma.Udlånsfrist,
+                                      FilofaxAdresselabel = firma.FilofaxAdresselabel
+                                  };
+                var result = channel.FirmaModify(command);
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Nummer, Is.GreaterThan(0));
+                Assert.That(result.Navn, Is.Not.Null);
+                Assert.That(result.Navn, Is.EqualTo(command.Navn));
+                Assert.That(result.Adresse1, Is.EqualTo(command.Adresse1));
+                Assert.That(result.Adresse2, Is.EqualTo(command.Adresse2));
+                Assert.That(result.PostnummerBy, Is.EqualTo(command.PostnummerBy));
+                Assert.That(result.Telefon1, Is.EqualTo(command.Telefon1.ToUpper()));
+                Assert.That(result.Telefon2, Is.EqualTo(command.Telefon2));
+                Assert.That(result.Telefax, Is.EqualTo(command.Telefax.ToUpper()));
+                Assert.That(result.Adressegruppe, Is.Not.Null);
+                Assert.That(result.Adressegruppe.Nummer, Is.EqualTo(command.Adressegruppe));
+                Assert.That(result.Adressegruppe.Nummer, Is.EqualTo(command.Adressegruppe));
+                Assert.That(result.Bekendtskab, Is.EqualTo(command.Bekendtskab));
+                Assert.That(result.Mailadresse, Is.EqualTo(command.Mailadresse));
+                Assert.That(result.Webadresse, Is.EqualTo(command.Webadresse));
+                Assert.That(result.Betalingsbetingelse, Is.Not.Null);
+                Assert.That(result.Betalingsbetingelse.Nummer, Is.EqualTo(command.Betalingsbetingelse));
+                Assert.That(result.Udlånsfrist, Is.EqualTo(command.Udlånsfrist));
+                Assert.That(result.FilofaxAdresselabel, Is.EqualTo(command.FilofaxAdresselabel));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+        
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved opdatering, hvis navnet er tomt.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOpdateringAfFirmaHvisNavnErEmpty()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var query = new FirmaGetByNummerQuery
+                                {
+                                    Nummer = 48
+                                };
+                var firma = channel.FirmaGetByNummer(query);
+                Assert.That(firma, Is.Not.Null);
+                Assert.That(firma.Nummer, Is.EqualTo(query.Nummer));
+
+                var command = new FirmaModifyCommand
+                                  {
+                                      Nummer = firma.Nummer,
+                                      Navn = string.Empty,
+                                      Adresse1 = firma.Adresse1,
+                                      Adresse2 = firma.Adresse2,
+                                      PostnummerBy = firma.PostnummerBy,
+                                      Telefon1 = firma.Telefon1,
+                                      Telefon2 = firma.Telefon2,
+                                      Telefax = firma.Telefax,
+                                      Adressegruppe = firma.Adressegruppe.Nummer,
+                                      Bekendtskab = firma.Bekendtskab,
+                                      Mailadresse = firma.Mailadresse,
+                                      Webadresse = firma.Webadresse,
+                                      Betalingsbetingelse = firma.Betalingsbetingelse == null
+                                                                ? 0
+                                                                : firma.Betalingsbetingelse.Nummer,
+                                      Udlånsfrist = firma.Udlånsfrist,
+                                      FilofaxAdresselabel = firma.FilofaxAdresselabel
+                                  };
+                Assert.Throws<FaultException>(() => channel.FirmaModify(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved opdatering, hvis adressegruppen ikke findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOpdateringAfFirmaHvisAdressegruppeIkkeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var query = new FirmaGetByNummerQuery
+                                {
+                                    Nummer = 48
+                                };
+                var firma = channel.FirmaGetByNummer(query);
+                Assert.That(firma, Is.Not.Null);
+                Assert.That(firma.Nummer, Is.EqualTo(query.Nummer));
+
+                var command = new FirmaModifyCommand
+                                  {
+                                      Nummer = firma.Nummer,
+                                      Navn = firma.Navn,
+                                      Adresse1 = firma.Adresse1,
+                                      Adresse2 = firma.Adresse2,
+                                      PostnummerBy = firma.PostnummerBy,
+                                      Telefon1 = firma.Telefon1,
+                                      Telefon2 = firma.Telefon2,
+                                      Telefax = firma.Telefax,
+                                      Adressegruppe = -1,
+                                      Bekendtskab = firma.Bekendtskab,
+                                      Mailadresse = firma.Mailadresse,
+                                      Webadresse = firma.Webadresse,
+                                      Betalingsbetingelse = firma.Betalingsbetingelse == null
+                                                                ? 0
+                                                                : firma.Betalingsbetingelse.Nummer,
+                                      Udlånsfrist = firma.Udlånsfrist,
+                                      FilofaxAdresselabel = firma.FilofaxAdresselabel
+                                  };
+                Assert.Throws<FaultException>(() => channel.FirmaModify(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved opdatering, hvis betalingsbetingelsen ikke findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOpdateringAfFirmaHvisBetalingsbetingelseIkkeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IAdresseRepositoryService>("AdresseRepositoryService");
+            try
+            {
+                var query = new FirmaGetByNummerQuery
+                                {
+                                    Nummer = 48
+                                };
+                var firma = channel.FirmaGetByNummer(query);
+                Assert.That(firma, Is.Not.Null);
+                Assert.That(firma.Nummer, Is.EqualTo(query.Nummer));
+
+                var command = new FirmaModifyCommand
+                                  {
+                                      Nummer = firma.Nummer,
+                                      Navn = firma.Navn,
+                                      Adresse1 = firma.Adresse1,
+                                      Adresse2 = firma.Adresse2,
+                                      PostnummerBy = firma.PostnummerBy,
+                                      Telefon1 = firma.Telefon1,
+                                      Telefon2 = firma.Telefon2,
+                                      Telefax = firma.Telefax,
+                                      Adressegruppe = firma.Adressegruppe.Nummer,
+                                      Bekendtskab = firma.Bekendtskab,
+                                      Mailadresse = firma.Mailadresse,
+                                      Webadresse = firma.Webadresse,
+                                      Betalingsbetingelse = -1,
+                                      Udlånsfrist = firma.Udlånsfrist,
+                                      FilofaxAdresselabel = firma.FilofaxAdresselabel
+                                  };
+                Assert.Throws<FaultException>(() => channel.FirmaModify(command));
             }
             finally
             {

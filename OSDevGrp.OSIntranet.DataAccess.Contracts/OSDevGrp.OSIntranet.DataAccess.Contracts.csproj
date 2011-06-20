@@ -51,13 +51,19 @@
     <Reference Include="System.ServiceModel" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\AdresseAddCommandBase.cs" />
     <Compile Include="Commands\AdressegruppeAddCommand.cs" />
     <Compile Include="Commands\AdressegruppeModifyCommand.cs" />
+    <Compile Include="Commands\AdresseModifyCommandBase.cs" />
     <Compile Include="Commands\BetalingsbetingelseAddCommand.cs" />
     <Compile Include="Commands\BetalingsbetingelseModifyCommand.cs" />
     <Compile Include="Commands\BogføringslinjeAddCommand.cs" />
     <Compile Include="Commands\BrevhovedAddCommand.cs" />
     <Compile Include="Commands\BrevhovedModifyCommand.cs" />
+    <Compile Include="Commands\FirmaAddCommand.cs" />
+    <Compile Include="Commands\FirmaModifyCommand.cs" />
+    <Compile Include="Commands\PersonAddCommand.cs" />
+    <Compile Include="Commands\PersonModifyCommand.cs" />
     <Compile Include="Commands\PostnummerAddCommand.cs" />
     <Compile Include="Commands\PostnummerModifyCommand.cs" />
     <Compile Include="Enums\KontogruppeType.cs" />

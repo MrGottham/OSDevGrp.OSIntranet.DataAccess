@@ -447,7 +447,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <returns>Det opdaterede firma.</returns>
         public Firma FirmaModify(int nummer, string navn, string adresse1, string adresse2, string postnrBy, string telefon1, string telefon2, string telefax, Adressegruppe adressegruppe, string bekendtskab, string mailadresse, string webadresse, Betalingsbetingelse betalingsbetingelse, int udlånsfrist, bool filofaxAdresselabel)
         {
-            AdresseBaseModify<Firma>(1000, nummer, navn, adresse1, adresse2, postnrBy, adressegruppe, bekendtskab,
+            AdresseBaseModify<Firma>(1010, nummer, navn, adresse1, adresse2, postnrBy, adressegruppe, bekendtskab,
                                      mailadresse, webadresse, betalingsbetingelse, udlånsfrist, filofaxAdresselabel,
                                      (db, sh) =>
                                          {

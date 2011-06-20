@@ -103,6 +103,10 @@
     <Compile Include="CommandHandlers\BogføringslinjeAddCommandHandler.cs" />
     <Compile Include="CommandHandlers\BrevhovedAddCommandHandler.cs" />
     <Compile Include="CommandHandlers\BrevhovedModifyCommandHandler.cs" />
+    <Compile Include="CommandHandlers\FirmaAddCommandHandler.cs" />
+    <Compile Include="CommandHandlers\FirmaModifyCommandHandler.cs" />
+    <Compile Include="CommandHandlers\PersonAddCommandHandler.cs" />
+    <Compile Include="CommandHandlers\PersonModifyCommandHandler.cs" />
     <Compile Include="CommandHandlers\PostnummerAddCommandHandler.cs" />
     <Compile Include="CommandHandlers\PostnummerModifyCommandHandler.cs" />
     <Compile Include="DataAccessService.cs">
