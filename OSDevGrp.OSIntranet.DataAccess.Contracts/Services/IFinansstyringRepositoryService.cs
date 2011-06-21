@@ -49,6 +49,23 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         KontoView KontoGetByRegnskabAndKontonummer(KontoGetByRegnskabAndKontonummerQuery kontoGetByRegnskabAndKontonummerQuery);
 
         /// <summary>
+        /// Opdaterer eller tilføjer kreditoplysninger til en given konto.
+        /// </summary>
+        /// <param name="kreditoplysningerAddOrModifyCommand">Kommando til opdatering eller tilføjelse af kreditoplysninger til en given konto.</param>
+        /// <returns>Opdateret eller tilføjet kreditoplysninger.</returns>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        KreditoplysningerView KreditoplysningerAddOrModify(KreditoplysningerAddOrModifyCommand kreditoplysningerAddOrModifyCommand);
+
+        /// <summary>
+        /// Opdaterer eller tilføjer én til flere kreditoplysninger til én eller flere konti.
+        /// </summary>
+        /// <param name="commands">Kommandoer til opdatering eller tilføjelse af kreditoplysninger til en given konto.</param>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        void KreditoplysningerAddOrModifyMary(IEnumerable<KreditoplysningerAddOrModifyCommand> commands);
+
+        /// <summary>
         /// Henter alle budgetkonti i et givent regnskab.
         /// </summary>
         /// <param name="budgetkontoGetByRegnskabQuery">Forespørgelse til at hente alle budgetkonti i et givent regnskab.</param>
@@ -67,6 +84,23 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         BudgetkontoView BudgetkontoGetByRegnskabAndKontonummer(BudgetkontoGetByRegnskabAndKontonummerQuery budgetkontoGetByRegnskabAndKontonummerQuery);
 
         /// <summary>
+        /// Opdaterer eller tilføjer budgetoplysninger til en given budgetkonto.
+        /// </summary>
+        /// <param name="budgetoplysningerAddOrModifyCommand">Kommando til opdatering eller tilføjelse af budgetoplysninger til en given budgetkonto.</param>
+        /// <returns>Opdateret eller tilføjet budgetoplysninger.</returns>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        BudgetoplysningerView BudgetoplysningerAddOrModify(BudgetoplysningerAddOrModifyCommand budgetoplysningerAddOrModifyCommand);
+
+        /// <summary>
+        /// Opdaterer eller tilføjer én til flere budgetoplysninger til én eller flere budgetkonti.
+        /// </summary>
+        /// <param name="commands">Kommandoer til opdatering eller tilføjelse af budgetoplysninger til en given budgetkonto.</param>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        void BudgetoplysningerAddOrModifyMany(IEnumerable<BudgetoplysningerAddOrModifyCommand> commands);
+
+        /// <summary>
         /// Henter alle bogføringslinjer for et givent regnskab.
         /// </summary>
         /// <param name="bogføringslinjeGetByRegnskabQuery">Forespørgelse til at hente alle bogføringslinjer for et givent regnskab.</param>
@@ -79,9 +113,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         /// Tilføjer en bogføringslinje.
         /// </summary>
         /// <param name="bogføringslinjeAddCommand">Kommando til tilføjelse af en bogføringslinje.</param>
+        /// <returns>Tilføjet bogføringslinje.</returns>
         [OperationContract]
         [TransactionFlow(TransactionFlowOption.Allowed)]
-        void BogføringslinjeAdd(BogføringslinjeAddCommand bogføringslinjeAddCommand);
+         BogføringslinjeView BogføringslinjeAdd(BogføringslinjeAddCommand bogføringslinjeAddCommand);
 
         /// <summary>
         /// Henter alle kontogrupper.
@@ -102,6 +137,24 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         KontogruppeView KontogruppeGetByNummer(KontogruppeGetByNummerQuery kontogruppeGetByNummerQuery);
 
         /// <summary>
+        /// Tilføjer en kontogruppe.
+        /// </summary>
+        /// <param name="kontogruppeAddCommand">Kommando til tilføjelse af en kontogruppe.</param>
+        /// <returns>Tilføjet kontogruppe.</returns>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        KontogruppeView KontogruppeAdd(KontogruppeAddCommand kontogruppeAddCommand);
+
+        /// <summary>
+        /// Opdaterer en given kontogruppe.
+        /// </summary>
+        /// <param name="kontogruppeModifyCommand">Kommando til opdatering af en kontogruppe.</param>
+        /// <returns>Opdateret kontogruppe.</returns>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        KontogruppeView KontogruppeModify(KontogruppeModifyCommand kontogruppeModifyCommand);
+
+        /// <summary>
         /// Henter alle grupper for budgetkonti.
         /// </summary>
         /// <param name="budgetkontogruppeGetAllQuery">Forespørgelse til at hente alle budgetkonti.</param>
@@ -118,5 +171,23 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         [OperationContract]
         [TransactionFlow(TransactionFlowOption.Allowed)]
         BudgetkontogruppeView BudgetkontogruppeGetByNummer(BudgetkontogruppeGetByNummerQuery budgetkontogruppeGetByNummerQuery);
+
+        /// <summary>
+        /// Tilføjer en gruppe til budgetkonti.
+        /// </summary>
+        /// <param name="budgetkontogruppeAddCommand">Kommando til tilføjelse af en gruppe til budgetkonti.</param>
+        /// <returns>Tilføjet gruppe til budgetkonti.</returns>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        BudgetkontogruppeView BudgetkontogruppeAdd(BudgetkontogruppeAddCommand budgetkontogruppeAddCommand);
+
+        /// <summary>
+        /// Opdaterer en given gruppe til budgetkonti.
+        /// </summary>
+        /// <param name="budgetkontogruppeModifyCommand">Kommand til opdatering af en given gruppe til budgetkonti.</param>
+        /// <returns>Opdateret gruppe til budgetkonti.</returns>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        BudgetkontogruppeView BudgetkontogruppeModify(BudgetkontogruppeModifyCommand budgetkontogruppeModifyCommand);
     }
 }

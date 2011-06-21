@@ -601,7 +601,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <returns>Den tilføjede betalingsbetingelse.</returns>
         public Betalingsbetingelse BetalingsbetingelseAdd(int nummer, string navn)
         {
-            CreateTableRecord(1040, nummer, navn, null);
+            CreateTableRecord(1040, nummer, navn);
             ClearCache();
             return BetalingsbetingelserGetAll().Single(m => m.Nummer == nummer);
         }

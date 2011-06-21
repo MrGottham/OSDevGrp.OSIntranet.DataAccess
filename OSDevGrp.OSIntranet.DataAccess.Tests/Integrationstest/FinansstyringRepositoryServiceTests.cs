@@ -5,6 +5,7 @@ using OSDevGrp.OSIntranet.CommonLibrary.IoC;
 using OSDevGrp.OSIntranet.CommonLibrary.Wcf;
 using OSDevGrp.OSIntranet.CommonLibrary.Wcf.ChannelFactory;
 using OSDevGrp.OSIntranet.DataAccess.Contracts.Commands;
+using OSDevGrp.OSIntranet.DataAccess.Contracts.Enums;
 using OSDevGrp.OSIntranet.DataAccess.Contracts.Queries;
 using OSDevGrp.OSIntranet.DataAccess.Contracts.Services;
 using NUnit.Framework;
@@ -207,6 +208,128 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
         }
 
         /// <summary>
+        /// Tester, at kreditoplysninger oprettes.
+        /// </summary>
+        [Test]
+        [Ignore("Oprettelse af kreditoplysninger er testet.")]
+        public void TestAtKreditoplysningerOprettes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var dato = DateTime.Now.AddYears(5);
+                var command = new KreditoplysningerAddOrModifyCommand
+                                  {
+                                      Regnskabsnummer = RegnskabsnummerTilTest,
+                                      Kontonummer = "DANKORT",
+                                      År = dato.Year,
+                                      Måned = dato.Month,
+                                      Kredit = 5000M
+                                  };
+                var result = channel.KreditoplysningerAddOrModify(command);
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.År, Is.EqualTo(command.År));
+                Assert.That(result.Måned, Is.EqualTo(command.Måned));
+                Assert.That(result.Kredit, Is.EqualTo(command.Kredit));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at kreditoplysninger opdateres.
+        /// </summary>
+        [Test]
+        [Ignore("Opdatering af kreditoplysninger er testet.")]
+        public void TestAtKreditoplysningerOpdateres()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var dato = DateTime.Now;
+                var command = new KreditoplysningerAddOrModifyCommand
+                                  {
+                                      Regnskabsnummer = RegnskabsnummerTilTest,
+                                      Kontonummer = "DANKORT",
+                                      År = dato.Year,
+                                      Måned = dato.Month,
+                                      Kredit = 5000M
+                                  };
+                var result = channel.KreditoplysningerAddOrModify(command);
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.År, Is.EqualTo(command.År));
+                Assert.That(result.Måned, Is.EqualTo(command.Måned));
+                Assert.That(result.Kredit, Is.EqualTo(command.Kredit));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved opdatering af kreditoplysninger, hvis regnskabet ikke findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOpdateringAfKreditoplysningerHvisRegnskabIkkeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var dato = DateTime.Now;
+                var command = new KreditoplysningerAddOrModifyCommand
+                                  {
+                                      Regnskabsnummer = -1,
+                                      Kontonummer = "DANKORT",
+                                      År = dato.Year,
+                                      Måned = dato.Month,
+                                      Kredit = 0M
+                                  };
+                Assert.Throws<FaultException>(() => channel.KreditoplysningerAddOrModify(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved opdatering af kreditoplysninger, hvis kontoen ikke findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOpdateringAfKreditoplysningerHvisKontoIkkeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var dato = DateTime.Now;
+                var command = new KreditoplysningerAddOrModifyCommand
+                                  {
+                                      Regnskabsnummer = RegnskabsnummerTilTest,
+                                      Kontonummer = "XYZ",
+                                      År = dato.Year,
+                                      Måned = dato.Month,
+                                      Kredit = 0M
+                                  };
+                Assert.Throws<FaultException>(() => channel.KreditoplysningerAddOrModify(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
         /// Tester, at budgetkonti hentes for et givent regnskab.
         /// </summary>
         [Test]
@@ -296,6 +419,134 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
         }
 
         /// <summary>
+        /// Tester, at budgetoplysninger oprettes.
+        /// </summary>
+        [Test]
+        [Ignore("Oprettelse af kreditoplysninger er testet.")]
+        public void TestAtBudgetoplysningerOprettes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var dato = DateTime.Now.AddYears(5);
+                var command = new BudgetoplysningerAddOrModifyCommand
+                                  {
+                                      Regnskabsnummer = RegnskabsnummerTilTest,
+                                      Budgetkontonummer = "8990",
+                                      År = dato.Year,
+                                      Måned = dato.Month,
+                                      Indtægter = 2500M,
+                                      Udgifter = 5000M
+                                  };
+                var result = channel.BudgetoplysningerAddOrModify(command);
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.År, Is.EqualTo(command.År));
+                Assert.That(result.Måned, Is.EqualTo(command.Måned));
+                Assert.That(result.Indtægter, Is.EqualTo(command.Indtægter));
+                Assert.That(result.Udgifter, Is.EqualTo(command.Udgifter));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at budgetoplysninger opdateres.
+        /// </summary>
+        [Test]
+        [Ignore("Opdatering af kreditoplysninger er testet.")]
+        public void TestAtBudgetoplysningerOpdateres()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var dato = DateTime.Now;
+                var command = new BudgetoplysningerAddOrModifyCommand
+                                  {
+                                      Regnskabsnummer = RegnskabsnummerTilTest,
+                                      Budgetkontonummer = "8990",
+                                      År = dato.Year,
+                                      Måned = dato.Month,
+                                      Indtægter = 2500M,
+                                      Udgifter = 5000M
+                                  };
+                var result = channel.BudgetoplysningerAddOrModify(command);
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.År, Is.EqualTo(command.År));
+                Assert.That(result.Måned, Is.EqualTo(command.Måned));
+                Assert.That(result.Indtægter, Is.EqualTo(command.Indtægter));
+                Assert.That(result.Udgifter, Is.EqualTo(command.Udgifter));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved opdatering af budgetoplysninger, hvis regnskabet ikke findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOpdateringAfBudgetoplysningerHvisRegnskabIkkeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var dato = DateTime.Now;
+                var command = new BudgetoplysningerAddOrModifyCommand
+                                  {
+                                      Regnskabsnummer = -1,
+                                      Budgetkontonummer = "8990",
+                                      År = dato.Year,
+                                      Måned = dato.Month,
+                                      Indtægter = 0M,
+                                      Udgifter = 0M
+                                  };
+                Assert.Throws<FaultException>(() => channel.BudgetoplysningerAddOrModify(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved opdatering af budgetoplysninger, hvis budgetkontoen ikke findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOpdateringAfBudgetoplysningerHvisBudgetkontoIkkeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var dato = DateTime.Now;
+                var command = new BudgetoplysningerAddOrModifyCommand
+                                  {
+                                      Regnskabsnummer = RegnskabsnummerTilTest,
+                                      Budgetkontonummer = "XYZ",
+                                      År = dato.Year,
+                                      Måned = dato.Month,
+                                      Indtægter = 0M,
+                                      Udgifter = 0M
+                                  };
+                Assert.Throws<FaultException>(() => channel.BudgetoplysningerAddOrModify(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
         /// Tester, at bogføringslinjer for et givent regnskab hentes.
         /// </summary>
         [Test]
@@ -326,7 +577,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
         /// <summary>
         /// Tester, at bogføringslinjer oprettes på et givent regnskab.
         /// </summary>
-        [Ignore]
+        [Test]
+        [Ignore("Oprettelse af bogføringslinjer er testet.")]
         public void TestAtBogføringslinjeOprettes()
         {
             var container = ContainerFactory.Create();
@@ -354,15 +606,74 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                                       Kredit = 0M,
                                       AdresseId = 1
                                   };
-                channel.BogføringslinjeAdd(command);
+                var result = channel.BogføringslinjeAdd(command);
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Løbenummer, Is.GreaterThan(0));
+                Assert.That(result.Dato, Is.EqualTo(command.Bogføringsdato).Within(1).Days);
+                Assert.That(result.Bilag, Is.EqualTo(command.Bilag));
+                Assert.That(result.Konto, Is.Not.Null);
+                Assert.That(result.Konto.Kontonummer, Is.EqualTo(command.Kontonummer));
+                Assert.That(result.Tekst, Is.Not.Null);
+                Assert.That(result.Tekst, Is.EqualTo(command.Tekst));
+                Assert.That(result.Budgetkonto, Is.Not.Null);
+                Assert.That(result.Budgetkonto.Kontonummer, Is.EqualTo(command.Budgetkontonummer));
+                Assert.That(result.Debit, Is.EqualTo(command.Debit));
+                Assert.That(result.Kredit, Is.EqualTo(command.Kredit));
+                Assert.That(result.Adresse, Is.Not.Null);
+                Assert.That(result.Adresse.Nummer, Is.EqualTo(command.AdresseId));
                 // Modpostér bogført linje. 
                 command.Kredit = command.Debit;
                 command.Debit = 0M;
-                channel.BogføringslinjeAdd(command);
+                result = channel.BogføringslinjeAdd(command);
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Løbenummer, Is.GreaterThan(0));
+                Assert.That(result.Dato, Is.EqualTo(command.Bogføringsdato).Within(1).Days);
+                Assert.That(result.Bilag, Is.EqualTo(command.Bilag));
+                Assert.That(result.Konto, Is.Not.Null);
+                Assert.That(result.Konto.Kontonummer, Is.EqualTo(command.Kontonummer));
+                Assert.That(result.Tekst, Is.Not.Null);
+                Assert.That(result.Tekst, Is.EqualTo(command.Tekst));
+                Assert.That(result.Budgetkonto, Is.Not.Null);
+                Assert.That(result.Budgetkonto.Kontonummer, Is.EqualTo(command.Budgetkontonummer));
+                Assert.That(result.Debit, Is.EqualTo(command.Debit));
+                Assert.That(result.Kredit, Is.EqualTo(command.Kredit));
+                Assert.That(result.Adresse, Is.Not.Null);
+                Assert.That(result.Adresse.Nummer, Is.EqualTo(command.AdresseId));
                 // Check at antallet af bogførte linjer er steget med 2.
                 var antalLinjer = channel.BogføringslinjeGetByRegnskab(query).Count();
                 Assert.That(antalLinjer, Is.GreaterThan(0));
                 Assert.That(antalLinjer, Is.EqualTo(bogførteLinjer + 2));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved oprettelse af bogføringslinje, hvis teksten er tom.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOprettelseAfBogføringslinjeHvisTekstErEmpty()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var command = new BogføringslinjeAddCommand
+                                  {
+                                      Regnskabsnummer = 1,
+                                      Bogføringsdato = DateTime.Now,
+                                      Bilag = null,
+                                      Kontonummer = "DANKORT",
+                                      Tekst = string.Empty,
+                                      Budgetkontonummer = "8990",
+                                      Debit = 0M,
+                                      Kredit = 0M,
+                                      AdresseId = 1
+                                  };
+                Assert.Throws<FaultException>(() => channel.BogføringslinjeAdd(command));
             }
             finally
             {
@@ -565,6 +876,192 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
         }
 
         /// <summary>
+        /// Tester, at kontogruppe oprettes.
+        /// </summary>
+        [Test]
+        [Ignore("Oprettelse af kontogrupper er testet")]
+        public void TestAtKontogruppeOprettes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var command = new KontogruppeAddCommand
+                                  {
+                                      Nummer = 99,
+                                      Navn = "_Test",
+                                      KontogruppeType = KontogruppeType.Passiver
+                                  };
+                var result = channel.KontogruppeAdd(command);
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Nummer, Is.EqualTo(command.Nummer));
+                Assert.That(result.Navn, Is.Not.Null);
+                Assert.That(result.Navn, Is.EqualTo(command.Navn));
+                Assert.That(result.KontogruppeType, Is.EqualTo(command.KontogruppeType));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved oprettelse af kontogruppe, der gruppen til kontogruppe allerede findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOprettelseAfKontogruppeHvisBudgetkontogruppeAlleredeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var command = new KontogruppeAddCommand
+                                  {
+                                      Nummer = 1,
+                                      Navn = "_Test",
+                                      KontogruppeType = KontogruppeType.Passiver
+                                  };
+                Assert.Throws<FaultException>(() => channel.KontogruppeAdd(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved oprettelse af kontogruppe, hvis navnet er tomt.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOprettelseAfKontogruppeHvisNavnErEmpty()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var command = new KontogruppeAddCommand
+                                  {
+                                      Nummer = 99,
+                                      Navn = string.Empty,
+                                      KontogruppeType = KontogruppeType.Passiver
+                                  };
+                Assert.Throws<FaultException>(() => channel.KontogruppeAdd(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at kontogruppe opdateres.
+        /// </summary>
+        [Test]
+        [Ignore("Opdatering af kontogrupper er testet.")]
+        public void TestAtKontogruppeOpdateres()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var query = new KontogruppeGetByNummerQuery
+                                {
+                                    Nummer = 1
+                                };
+                var kontogruppe = channel.KontogruppeGetByNummer(query);
+                Assert.That(kontogruppe, Is.Not.Null);
+                Assert.That(kontogruppe.Nummer, Is.EqualTo(query.Nummer));
+
+                var command = new KontogruppeModifyCommand
+                                  {
+                                      Nummer = kontogruppe.Nummer,
+                                      Navn = string.Format("_{0}", kontogruppe.Navn),
+                                      KontogruppeType = kontogruppe.KontogruppeType
+                                  };
+                var result = channel.KontogruppeModify(command);
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Nummer, Is.EqualTo(command.Nummer));
+                Assert.That(result.Navn, Is.Not.Null);
+                Assert.That(result.Navn, Is.EqualTo(command.Navn));
+                Assert.That(result.KontogruppeType, Is.EqualTo(command.KontogruppeType));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved opdatering af kontogruppe, hvis kontogruppen ikke findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOpdateringAfKontogruppeHvisKontogruppeIkkeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var query = new KontogruppeGetByNummerQuery
+                                {
+                                    Nummer = 1
+                                };
+                var kontogruppe = channel.KontogruppeGetByNummer(query);
+                Assert.That(kontogruppe, Is.Not.Null);
+                Assert.That(kontogruppe.Nummer, Is.EqualTo(query.Nummer));
+
+                var command = new KontogruppeModifyCommand
+                                  {
+                                      Nummer = -1,
+                                      Navn = kontogruppe.Navn,
+                                      KontogruppeType = kontogruppe.KontogruppeType
+                                  };
+                Assert.Throws<FaultException>(() => channel.KontogruppeModify(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved opdatering af kontogruppe, hvis navnet er tomt.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOpdateringAfKontogruppeHvisNavnErEmpty()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var query = new KontogruppeGetByNummerQuery
+                                {
+                                    Nummer = 1
+                                };
+                var kontogruppe = channel.KontogruppeGetByNummer(query);
+                Assert.That(kontogruppe, Is.Not.Null);
+                Assert.That(kontogruppe.Nummer, Is.EqualTo(query.Nummer));
+
+                var command = new KontogruppeModifyCommand
+                                  {
+                                      Nummer = kontogruppe.Nummer,
+                                      Navn = string.Empty,
+                                      KontogruppeType = kontogruppe.KontogruppeType
+                                  };
+                Assert.Throws<FaultException>(() => channel.KontogruppeModify(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
         /// Tester, at grupper for budgetkonti hentes.
         /// </summary>
         [Test]
@@ -627,6 +1124,184 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                                     Nummer = -1
                                 };
                 Assert.Throws<FaultException>(() => channel.BudgetkontogruppeGetByNummer(query));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at gruppe til budgetkonti oprettes.
+        /// </summary>
+        [Test]
+        [Ignore("Oprettelse af gruppe til budgetkonti er testet")]
+        public void TestAtBudgetkontogruppeOprettes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var command = new BudgetkontogruppeAddCommand
+                                  {
+                                      Nummer = 99,
+                                      Navn = "_Test"
+                                  };
+                var result = channel.BudgetkontogruppeAdd(command);
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Nummer, Is.EqualTo(command.Nummer));
+                Assert.That(result.Navn, Is.Not.Null);
+                Assert.That(result.Navn, Is.EqualTo(command.Navn));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved oprettelse af gruppe til budgetkonti, der gruppen til budgetkonti allerede findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOprettelseAfBudgetkontogruppeHvisBudgetkontogruppeAlleredeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var command = new BudgetkontogruppeAddCommand
+                                  {
+                                      Nummer = 1,
+                                      Navn = "_Test"
+                                  };
+                Assert.Throws<FaultException>(() => channel.BudgetkontogruppeAdd(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved oprettelse af gruppe til budgetkonti, hvis navnet er tomt.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOprettelseAfBudgetkontogruppeHvisNavnErEmpty()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var command = new BudgetkontogruppeAddCommand
+                                  {
+                                      Nummer = 99,
+                                      Navn = string.Empty
+                                  };
+                Assert.Throws<FaultException>(() => channel.BudgetkontogruppeAdd(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at gruppe til budgetkonti opdateres.
+        /// </summary>
+        [Test]
+        [Ignore("Opdatering af grupper til budgetkonti er testet.")]
+        public void TestAtBudgetkontogruppeOpdateres()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var query = new BudgetkontogruppeGetByNummerQuery
+                                {
+                                    Nummer = 1
+                                };
+                var budgetkontogruppe = channel.BudgetkontogruppeGetByNummer(query);
+                Assert.That(budgetkontogruppe, Is.Not.Null);
+                Assert.That(budgetkontogruppe.Nummer, Is.EqualTo(query.Nummer));
+
+                var command = new BudgetkontogruppeModifyCommand
+                                  {
+                                      Nummer = budgetkontogruppe.Nummer,
+                                      Navn = string.Format("_{0}", budgetkontogruppe.Navn)
+                                  };
+                var result = channel.BudgetkontogruppeModify(command);
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Nummer, Is.EqualTo(command.Nummer));
+                Assert.That(result.Navn, Is.Not.Null);
+                Assert.That(result.Navn, Is.EqualTo(command.Navn));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved opdatering af gruppe til budgetkonti, hvis gruppen til budgetkonti ikke findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOpdateringAfBudgetkontogruppeHvisBudgetkontogruppeIkkeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var query = new BudgetkontogruppeGetByNummerQuery
+                                {
+                                    Nummer = 1
+                                };
+                var budgetkontogruppe = channel.BudgetkontogruppeGetByNummer(query);
+                Assert.That(budgetkontogruppe, Is.Not.Null);
+                Assert.That(budgetkontogruppe.Nummer, Is.EqualTo(query.Nummer));
+
+                var command = new BudgetkontogruppeModifyCommand
+                                  {
+                                      Nummer = -1,
+                                      Navn = budgetkontogruppe.Navn
+                                  };
+                Assert.Throws<FaultException>(() => channel.BudgetkontogruppeModify(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved opdatering af gruppe til budgetkonti, hvis navnet er tomt.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOpdateringAfBudgetkontogruppeHvisNavnErEmpty()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var query = new BudgetkontogruppeGetByNummerQuery
+                                {
+                                    Nummer = 1
+                                };
+                var budgetkontogruppe = channel.BudgetkontogruppeGetByNummer(query);
+                Assert.That(budgetkontogruppe, Is.Not.Null);
+                Assert.That(budgetkontogruppe.Nummer, Is.EqualTo(query.Nummer));
+
+                var command = new BudgetkontogruppeModifyCommand
+                                  {
+                                      Nummer = budgetkontogruppe.Nummer,
+                                      Navn = string.Empty
+                                  };
+                Assert.Throws<FaultException>(() => channel.BudgetkontogruppeModify(command));
             }
             finally
             {

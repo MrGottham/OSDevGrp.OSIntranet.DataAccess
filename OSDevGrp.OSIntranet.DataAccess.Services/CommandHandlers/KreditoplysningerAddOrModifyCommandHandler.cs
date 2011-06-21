@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using OSDevGrp.OSIntranet.CommonLibrary.Domain.Adressekartotek;
 using OSDevGrp.OSIntranet.CommonLibrary.Domain.Finansstyring;
 using OSDevGrp.OSIntranet.CommonLibrary.Domain.Fælles;
 using OSDevGrp.OSIntranet.CommonLibrary.Infrastructure.Interfaces;
@@ -15,14 +14,13 @@ using OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces;
 namespace OSDevGrp.OSIntranet.DataAccess.Services.CommandHandlers
 {
     /// <summary>
-    /// Commandhandler til håndtering af kommandoen: BogføringslinjeAddCommand.
+    /// Commandhandler til håndtering af kommandoen: KreditoplysningerAddOrModifyCommand.
     /// </summary>
-    public class BogføringslinjeAddCommandHandler : CommandHandlerTransactionalBase, ICommandHandler<BogføringslinjeAddCommand, BogføringslinjeView>
+    public class KreditoplysningerAddOrModifyCommandHandler : CommandHandlerTransactionalBase, ICommandHandler<KreditoplysningerAddOrModifyCommand, KreditoplysningerView>
     {
         #region Private variables
 
         private readonly IFinansstyringRepository _finansstyringRepository;
-        private readonly IAdresseRepository _adresseRepository;
         private readonly IFællesRepository _fællesRepository;
         private readonly IObjectMapper _objectMapper;
 
@@ -31,21 +29,16 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.CommandHandlers
         #region Constructor
 
         /// <summary>
-        /// Danner commandhandler til håndtering af kommandoen: BogføringslinjeAddCommand.
+        /// Danner commandhandler til håndtering af kommandoen: KreditoplysningerAddOrModifyCommand.
         /// </summary>
         /// <param name="finansstyringRepository">Implementering af repository til finansstyring.</param>
-        /// <param name="adresseRepository">Implementering af repository til adressekartotek.</param>
         /// <param name="fællesRepository">Implementering af repository til fælles elementer.</param>
         /// <param name="objectMapper">Implementering af objectmapper.</param>
-        public BogføringslinjeAddCommandHandler(IFinansstyringRepository finansstyringRepository, IAdresseRepository adresseRepository, IFællesRepository fællesRepository, IObjectMapper objectMapper)
+        public KreditoplysningerAddOrModifyCommandHandler(IFinansstyringRepository finansstyringRepository, IFællesRepository fællesRepository, IObjectMapper objectMapper)
         {
             if (finansstyringRepository == null)
             {
                 throw new ArgumentNullException("finansstyringRepository");
-            }
-            if (adresseRepository == null)
-            {
-                throw new ArgumentNullException("adresseRepository");
             }
             if (fællesRepository == null)
             {
@@ -56,27 +49,26 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.CommandHandlers
                 throw new ArgumentNullException("objectMapper");
             }
             _finansstyringRepository = finansstyringRepository;
-            _adresseRepository = adresseRepository;
             _fællesRepository = fællesRepository;
             _objectMapper = objectMapper;
         }
 
         #endregion
 
-        #region ICommandHandler<BogføringslinjeAddCommand,BogføringslinjeView> Members
+        #region ICommandHandler<KreditoplysningerAddOrModifyCommand,KreditoplysningerView> Members
 
         /// <summary>
         /// Udførelse af kommandoen.
         /// </summary>
-        /// <param name="command">Kommand til oprettelse af en bogføringslinje.</param>
-        /// <returns>Oprettet bogføringslinje.</returns>
-        public BogføringslinjeView Execute(BogføringslinjeAddCommand command)
+        /// <param name="command">Command til opdatering eller tilføjelse af kreditoplysninger.</param>
+        /// <returns>Opdateret eller tilføjet kreditoplysninger.</returns>
+        public KreditoplysningerView Execute(KreditoplysningerAddOrModifyCommand command)
         {
             if (command == null)
             {
                 throw new ArgumentNullException("command");
             }
-            
+
             Regnskab regnskab;
             try
             {
@@ -103,69 +95,28 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.CommandHandlers
                     Resource.GetExceptionMessage(ExceptionMessage.CantFindUniqueRecordId, typeof (Konto),
                                                  command.Kontonummer), ex);
             }
-            Budgetkonto budgetkonto = null;
-            if (!string.IsNullOrEmpty(command.Budgetkontonummer))
-            {
-                try
-                {
-                    budgetkonto = regnskab.Konti
-                        .OfType<Budgetkonto>()
-                        .Single(m => m.Kontonummer.CompareTo(command.Budgetkontonummer) == 0);
-                }
-                catch (InvalidOperationException ex)
-                {
-                    throw new DataAccessSystemException(
-                        Resource.GetExceptionMessage(ExceptionMessage.CantFindUniqueRecordId, typeof (Budgetkonto),
-                                                     command.Budgetkontonummer), ex);
-                }
-            }
-            AdresseBase adresse = null;
-            if (command.AdresseId != 0)
-            {
-                try
-                {
-                    adresse = _adresseRepository.AdresseGetAll()
-                        .Single(m => m.Nummer == command.AdresseId);
-                }
-                catch (InvalidOperationException ex)
-                {
-                    throw new DataAccessSystemException(
-                        Resource.GetExceptionMessage(ExceptionMessage.CantFindUniqueRecordId, typeof (AdresseBase),
-                                                     command.AdresseId), ex);
-                }
-            }
 
-            var bogføringslinje = _finansstyringRepository.BogføringslinjeAdd(command.Bogføringsdato, command.Bilag,
-                                                                              konto, command.Tekst, budgetkonto,
-                                                                              command.Debit, command.Kredit, adresse);
+            var kreditoplysninger = _finansstyringRepository.KreditoplysningerModifyOrAdd(konto, command.År,
+                                                                                          command.Måned, command.Kredit);
 
-            var oldValue = Bogføringslinje.AutoCalculate;
-            try
-            {
-                Bogføringslinje.SætAutoCalculate(true);
-                return _objectMapper.Map<Bogføringslinje, BogføringslinjeView>(bogføringslinje);
-            }
-            finally
-            {
-                Bogføringslinje.SætAutoCalculate(oldValue);
-            }
+            return _objectMapper.Map<Kreditoplysninger, KreditoplysningerView>(kreditoplysninger);
         }
 
         /// <summary>
         /// Exceptionhandler.
         /// </summary>
-        /// <param name="command">Kommando til oprettelse af en bogføringslinje.</param>
+        /// <param name="command">Command til opdatering eller tilføjelse af kreditoplysninger.</param>
         /// <param name="exception">Exception, der er opstået under udførelse af kommandoen.</param>
         [RethrowException(typeof(DataAccessSystemException))]
-        public void HandleException(BogføringslinjeAddCommand command, Exception exception)
+        public void HandleException(KreditoplysningerAddOrModifyCommand command, Exception exception)
         {
             if (exception is DataAccessSystemException)
             {
                 throw exception;
             }
             throw new DataAccessSystemException(
-                Resource.GetExceptionMessage(ExceptionMessage.ErrorInCommandHandler, typeof (BogføringslinjeAddCommand),
-                                             exception.Message), exception);
+                Resource.GetExceptionMessage(ExceptionMessage.ErrorInCommandHandler,
+                                             typeof (KreditoplysningerAddOrModifyCommand), exception.Message), exception);
         }
 
         #endregion

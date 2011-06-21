@@ -10,7 +10,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Views
     public abstract class MånedsoplysningerView : IView
     {
         /// <summary>
-        /// Årtsal
+        /// Årtsal.
         /// </summary>
         [DataMember(IsRequired = true)]
         public int År

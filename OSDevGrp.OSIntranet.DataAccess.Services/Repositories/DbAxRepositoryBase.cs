@@ -127,7 +127,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <param name="text">Tekst til posten.</param>
         protected void CreateTableRecord(int tableNumber, int number, string text)
         {
-            CreateTableRecord(tableNumber, number, text);
+            CreateTableRecord(tableNumber, number, text, null);
         }
 
         /// <summary>

@@ -129,6 +129,48 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         }
 
         /// <summary>
+        /// Opdaterer eller tilføjer kreditoplysninger til en given konto.
+        /// </summary>
+        /// <param name="kreditoplysningerAddOrModifyCommand">Kommando til opdatering eller tilføjelse af kreditoplysninger til en given konto.</param>
+        /// <returns>Opdateret eller tilføjet kreditoplysninger.</returns>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public KreditoplysningerView KreditoplysningerAddOrModify(KreditoplysningerAddOrModifyCommand kreditoplysningerAddOrModifyCommand)
+        {
+            try
+            {
+                return
+                    _commandBus.Publish<KreditoplysningerAddOrModifyCommand, KreditoplysningerView>(
+                        kreditoplysningerAddOrModifyCommand);
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogFinansstyringRepositoryService));
+            }
+        }
+
+        /// <summary>
+        /// Opdaterer eller tilføjer én til flere kreditoplysninger til én eller flere konti.
+        /// </summary>
+        /// <param name="commands">Kommandoer til opdatering eller tilføjelse af kreditoplysninger til en given konto.</param>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public void KreditoplysningerAddOrModifyMary(IEnumerable<KreditoplysningerAddOrModifyCommand> commands)
+        {
+            try
+            {
+                foreach (var command in commands)
+                {
+                    _commandBus.Publish<KreditoplysningerAddOrModifyCommand, KreditoplysningerView>(command);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogFinansstyringRepositoryService));
+            }
+        }
+
+        /// <summary>
         /// Henter alle budgetkonti i et givent regnskab.
         /// </summary>
         /// <param name="budgetkontoGetByRegnskabQuery">Forespørgelse til at hente alle budgetkonti i et givent regnskab.</param>
@@ -171,6 +213,48 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         }
 
         /// <summary>
+        /// Opdaterer eller tilføjer budgetoplysninger til en given budgetkonto.
+        /// </summary>
+        /// <param name="budgetoplysningerAddOrModifyCommand">Kommando til opdatering eller tilføjelse af budgetoplysninger til en given budgetkonto.</param>
+        /// <returns>Opdateret eller tilføjet budgetoplysninger.</returns>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public BudgetoplysningerView BudgetoplysningerAddOrModify(BudgetoplysningerAddOrModifyCommand budgetoplysningerAddOrModifyCommand)
+        {
+            try
+            {
+                return
+                    _commandBus.Publish<BudgetoplysningerAddOrModifyCommand, BudgetoplysningerView>(
+                        budgetoplysningerAddOrModifyCommand);
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogFinansstyringRepositoryService));
+            }
+        }
+
+        /// <summary>
+        /// Opdaterer eller tilføjer én til flere budgetoplysninger til én eller flere budgetkonti.
+        /// </summary>
+        /// <param name="commands">Kommandoer til opdatering eller tilføjelse af budgetoplysninger til en given budgetkonto.</param>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public void BudgetoplysningerAddOrModifyMany(IEnumerable<BudgetoplysningerAddOrModifyCommand> commands)
+        {
+            try
+            {
+                foreach (var command in commands)
+                {
+                    _commandBus.Publish<BudgetoplysningerAddOrModifyCommand, BudgetoplysningerView>(command);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogFinansstyringRepositoryService));
+            }
+        }
+
+        /// <summary>
         /// Henter alle bogføringslinjer for et givent regnskab.
         /// </summary>
         /// <param name="bogføringslinjeGetByRegnskabQuery">Forespørgelse til at hente alle bogføringslinjer for et givent regnskab.</param>
@@ -195,12 +279,13 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         /// Tilføjer en bogføringslinje.
         /// </summary>
         /// <param name="bogføringslinjeAddCommand">Kommando til tilføjelse af en bogføringslinje.</param>
+        /// <returns>Tilføjet bogføringslinje.</returns>
         [OperationBehavior(TransactionScopeRequired = false)]
-        public void BogføringslinjeAdd(BogføringslinjeAddCommand bogføringslinjeAddCommand)
+        public BogføringslinjeView BogføringslinjeAdd(BogføringslinjeAddCommand bogføringslinjeAddCommand)
         {
             try
             {
-                _commandBus.Publish(bogføringslinjeAddCommand);
+                return _commandBus.Publish<BogføringslinjeAddCommand, BogføringslinjeView>(bogføringslinjeAddCommand);
             }
             catch (Exception ex)
             {
@@ -248,6 +333,44 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         }
 
         /// <summary>
+        /// Tilføjer en kontogruppe.
+        /// </summary>
+        /// <param name="kontogruppeAddCommand">Kommando til tilføjelse af en kontogruppe.</param>
+        /// <returns>Tilføjet kontogruppe.</returns>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public KontogruppeView KontogruppeAdd(KontogruppeAddCommand kontogruppeAddCommand)
+        {
+            try
+            {
+                return _commandBus.Publish<KontogruppeAddCommand, KontogruppeView>(kontogruppeAddCommand);
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogFinansstyringRepositoryService));
+            }
+        }
+
+        /// <summary>
+        /// Opdaterer en given kontogruppe.
+        /// </summary>
+        /// <param name="kontogruppeModifyCommand">Kommando til opdatering af en kontogruppe.</param>
+        /// <returns>Opdateret kontogruppe.</returns>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public KontogruppeView KontogruppeModify(KontogruppeModifyCommand kontogruppeModifyCommand)
+        {
+            try
+            {
+                return _commandBus.Publish<KontogruppeModifyCommand, KontogruppeView>(kontogruppeModifyCommand);
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogFinansstyringRepositoryService));
+            }
+        }
+
+        /// <summary>
         /// Henter alle grupper for budgetkonti.
         /// </summary>
         /// <param name="budgetkontogruppeGetAllQuery">Forespørgelse til at hente alle budgetkonti.</param>
@@ -279,6 +402,47 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
                 return
                     _queryBus.Query<BudgetkontogruppeGetByNummerQuery, BudgetkontogruppeView>(
                         budgetkontogruppeGetByNummerQuery);
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogFinansstyringRepositoryService));
+            }
+        }
+
+        /// <summary>
+        /// Tilføjer en gruppe til budgetkonti.
+        /// </summary>
+        /// <param name="budgetkontogruppeAddCommand">Kommando til tilføjelse af en gruppe til budgetkonti.</param>
+        /// <returns>Tilføjet gruppe til budgetkonti.</returns>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public BudgetkontogruppeView BudgetkontogruppeAdd(BudgetkontogruppeAddCommand budgetkontogruppeAddCommand)
+        {
+            try
+            {
+                return
+                    _commandBus.Publish<BudgetkontogruppeAddCommand, BudgetkontogruppeView>(budgetkontogruppeAddCommand);
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogFinansstyringRepositoryService));
+            }
+        }
+
+        /// <summary>
+        /// Opdaterer en given gruppe til budgetkonti.
+        /// </summary>
+        /// <param name="budgetkontogruppeModifyCommand">Kommand til opdatering af en given gruppe til budgetkonti.</param>
+        /// <returns>Opdateret gruppe til budgetkonti.</returns>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public BudgetkontogruppeView BudgetkontogruppeModify(BudgetkontogruppeModifyCommand budgetkontogruppeModifyCommand)
+        {
+            try
+            {
+                return
+                    _commandBus.Publish<BudgetkontogruppeModifyCommand, BudgetkontogruppeView>(
+                        budgetkontogruppeModifyCommand);
             }
             catch (Exception ex)
             {
