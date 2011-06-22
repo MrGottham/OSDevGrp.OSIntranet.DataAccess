@@ -33,7 +33,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Commands
         /// Kontonavn.
         /// </summary>
         [DataMember(IsRequired = true)]
-        public string Kontonnavn
+        public string Kontonavn
         {
             get;
             set;

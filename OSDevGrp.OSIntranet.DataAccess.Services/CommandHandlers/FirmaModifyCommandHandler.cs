@@ -95,7 +95,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.CommandHandlers
                     .OfType<Firma>()
                     .Single(m => m.Nummer == command.Nummer);
             }
-            catch (Exception ex)
+            catch (InvalidOperationException ex)
             {
                 throw new DataAccessSystemException(
                     Resource.GetExceptionMessage(ExceptionMessage.CantFindUniqueRecordId, typeof (Firma), command.Nummer),

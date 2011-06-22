@@ -14,9 +14,9 @@ using OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces;
 namespace OSDevGrp.OSIntranet.DataAccess.Services.CommandHandlers
 {
     /// <summary>
-    /// Commandhandler til håndtering af kommandoen: KontoAddCommand.
+    /// Commandhandler til håndtering af kommandoen: RegnskabAddCommand.
     /// </summary>
-    public class KontoAddCommandHandler : CommandHandlerTransactionalBase, ICommandHandler<KontoAddCommand, KontoView>
+    public class RegnskabAddCommandHandler : CommandHandlerTransactionalBase, ICommandHandler<RegnskabAddCommand, RegnskabView>
     {
         #region Private variables
 
@@ -29,12 +29,12 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.CommandHandlers
         #region Constructor
 
         /// <summary>
-        /// Danner commandhandler til håndtering af kommandoen: KontoAddCommand.
+        /// Danner commandhandler til håndtering af kommandoen: RegnskabAddCommand.
         /// </summary>
         /// <param name="finansstyringRepository">Implementering af repository til finansstyring.</param>
         /// <param name="fællesRepository">Implementering af repository til fælles elementer.</param>
         /// <param name="objectMapper">Implementering af objectmapper.</param>
-        public KontoAddCommandHandler(IFinansstyringRepository finansstyringRepository, IFællesRepository fællesRepository, IObjectMapper objectMapper)
+        public RegnskabAddCommandHandler(IFinansstyringRepository finansstyringRepository, IFællesRepository fællesRepository, IObjectMapper objectMapper)
         {
             if (finansstyringRepository == null)
             {
@@ -55,65 +55,60 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.CommandHandlers
 
         #endregion
 
-        #region ICommandHandler<KontoAddCommand,KontoView> Members
+        #region ICommandHandler<RegnskabAddCommand,RegnskabView> Members
 
         /// <summary>
         /// Udførelse af kommandoen.
         /// </summary>
-        /// <param name="command">Command til tilføjelse af en konto.</param>
-        /// <returns>Oprettet konto.</returns>
-        public KontoView Execute(KontoAddCommand command)
+        /// <param name="command">Command til tilføjelse af et regnskab.</param>
+        /// <returns>Oprettet regnskab.</returns>
+        public RegnskabView Execute(RegnskabAddCommand command)
         {
             if (command == null)
             {
                 throw new ArgumentNullException("command");
             }
 
-            Regnskab regnskab;
-            try
+            Brevhoved brevhoved = null;
+            if (command.Brevhoved != 0)
             {
-                var getBrevhoved = new Func<int, Brevhoved>(nummer => _fællesRepository.BrevhovedGetByNummer(nummer));
-                regnskab = _finansstyringRepository.RegnskabGetAll(getBrevhoved)
-                    .Single(m => m.Nummer == command.Regnskabsnummer);
-            }
-            catch (InvalidOperationException ex)
-            {
-                throw new DataAccessSystemException(
-                    Resource.GetExceptionMessage(ExceptionMessage.CantFindUniqueRecordId, typeof (Regnskab),
-                                                 command.Regnskabsnummer), ex);
-            }
-            Kontogruppe kontogruppe;
-            try
-            {
-                kontogruppe = _finansstyringRepository.KontogruppeGetAll().Single(m => m.Nummer == command.Kontogruppe);
-            }
-            catch (InvalidOperationException ex)
-            {
-                throw new DataAccessSystemException(
-                    Resource.GetExceptionMessage(ExceptionMessage.CantFindUniqueRecordId, typeof (Kontogruppe),
-                                                 command.Kontogruppe), ex);
+                try
+                {
+                    brevhoved = _fællesRepository.BrevhovedGetAll().Single(m => m.Nummer == command.Brevhoved);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    throw new DataAccessSystemException(
+                        Resource.GetExceptionMessage(ExceptionMessage.CantFindUniqueRecordId, typeof (Brevhoved),
+                                                     command.Brevhoved), ex);
+                }
             }
 
-            var konto = _finansstyringRepository.KontoAdd(regnskab, command.Kontonummer, command.Kontonavn,
-                                                          command.Beskrivelse, command.Note, kontogruppe);
+            var getBrevhoved = new Func<int, Brevhoved>(nummer => _fællesRepository.BrevhovedGetByNummer(nummer));
 
-            return _objectMapper.Map<Konto, KontoView>(konto);
+            var regnskab = new Regnskab(command.Nummer, command.Navn);
+            regnskab.SætBrevhoved(brevhoved);
+
+            var oprettetRegnskab = _finansstyringRepository.RegnskabAdd(getBrevhoved, regnskab.Nummer, regnskab.Navn,
+                                                                        regnskab.Brevhoved);
+
+            throw new NotImplementedException();
         }
 
         /// <summary>
         /// Exceptionhandler.
         /// </summary>
-        /// <param name="command">Command til tilføjelse af en konto.</param>
+        /// <param name="command">Command til tilføjelse af et regnskab.</param>
         /// <param name="exception">Exception, der er opstået under udførelse af kommandoen.</param>
         [RethrowException(typeof(DataAccessSystemException))]
-        public void HandleException(KontoAddCommand command, Exception exception)
+        public void HandleException(RegnskabAddCommand command, Exception exception)
         {
             if (exception is DataAccessSystemException)
             {
                 throw exception;
             }
             throw new DataAccessSystemException(
-                Resource.GetExceptionMessage(ExceptionMessage.ErrorInCommandHandler, typeof (KontoAddCommand),
+                Resource.GetExceptionMessage(ExceptionMessage.ErrorInCommandHandler, typeof (RegnskabAddCommand),
                                              exception.Message), exception);
         }
 

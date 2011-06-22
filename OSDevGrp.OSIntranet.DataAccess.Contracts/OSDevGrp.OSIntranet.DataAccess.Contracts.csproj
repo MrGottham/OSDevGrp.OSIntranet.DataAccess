@@ -78,6 +78,8 @@
     <Compile Include="Commands\PersonModifyCommand.cs" />
     <Compile Include="Commands\PostnummerAddCommand.cs" />
     <Compile Include="Commands\PostnummerModifyCommand.cs" />
+    <Compile Include="Commands\RegnskabAddCommand.cs" />
+    <Compile Include="Commands\RegnskabModifyCommand.cs" />
     <Compile Include="Enums\KontogruppeType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\AdressegruppeGetAllQuery.cs" />

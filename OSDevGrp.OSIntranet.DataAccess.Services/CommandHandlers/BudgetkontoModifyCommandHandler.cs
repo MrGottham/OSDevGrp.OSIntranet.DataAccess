@@ -95,7 +95,31 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.CommandHandlers
                                                  command.Budgetkontogruppe), ex);
             }
 
-            throw new NotImplementedException();
+            Budgetkonto budgetkonto;
+            try
+            {
+                budgetkonto = regnskab.Konti
+                    .OfType<Budgetkonto>()
+                    .Single(m => m.Kontonummer.CompareTo(command.Kontonummer) == 0);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new DataAccessSystemException(
+                    Resource.GetExceptionMessage(ExceptionMessage.CantFindUniqueRecordId, typeof (Budgetkonto),
+                                                 command.Kontonummer), ex);
+            }
+            budgetkonto.SætKontonavn(command.Kontonavn);
+            budgetkonto.SætBeskrivelse(command.Beskrivelse);
+            budgetkonto.SætNote(command.Note);
+            budgetkonto.SætBudgetkontogruppe(budgetkontogruppe);
+
+            var opdateretBudgetkonto = _finansstyringRepository.BudgetkontoModify(regnskab, budgetkonto.Kontonummer,
+                                                                                  budgetkonto.Kontonavn,
+                                                                                  budgetkonto.Beskrivelse,
+                                                                                  budgetkonto.Note,
+                                                                                  budgetkonto.Budgetkontogruppe);
+
+            return _objectMapper.Map<Budgetkonto, BudgetkontoView>(opdateretBudgetkonto);
         }
 
         /// <summary>

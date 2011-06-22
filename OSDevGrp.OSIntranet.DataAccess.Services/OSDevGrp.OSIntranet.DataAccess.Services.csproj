@@ -119,6 +119,8 @@
     <Compile Include="CommandHandlers\PersonModifyCommandHandler.cs" />
     <Compile Include="CommandHandlers\PostnummerAddCommandHandler.cs" />
     <Compile Include="CommandHandlers\PostnummerModifyCommandHandler.cs" />
+    <Compile Include="CommandHandlers\RegnskabAddCommandHandler.cs" />
+    <Compile Include="CommandHandlers\RegnskabModifyCommandHandler.cs" />
     <Compile Include="DataAccessService.cs">
       <SubType>Component</SubType>
     </Compile>

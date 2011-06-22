@@ -69,6 +69,14 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
             {
                 if (RegnskabCache.Count > 0)
                 {
+                    if (callback == null)
+                    {
+                        return new List<Regnskab>(RegnskabCache);
+                    }
+                    foreach (var regnskab in RegnskabCache)
+                    {
+                        callback(regnskab);
+                    }
                     return new List<Regnskab>(RegnskabCache);
                 }
                 var kontogrupper = KontogruppeGetAll();
@@ -270,6 +278,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
             KontoBaseAdd(3010, regnskab, kontonummer, kontonavn, beskrivelse, notat, kontogruppe,
                          (db, sh, ct) =>
                              {
+                                 if (!db.IsRecOk(sh))
+                                 {
+                                     throw new DataAccessSystemException(Resource.GetExceptionMessage(ExceptionMessage.RecordIsNotOk));
+                                 }
                                  var fromDate = ct.AddMonths(-11);
                                  for (var i = 0; i < kreditoplysninger.Capacity; i++)
                                  {
@@ -404,6 +416,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
             KontoBaseAdd(3020, regnskab, kontonummer, kontonavn, beskrivelse, notat, budgetkontogruppe,
                          (db, sh, ct) =>
                              {
+                                 if (!db.IsRecOk(sh))
+                                 {
+                                     throw new DataAccessSystemException(
+                                         Resource.GetExceptionMessage(ExceptionMessage.RecordIsNotOk));
+                                 }
                                  var fromDate = ct.AddMonths(-11);
                                  for (var i = 0; i < budgetoplysninger.Capacity; i++)
                                  {
@@ -514,7 +531,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Repositories
         /// <returns>Den opdaterede budgetkonto.</returns>
         public Budgetkonto BudgetkontoModify(Regnskab regnskab, string kontonummer, string kontonavn, string beskrivelse, string notat, Budgetkontogruppe budgetkontogruppe)
         {
-            KontoBaseModify<Budgetkonto>(3012, regnskab, kontonummer, kontonavn, beskrivelse, notat, budgetkontogruppe);
+            KontoBaseModify<Budgetkonto>(3020, regnskab, kontonummer, kontonavn, beskrivelse, notat, budgetkontogruppe);
             lock (RegnskabCache)
             {
                 var budgetkonto = regnskab.Konti

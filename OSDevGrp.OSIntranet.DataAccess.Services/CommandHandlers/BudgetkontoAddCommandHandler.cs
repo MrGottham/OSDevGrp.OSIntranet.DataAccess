@@ -95,7 +95,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.CommandHandlers
                                                  command.Budgetkontogruppe), ex);
             }
 
-            throw new NotImplementedException();
+            var budgetkonto = _finansstyringRepository.BudgetkontoAdd(regnskab, command.Kontonummer, command.Kontonavn,
+                                                                      command.Beskrivelse, command.Note,
+                                                                      budgetkontogruppe);
+
+            return _objectMapper.Map<Budgetkonto, BudgetkontoView>(budgetkonto);
         }
 
         /// <summary>

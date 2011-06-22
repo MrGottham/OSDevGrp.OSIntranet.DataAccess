@@ -94,12 +94,26 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.CommandHandlers
                                                  command.Kontogruppe), ex);
             }
 
-            // TODO: Find konto? Det bør gøres her, således at vi sikrer, at kontoen findes inden rettelse.
+            Konto konto;
+            try
+            {
+                konto = regnskab.Konti.OfType<Konto>().Single(m => m.Kontonummer.CompareTo(command.Kontonummer) == 0);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new DataAccessSystemException(
+                    Resource.GetExceptionMessage(ExceptionMessage.CantFindUniqueRecordId, typeof (Konto),
+                                                 command.Kontonummer), ex);
+            }
+            konto.SætKontonavn(command.Kontonavn);
+            konto.SætBeskrivelse(command.Beskrivelse);
+            konto.SætNote(command.Note);
+            konto.SætKontogruppe(kontogruppe);
 
-            var konto = _finansstyringRepository.KontoModify(regnskab, command.Kontonummer, command.Kontonnavn,
-                                                             command.Beskrivelse, command.Note, kontogruppe);
+            var opdateretKonto = _finansstyringRepository.KontoModify(regnskab, konto.Kontonummer, konto.Kontonavn,
+                                                                      konto.Beskrivelse, konto.Note, konto.Kontogruppe);
 
-            return _objectMapper.Map<Konto, KontoView>(konto);
+            return _objectMapper.Map<Konto, KontoView>(opdateretKonto);
         }
 
         /// <summary>

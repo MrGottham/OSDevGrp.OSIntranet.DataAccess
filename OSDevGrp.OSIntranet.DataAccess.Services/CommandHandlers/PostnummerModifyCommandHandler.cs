@@ -77,8 +77,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.CommandHandlers
             }
             postnummer.SætBy(command.Bynavn);
 
-            var opdateretPostnummer = _adresseRepository.PostnummerModify(postnummer.Landekode.ToUpper(),
-                                                                          postnummer.Postnr.ToUpper(), postnummer.By);
+            var opdateretPostnummer = _adresseRepository.PostnummerModify(postnummer.Landekode, postnummer.Postnr,
+                                                                          postnummer.By);
 
             return _objectMapper.Map<Postnummer, PostnummerView>(opdateretPostnummer);
         }

@@ -62,8 +62,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.CommandHandlers
 
             var postnummer = new Postnummer(command.Landekode, command.Postnummer, command.Bynavn);
 
-            var oprettetPostnummer = _adresseRepository.PostnummerAdd(postnummer.Landekode.ToUpper(),
-                                                                      postnummer.Postnr.ToUpper(), postnummer.By);
+            var oprettetPostnummer = _adresseRepository.PostnummerAdd(postnummer.Landekode, postnummer.Postnr,
+                                                                      postnummer.By);
 
             return _objectMapper.Map<Postnummer, PostnummerView>(oprettetPostnummer);
         }

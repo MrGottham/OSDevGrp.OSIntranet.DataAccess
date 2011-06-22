@@ -112,8 +112,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                                       Adresse1 = "_Adresse 1",
                                       Adresse2 = "_Adresse 2",
                                       PostnummerBy = "_Postnummer og bynavn",
-                                      Telefon = "_Telefon",
-                                      Mobil = "_Mobil",
+                                      Telefon = "_TELEFON",
+                                      Mobil = "_MÒBIL",
                                       Fødselsdato = DateTime.Now.AddYears(-7).AddDays(-7),
                                       Adressegruppe = 1,
                                       Bekendtskab = "_Bekendtskab",
@@ -132,8 +132,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                 Assert.That(result.Adresse1, Is.EqualTo(command.Adresse1));
                 Assert.That(result.Adresse2, Is.EqualTo(command.Adresse2));
                 Assert.That(result.PostnummerBy, Is.EqualTo(command.PostnummerBy));
-                Assert.That(result.Telefon, Is.EqualTo(command.Telefon.ToUpper()));
-                Assert.That(result.Mobil, Is.EqualTo(command.Mobil.ToUpper()));
+                Assert.That(result.Telefon, Is.EqualTo(command.Telefon));
+                Assert.That(result.Mobil, Is.EqualTo(command.Mobil));
                 Assert.That(result.Fødselsdato, Is.EqualTo(command.Fødselsdato).Within(1).Days);
                 Assert.That(result.Adressegruppe, Is.Not.Null);
                 Assert.That(result.Adressegruppe.Nummer, Is.EqualTo(command.Adressegruppe));
@@ -351,8 +351,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                 Assert.That(result.Adresse1, Is.EqualTo(command.Adresse1));
                 Assert.That(result.Adresse2, Is.EqualTo(command.Adresse2));
                 Assert.That(result.PostnummerBy, Is.EqualTo(command.PostnummerBy));
-                Assert.That(result.Telefon, Is.EqualTo(command.Telefon.ToUpper()));
-                Assert.That(result.Mobil, Is.EqualTo(command.Mobil.ToUpper()));
+                Assert.That(result.Telefon, Is.EqualTo(command.Telefon));
+                Assert.That(result.Mobil, Is.EqualTo(command.Mobil));
                 Assert.That(result.Fødselsdato, Is.EqualTo(command.Fødselsdato).Within(1).Days);
                 Assert.That(result.Adressegruppe, Is.Not.Null);
                 Assert.That(result.Adressegruppe.Nummer, Is.EqualTo(command.Adressegruppe));
@@ -657,9 +657,9 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                                       Adresse1 = "_Adresse 1",
                                       Adresse2 = "_Adresse 2",
                                       PostnummerBy = "_Postnummer og bynavn",
-                                      Telefon1 = "_Telefon 1",
-                                      Telefon2 = "_Telefon 2",
-                                      Telefax = "_Telefax",
+                                      Telefon1 = "_TELEFON 1",
+                                      Telefon2 = "_TELEFON 2",
+                                      Telefax = "_TELEFAX",
                                       Adressegruppe = 1,
                                       Bekendtskab = "_Bekendtskab",
                                       Mailadresse = "_Mailadresse",
@@ -676,9 +676,9 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                 Assert.That(result.Adresse1, Is.EqualTo(command.Adresse1));
                 Assert.That(result.Adresse2, Is.EqualTo(command.Adresse2));
                 Assert.That(result.PostnummerBy, Is.EqualTo(command.PostnummerBy));
-                Assert.That(result.Telefon1, Is.EqualTo(command.Telefon1.ToUpper()));
-                Assert.That(result.Telefon2, Is.EqualTo(command.Telefon2.ToUpper()));
-                Assert.That(result.Telefax, Is.EqualTo(command.Telefax.ToUpper()));
+                Assert.That(result.Telefon1, Is.EqualTo(command.Telefon1));
+                Assert.That(result.Telefon2, Is.EqualTo(command.Telefon2));
+                Assert.That(result.Telefax, Is.EqualTo(command.Telefax));
                 Assert.That(result.Adressegruppe, Is.Not.Null);
                 Assert.That(result.Adressegruppe.Nummer, Is.EqualTo(command.Adressegruppe));
                 Assert.That(result.Adressegruppe.Nummer, Is.EqualTo(command.Adressegruppe));
@@ -852,9 +852,9 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
                 Assert.That(result.Adresse1, Is.EqualTo(command.Adresse1));
                 Assert.That(result.Adresse2, Is.EqualTo(command.Adresse2));
                 Assert.That(result.PostnummerBy, Is.EqualTo(command.PostnummerBy));
-                Assert.That(result.Telefon1, Is.EqualTo(command.Telefon1.ToUpper()));
+                Assert.That(result.Telefon1, Is.EqualTo(command.Telefon1));
                 Assert.That(result.Telefon2, Is.EqualTo(command.Telefon2));
-                Assert.That(result.Telefax, Is.EqualTo(command.Telefax.ToUpper()));
+                Assert.That(result.Telefax, Is.EqualTo(command.Telefax));
                 Assert.That(result.Adressegruppe, Is.Not.Null);
                 Assert.That(result.Adressegruppe.Nummer, Is.EqualTo(command.Adressegruppe));
                 Assert.That(result.Adressegruppe.Nummer, Is.EqualTo(command.Adressegruppe));

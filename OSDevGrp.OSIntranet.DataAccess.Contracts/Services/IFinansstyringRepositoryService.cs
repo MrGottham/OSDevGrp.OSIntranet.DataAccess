@@ -49,6 +49,24 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         KontoView KontoGetByRegnskabAndKontonummer(KontoGetByRegnskabAndKontonummerQuery kontoGetByRegnskabAndKontonummerQuery);
 
         /// <summary>
+        /// Tilføjer en konto.
+        /// </summary>
+        /// <param name="kontoAddCommand">Kommando til tilføjelse af en konto.</param>
+        /// <returns>Tilføjet konto.</returns>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        KontoView KontoAdd(KontoAddCommand kontoAddCommand);
+
+        /// <summary>
+        /// Opdaterer en given konto.
+        /// </summary>
+        /// <param name="kontoModifyCommand">Kommando til opdatering af en given konto.</param>
+        /// <returns>Opdateret konto.</returns>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        KontoView KontoModify(KontoModifyCommand kontoModifyCommand);
+
+        /// <summary>
         /// Opdaterer eller tilføjer kreditoplysninger til en given konto.
         /// </summary>
         /// <param name="kreditoplysningerAddOrModifyCommand">Kommando til opdatering eller tilføjelse af kreditoplysninger til en given konto.</param>
@@ -82,6 +100,24 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         [OperationContract]
         [TransactionFlow(TransactionFlowOption.Allowed)]
         BudgetkontoView BudgetkontoGetByRegnskabAndKontonummer(BudgetkontoGetByRegnskabAndKontonummerQuery budgetkontoGetByRegnskabAndKontonummerQuery);
+
+        /// <summary>
+        /// Tilføjer en budgetkonto.
+        /// </summary>
+        /// <param name="budgetkontoAddCommand">Kommando til tilføjelse af en budgetkonto.</param>
+        /// <returns>Tilføjet budgetkonto.</returns>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        BudgetkontoView BudgetkontoAdd(BudgetkontoAddCommand budgetkontoAddCommand);
+
+        /// <summary>
+        /// Opdaterer en given budgetkonto.
+        /// </summary>
+        /// <param name="budgetkontoModifyCommand">Kommando til opdatering af en given budgetkonto.</param>
+        /// <returns>Opdateret budgetkonto.</returns>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        BudgetkontoView BudgetkontoModify(BudgetkontoModifyCommand budgetkontoModifyCommand);
 
         /// <summary>
         /// Opdaterer eller tilføjer budgetoplysninger til en given budgetkonto.
