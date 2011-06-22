@@ -104,7 +104,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.CommandHandlers
             var opdateretRegnskab = _finansstyringRepository.RegnskabModify(getBrevhoved, regnskab.Nummer, regnskab.Navn,
                                                                             regnskab.Brevhoved);
 
-            throw new NotImplementedException();
+            return _objectMapper.Map<Regnskab, RegnskabView>(opdateretRegnskab);
         }
 
         /// <summary>

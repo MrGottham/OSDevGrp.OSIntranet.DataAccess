@@ -31,6 +31,24 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         RegnskabView RegnskabGetByNummer(RegnskabGetByNummerQuery regnskabGetByNummerQuery);
 
         /// <summary>
+        /// Tilføjer et regnskab.
+        /// </summary>
+        /// <param name="regnskabAddCommand">Kommando til tilføjelse af et regnskab.</param>
+        /// <returns>Tilføjet regnskab.</returns>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        RegnskabView RegnskabAdd(RegnskabAddCommand regnskabAddCommand);
+
+        /// <summary>
+        /// Opdaterer et givent regnskab.
+        /// </summary>
+        /// <param name="regnskabModifyCommand">Kommando til opdatering af et givent regnskab.</param>
+        /// <returns>Opdateret regnskab.</returns>
+        [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
+        RegnskabView RegnskabModify(RegnskabModifyCommand regnskabModifyCommand);
+
+        /// <summary>
         /// Henter alle konti i et givent regnskab.
         /// </summary>
         /// <param name="kontoGetByRegnskabQuery">Forespørgelse til at hente alle konti i et givent regnskab.</param>
@@ -152,7 +170,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Services
         /// <returns>Tilføjet bogføringslinje.</returns>
         [OperationContract]
         [TransactionFlow(TransactionFlowOption.Allowed)]
-         BogføringslinjeView BogføringslinjeAdd(BogføringslinjeAddCommand bogføringslinjeAddCommand);
+        BogføringslinjeView BogføringslinjeAdd(BogføringslinjeAddCommand bogføringslinjeAddCommand);
 
         /// <summary>
         /// Henter alle kontogrupper.

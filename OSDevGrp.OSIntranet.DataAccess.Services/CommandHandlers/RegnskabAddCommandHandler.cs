@@ -92,7 +92,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.CommandHandlers
             var oprettetRegnskab = _finansstyringRepository.RegnskabAdd(getBrevhoved, regnskab.Nummer, regnskab.Navn,
                                                                         regnskab.Brevhoved);
 
-            throw new NotImplementedException();
+            return _objectMapper.Map<Regnskab, RegnskabView>(oprettetRegnskab);
         }
 
         /// <summary>

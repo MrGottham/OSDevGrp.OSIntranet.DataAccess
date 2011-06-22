@@ -89,6 +89,44 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Implementations
         }
 
         /// <summary>
+        /// Tilføjer et regnskab.
+        /// </summary>
+        /// <param name="regnskabAddCommand">Kommando til tilføjelse af et regnskab.</param>
+        /// <returns>Tilføjet regnskab.</returns>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public RegnskabView RegnskabAdd(RegnskabAddCommand regnskabAddCommand)
+        {
+            try
+            {
+                return _commandBus.Publish<RegnskabAddCommand, RegnskabView>(regnskabAddCommand);
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogFinansstyringRepositoryService));
+            }
+        }
+
+        /// <summary>
+        /// Opdaterer et givent regnskab.
+        /// </summary>
+        /// <param name="regnskabModifyCommand">Kommando til opdatering af et givent regnskab.</param>
+        /// <returns>Opdateret regnskab.</returns>
+        [OperationBehavior(TransactionScopeRequired = false)]
+        public RegnskabView RegnskabModify(RegnskabModifyCommand regnskabModifyCommand)
+        {
+            try
+            {
+                return _commandBus.Publish<RegnskabModifyCommand, RegnskabView>(regnskabModifyCommand);
+            }
+            catch (Exception ex)
+            {
+                throw CreateFault(MethodBase.GetCurrentMethod(), ex,
+                                  int.Parse(Properties.Resources.EventLogFinansstyringRepositoryService));
+            }
+        }
+
+        /// <summary>
         /// Henter alle konti i et givent regnskab.
         /// </summary>
         /// <param name="kontoGetByRegnskabQuery">Forespørgelse til at hente alle konti i et givent regnskab.</param>

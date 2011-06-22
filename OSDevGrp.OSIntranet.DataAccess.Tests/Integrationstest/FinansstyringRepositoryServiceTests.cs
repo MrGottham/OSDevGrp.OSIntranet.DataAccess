@@ -119,6 +119,252 @@ namespace OSDevGrp.OSIntranet.DataAccess.Tests.Integrationstest
         }
 
         /// <summary>
+        /// Tester, at et regnskab oprettes.
+        /// </summary>
+        [Test]
+        [Ignore("Oprettelse af regnskab er testet.")]
+        public void TestAtRegnskabOprettes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var command = new RegnskabAddCommand
+                                  {
+                                      Nummer = 99,
+                                      Navn = "_Test",
+                                      Brevhoved = 1
+                                  };
+                var result = channel.RegnskabAdd(command);
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Nummer, Is.EqualTo(command.Nummer));
+                Assert.That(result.Navn, Is.Not.Null);
+                Assert.That(result.Navn, Is.EqualTo(command.Navn));
+                Assert.That(result.Brevhoved, Is.Not.Null);
+                Assert.That(result.Brevhoved.Nummer, Is.EqualTo(command.Brevhoved));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved oprettelse af et regnskab, hvis regnskabet allerede findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOprettelseAfRegnskabHvisRegnskabAlleredeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var command = new RegnskabAddCommand
+                                  {
+                                      Nummer = 1,
+                                      Navn = "_Test",
+                                      Brevhoved = 1
+                                  };
+                Assert.Throws<FaultException>(() => channel.RegnskabAdd(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved oprettelse af et regnskab, hvis brevhovedet ikke findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOprettelseAfRegnskabHvisBrevhovedIkkeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var command = new RegnskabAddCommand
+                                  {
+                                      Nummer = 99,
+                                      Navn = "_Test",
+                                      Brevhoved = -1
+                                  };
+                Assert.Throws<FaultException>(() => channel.RegnskabAdd(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved oprettelse af et regnskab, hvis navnet er tomt.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOprettelseAfRegnskabHvisNavnErEmpty()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var command = new RegnskabAddCommand
+                                  {
+                                      Nummer = 99,
+                                      Navn = string.Empty,
+                                      Brevhoved = 1
+                                  };
+                Assert.Throws<FaultException>(() => channel.RegnskabAdd(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved opdatering af et givent regnskab, hvis navnet er tomt.
+        /// </summary>
+        [Test]
+        [Ignore("Opdatering af regnskaber er allerede testet.")]
+        public void TestAtRegnskabOpdateres()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var query = new RegnskabGetByNummerQuery
+                                {
+                                    Regnskabsnummer = 1
+                                };
+                var regnskab = channel.RegnskabGetByNummer(query);
+                Assert.That(regnskab, Is.Not.Null);
+                Assert.That(regnskab.Nummer, Is.EqualTo(query.Regnskabsnummer));
+
+                var command = new RegnskabModifyCommand
+                                  {
+                                      Nummer = regnskab.Nummer,
+                                      Navn = string.Format("_{0}", regnskab.Navn),
+                                      Brevhoved = regnskab.Brevhoved.Nummer
+                                  };
+                var result = channel.RegnskabModify(command);
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Nummer, Is.EqualTo(command.Nummer));
+                Assert.That(result.Navn, Is.Not.Null);
+                Assert.That(result.Navn, Is.EqualTo(command.Navn));
+                Assert.That(result.Brevhoved, Is.Not.Null);
+                Assert.That(result.Brevhoved.Nummer, Is.EqualTo(command.Brevhoved));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved opdatering af et givent regnskab, hvis brevhovedet ikke findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOpdateringAfRegnskabHvisBrevhovedIkkeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var query = new RegnskabGetByNummerQuery
+                                {
+                                    Regnskabsnummer = 1
+                                };
+                var regnskab = channel.RegnskabGetByNummer(query);
+                Assert.That(regnskab, Is.Not.Null);
+                Assert.That(regnskab.Nummer, Is.EqualTo(query.Regnskabsnummer));
+
+                var command = new RegnskabModifyCommand
+                                  {
+                                      Nummer = regnskab.Nummer,
+                                      Navn = regnskab.Navn,
+                                      Brevhoved = -1
+                                  };
+                Assert.Throws<FaultException>(() => channel.RegnskabModify(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved opdatering af et givent regnskab, hvis regnskabet ikke findes.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOpdateringAfRegnskabHvisRegnskabIkkeFindes()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var query = new RegnskabGetByNummerQuery
+                                {
+                                    Regnskabsnummer = 1
+                                };
+                var regnskab = channel.RegnskabGetByNummer(query);
+                Assert.That(regnskab, Is.Not.Null);
+                Assert.That(regnskab.Nummer, Is.EqualTo(query.Regnskabsnummer));
+
+                var command = new RegnskabModifyCommand
+                                  {
+                                      Nummer = -1,
+                                      Navn = regnskab.Navn,
+                                      Brevhoved = regnskab.Brevhoved.Nummer
+                                  };
+                Assert.Throws<FaultException>(() => channel.RegnskabModify(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
+        /// Tester, at der kastes en FaultException ved opdatering af et givent regnskab, hvis navnet er tomt.
+        /// </summary>
+        [Test]
+        public void TestAtFaultExceptionKastesVedOpdateringAfRegnskabHvisNavnErEmpty()
+        {
+            var container = ContainerFactory.Create();
+            var channelFactory = container.Resolve<IChannelFactory>();
+            var channel = channelFactory.CreateChannel<IFinansstyringRepositoryService>("FinansstyringRepositoryService");
+            try
+            {
+                var query = new RegnskabGetByNummerQuery
+                                {
+                                    Regnskabsnummer = 1
+                                };
+                var regnskab = channel.RegnskabGetByNummer(query);
+                Assert.That(regnskab, Is.Not.Null);
+                Assert.That(regnskab.Nummer, Is.EqualTo(query.Regnskabsnummer));
+
+                var command = new RegnskabModifyCommand
+                                  {
+                                      Nummer = regnskab.Nummer,
+                                      Navn = string.Empty,
+                                      Brevhoved = regnskab.Brevhoved.Nummer
+                                  };
+                Assert.Throws<FaultException>(() => channel.RegnskabModify(command));
+            }
+            finally
+            {
+                ChannelTools.CloseChannel(channel);
+            }
+        }
+
+        /// <summary>
         /// Tester, at konti hentes for et givent regnskab.
         /// </summary>
         [Test]

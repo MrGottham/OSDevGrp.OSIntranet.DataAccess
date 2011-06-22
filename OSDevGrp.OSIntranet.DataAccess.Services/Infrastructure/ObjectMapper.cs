@@ -6,6 +6,7 @@ using OSDevGrp.OSIntranet.CommonLibrary.Domain.Fælles;
 using OSDevGrp.OSIntranet.DataAccess.Contracts.Views;
 using OSDevGrp.OSIntranet.DataAccess.Infrastructure.Interfaces.Exceptions;
 using OSDevGrp.OSIntranet.DataAccess.Resources;
+using OSDevGrp.OSIntranet.DataAccess.Services.Domain;
 using IObjectMapper = OSDevGrp.OSIntranet.DataAccess.Infrastructure.Interfaces.IObjectMapper;
 
 namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
@@ -34,6 +35,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
                                           return null;
                                       }
                                       var mapper = new ObjectMapper();
+                                      if (s is Adressereference)
+                                      {
+                                          return null;
+                                      }
                                       if (s is Person)
                                       {
                                           return mapper.Map<Person, PersonView>(s as Person);
@@ -50,6 +55,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
                                           return null;
                                       }
                                       var mapper = new ObjectMapper();
+                                      if (s is Adressereference)
+                                      {
+                                          return null;
+                                      }
                                       if (s is Firma)
                                       {
                                           return mapper.Map<Firma, FirmaView>(s as Firma);
@@ -66,6 +75,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
                                           return null;
                                       }
                                       var mapper = new ObjectMapper();
+                                      if (s is Adressereference)
+                                      {
+                                          return null;
+                                      }
                                       if (s is Person)
                                       {
                                           return mapper.Map<Person, AdresselisteView>(s as Person);
@@ -86,6 +99,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
                                           return null;
                                       }
                                       var mapper = new ObjectMapper();
+                                      if (s is Adressereference)
+                                      {
+                                          return null;
+                                      }
                                       if (s is Person)
                                       {
                                           return mapper.Map<Person, AdressereferenceView>(s as Person);

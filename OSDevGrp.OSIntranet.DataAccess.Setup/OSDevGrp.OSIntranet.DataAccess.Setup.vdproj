@@ -1074,7 +1074,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:OS Intranet - Data Access"
         "ProductCode" = "8:{6E5DCA7B-D7FB-4B91-8004-01C483FFC22D}"
-        "PackageCode" = "8:{70A2D203-C21C-44BF-978D-EDA061E5C5AA}"
+        "PackageCode" = "8:{61EA0A9F-8DFC-464E-97CF-AE1F8B8C5B2A}"
         "UpgradeCode" = "8:{DCC75A15-60B2-432F-8511-B6BD7F7364F3}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
