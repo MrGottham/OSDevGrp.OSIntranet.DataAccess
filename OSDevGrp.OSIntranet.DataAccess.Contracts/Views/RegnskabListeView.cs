@@ -8,5 +8,14 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Views
     [DataContract(Name = "Regnskabsliste", Namespace = SoapNamespaces.DataAccessNamespace)]
     public class RegnskabListeView : TabelView
     {
+        /// <summary>
+        /// Reference til et brevhoved.
+        /// </summary>
+        [DataMember(IsRequired = false)]
+        public BrevhovedreferenceView Brevhoved
+        {
+            get;
+            set;
+        }
     }
 }

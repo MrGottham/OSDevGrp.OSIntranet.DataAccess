@@ -6,7 +6,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Contracts.Views
     /// Viewobjekt for et brevhoved.
     /// </summary>
     [DataContract(Name = "Brevhoved", Namespace = SoapNamespaces.DataAccessNamespace)]
-    public class BrevhovedView : TabelView
+    public class BrevhovedView : BrevhovedreferenceView
     {
         /// <summary>
         /// Brevhovedet 1. linje.

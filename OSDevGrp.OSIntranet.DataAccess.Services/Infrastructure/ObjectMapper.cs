@@ -206,7 +206,8 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
 
             Mapper.CreateMap<Regnskab, RegnskabListeView>()
                 .ForMember(x => x.Nummer, opt => opt.MapFrom(s => s.Nummer))
-                .ForMember(x => x.Navn, opt => opt.MapFrom(s => s.Navn));
+                .ForMember(x => x.Navn, opt => opt.MapFrom(s => s.Navn))
+                .ForMember(x => x.Brevhoved, opt => opt.MapFrom(s => s.Brevhoved));
 
             Mapper.CreateMap<Konto, KontoView>()
                 .ForMember(x => x.Regnskab, opt => opt.MapFrom(s => s.Regnskab))
@@ -273,6 +274,10 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
                 .ForMember(x => x.KontogruppeType, opt => opt.MapFrom(s => s.KontogruppeType));
 
             Mapper.CreateMap<Budgetkontogruppe, BudgetkontogruppeView>()
+                .ForMember(x => x.Nummer, opt => opt.MapFrom(s => s.Nummer))
+                .ForMember(x => x.Navn, opt => opt.MapFrom(s => s.Navn));
+
+            Mapper.CreateMap<Brevhoved, BrevhovedreferenceView>()
                 .ForMember(x => x.Nummer, opt => opt.MapFrom(s => s.Nummer))
                 .ForMember(x => x.Navn, opt => opt.MapFrom(s => s.Navn));
 
