@@ -1073,15 +1073,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:OS Intranet - Data Access"
-        "ProductCode" = "8:{6E5DCA7B-D7FB-4B91-8004-01C483FFC22D}"
-        "PackageCode" = "8:{1B705889-DF02-44A7-8DB2-59EBE80C8927}"
+        "ProductCode" = "8:{E5BE04E2-1F69-40C6-8F12-0CB8FB0DCD07}"
+        "PackageCode" = "8:{FDE09F2D-F7CF-4C7F-8F69-6F7AC273172F}"
         "UpgradeCode" = "8:{DCC75A15-60B2-432F-8511-B6BD7F7364F3}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.0.1"
+        "ProductVersion" = "8:1.0.2"
         "Manufacturer" = "8:OS Development Group"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -1567,7 +1567,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_FE5FCDD9376F4119B5AAC59DE4F0317C"
             {
-            "SourcePath" = "8:..\\OSDevGrp.OSIntranet.DataAccess.Services\\obj\\x86\\Release\\OSDevGrp.OSIntranet.DataAccess.Services.exe"
+            "SourcePath" = "8:..\\OSDevGrp.OSIntranet.DataAccess.Services\\obj\\x86\\Debug\\OSDevGrp.OSIntranet.DataAccess.Services.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C8B8618E4EAE407DAFDEFC1F43CB517B"
