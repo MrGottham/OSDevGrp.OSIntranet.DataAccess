@@ -29,17 +29,13 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services.Infrastructure
             container.Register(Component.For<IQueryBus>().ImplementedBy<QueryBus>().LifeStyle.Transient);
             container.Register(Component.For<ICommandBus>().ImplementedBy<CommandBus>().LifeStyle.Transient);
 
-            container.Register(AllTypes.FromAssemblyNamed("OSDevGrp.OSIntranet.DataAccess.Services")
-                                   .BasedOn(typeof (IRepository)).WithService.FromInterface(typeof (IRepository)));
+            container.Register(Classes.FromAssemblyNamed("OSDevGrp.OSIntranet.DataAccess.Services").BasedOn(typeof (IRepository)).WithService.FromInterface(typeof (IRepository)));
 
-            container.Register(AllTypes.FromAssemblyNamed("OSDevGrp.OSIntranet.DataAccess.Services")
-                                   .BasedOn(typeof (IQueryHandler)).WithService.FromInterface(typeof (IQueryHandler)));
+            container.Register(Classes.FromAssemblyNamed("OSDevGrp.OSIntranet.DataAccess.Services").BasedOn(typeof (IQueryHandler)).WithService.FromInterface(typeof (IQueryHandler)));
 
-            container.Register(AllTypes.FromAssemblyNamed("OSDevGrp.OSIntranet.DataAccess.Services")
-                                   .BasedOn(typeof (ICommandHandler)).WithService.FromInterface(typeof (ICommandHandler)));
+            container.Register(Classes.FromAssemblyNamed("OSDevGrp.OSIntranet.DataAccess.Services").BasedOn(typeof (ICommandHandler)).WithService.FromInterface(typeof (ICommandHandler)));
 
-            container.Register(AllTypes.FromAssemblyNamed("OSDevGrp.OSIntranet.DataAccess.Services")
-                                   .BasedOn(typeof (IRepositoryService)).WithService.FromInterface(typeof (IRepositoryService)));
+            container.Register(Classes.FromAssemblyNamed("OSDevGrp.OSIntranet.DataAccess.Services").BasedOn(typeof (IRepositoryService)).WithService.FromInterface(typeof (IRepositoryService)));
         }
 
         #endregion
