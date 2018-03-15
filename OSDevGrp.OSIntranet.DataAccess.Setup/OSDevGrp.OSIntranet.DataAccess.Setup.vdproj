@@ -7,10 +7,10 @@
 "LanguageId" = "3:1033"
 "CodePage" = "3:1252"
 "UILanguageId" = "3:1033"
-"SccProjectName" = "8:SAK"
-"SccLocalPath" = "8:SAK"
-"SccAuxPath" = "8:SAK"
-"SccProvider" = "8:SAK"
+"SccProjectName" = "8:"
+"SccLocalPath" = "8:"
+"SccAuxPath" = "8:"
+"SccProvider" = "8:"
     "Hierarchy"
     {
         "Entry"
@@ -40,7 +40,7 @@
         "Entry"
         {
         "MsmKey" = "8:_2343833FB0F045787C8D07B2282BD831"
-        "OwnerKey" = "8:_1CCFC3DE6A6F6217B55E67AEBDC55B49"
+        "OwnerKey" = "8:_C5E938ED3A52963642555AE9125115CF"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -52,7 +52,7 @@
         "Entry"
         {
         "MsmKey" = "8:_2343833FB0F045787C8D07B2282BD831"
-        "OwnerKey" = "8:_C5E938ED3A52963642555AE9125115CF"
+        "OwnerKey" = "8:_1CCFC3DE6A6F6217B55E67AEBDC55B49"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -64,7 +64,7 @@
         "Entry"
         {
         "MsmKey" = "8:_4F352B8218ADAF445D91FE5906A2137B"
-        "OwnerKey" = "8:_FE5FCDD9376F4119B5AAC59DE4F0317C"
+        "OwnerKey" = "8:_EE08DE445480347E31ED0437A52909F2"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -76,7 +76,7 @@
         "Entry"
         {
         "MsmKey" = "8:_4F352B8218ADAF445D91FE5906A2137B"
-        "OwnerKey" = "8:_EE08DE445480347E31ED0437A52909F2"
+        "OwnerKey" = "8:_FE5FCDD9376F4119B5AAC59DE4F0317C"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -130,7 +130,7 @@
         "Entry"
         {
         "MsmKey" = "8:_C5E938ED3A52963642555AE9125115CF"
-        "OwnerKey" = "8:_1CCFC3DE6A6F6217B55E67AEBDC55B49"
+        "OwnerKey" = "8:_EE08DE445480347E31ED0437A52909F2"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -142,7 +142,7 @@
         "Entry"
         {
         "MsmKey" = "8:_C5E938ED3A52963642555AE9125115CF"
-        "OwnerKey" = "8:_EE08DE445480347E31ED0437A52909F2"
+        "OwnerKey" = "8:_1CCFC3DE6A6F6217B55E67AEBDC55B49"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -184,73 +184,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_BC78A38BEEEF4F5DB405B902A622D891"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_73E42DA41A5A435BB4416D5F4F9FAA4B"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_1CCFC3DE6A6F6217B55E67AEBDC55B49"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_94BA5D3297933912DEDF8DC8EC4B1EED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_0A751EBA86411484AA7A6A98C0449A49"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_EE08DE445480347E31ED0437A52909F2"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_DF59E9270F0BD98FCC0EA2DDF325D1A3"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_4F352B8218ADAF445D91FE5906A2137B"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_C5E938ED3A52963642555AE9125115CF"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_547A58D57A548A389B593D4834A7DA31"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_FC2AFB73190CBFE0E4F742D1890317A5"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_2343833FB0F045787C8D07B2282BD831"
+        "OwnerKey" = "8:_E5651295322C5BC0DD0FB831F66981D1"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -262,7 +196,73 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_E5651295322C5BC0DD0FB831F66981D1"
+        "OwnerKey" = "8:_2343833FB0F045787C8D07B2282BD831"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_FC2AFB73190CBFE0E4F742D1890317A5"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_547A58D57A548A389B593D4834A7DA31"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_C5E938ED3A52963642555AE9125115CF"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_4F352B8218ADAF445D91FE5906A2137B"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_DF59E9270F0BD98FCC0EA2DDF325D1A3"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_EE08DE445480347E31ED0437A52909F2"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_0A751EBA86411484AA7A6A98C0449A49"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_94BA5D3297933912DEDF8DC8EC4B1EED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_1CCFC3DE6A6F6217B55E67AEBDC55B49"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_73E42DA41A5A435BB4416D5F4F9FAA4B"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_BC78A38BEEEF4F5DB405B902A622D891"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -433,11 +433,6 @@
             "AssemblyAsmDisplayName" = "8:OSDevGrp.OSIntranet.CommonLibrary.Repositories.Interface, Version=1.0.1.0, Culture=neutral, PublicKeyToken=1719c289d1070527, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_0A751EBA86411484AA7A6A98C0449A49"
-                    {
-                    "Name" = "8:OSDevGrp.OSIntranet.CommonLibrary.Repositories.Interface.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:OSDevGrp.OSIntranet.CommonLibrary.Repositories.Interface.dll"
             "TargetName" = "8:"
@@ -464,11 +459,6 @@
             "AssemblyAsmDisplayName" = "8:OSDevGrp.OSIntranet.CommonLibrary.Wcf, Version=1.0.1.0, Culture=neutral, PublicKeyToken=1719c289d1070527, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_1CCFC3DE6A6F6217B55E67AEBDC55B49"
-                    {
-                    "Name" = "8:OSDevGrp.OSIntranet.CommonLibrary.Wcf.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:OSDevGrp.OSIntranet.CommonLibrary.Wcf.dll"
             "TargetName" = "8:"
@@ -495,11 +485,6 @@
             "AssemblyAsmDisplayName" = "8:Castle.Windsor, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_2343833FB0F045787C8D07B2282BD831"
-                    {
-                    "Name" = "8:Castle.Windsor.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Castle.Windsor.dll"
             "TargetName" = "8:"
@@ -526,11 +511,6 @@
             "AssemblyAsmDisplayName" = "8:OSDevGrp.OSIntranet.CommonLibrary.Resources, Version=1.0.1.0, Culture=neutral, PublicKeyToken=1719c289d1070527, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_4F352B8218ADAF445D91FE5906A2137B"
-                    {
-                    "Name" = "8:OSDevGrp.OSIntranet.CommonLibrary.Resources.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:OSDevGrp.OSIntranet.CommonLibrary.Resources.dll"
             "TargetName" = "8:"
@@ -557,11 +537,6 @@
             "AssemblyAsmDisplayName" = "8:OSDevGrp.OSIntranet.CommonLibrary.Infrastructure.Interfaces, Version=1.0.1.0, Culture=neutral, PublicKeyToken=1719c289d1070527, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_547A58D57A548A389B593D4834A7DA31"
-                    {
-                    "Name" = "8:OSDevGrp.OSIntranet.CommonLibrary.Infrastructure.Interfaces.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:OSDevGrp.OSIntranet.CommonLibrary.Infrastructure.Interfaces.dll"
             "TargetName" = "8:"
@@ -588,11 +563,6 @@
             "AssemblyAsmDisplayName" = "8:Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_5F6FBCC93DF963BE50BA36909CB222D5"
-                    {
-                    "Name" = "8:Castle.Core.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Castle.Core.dll"
             "TargetName" = "8:"
@@ -650,11 +620,6 @@
             "AssemblyAsmDisplayName" = "8:OSDevGrp.OSIntranet.CommonLibrary.Repositories, Version=1.0.1.0, Culture=neutral, PublicKeyToken=1719c289d1070527, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_94BA5D3297933912DEDF8DC8EC4B1EED"
-                    {
-                    "Name" = "8:OSDevGrp.OSIntranet.CommonLibrary.Repositories.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:OSDevGrp.OSIntranet.CommonLibrary.Repositories.dll"
             "TargetName" = "8:"
@@ -712,11 +677,6 @@
             "AssemblyAsmDisplayName" = "8:OSDevGrp.OSIntranet.CommonLibrary.IoC.Interfaces, Version=1.0.1.0, Culture=neutral, PublicKeyToken=1719c289d1070527, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_C5E938ED3A52963642555AE9125115CF"
-                    {
-                    "Name" = "8:OSDevGrp.OSIntranet.CommonLibrary.IoC.Interfaces.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:OSDevGrp.OSIntranet.CommonLibrary.IoC.Interfaces.dll"
             "TargetName" = "8:"
@@ -743,11 +703,6 @@
             "AssemblyAsmDisplayName" = "8:OSDevGrp.OSIntranet.CommonLibrary.Infrastructure, Version=1.0.1.0, Culture=neutral, PublicKeyToken=1719c289d1070527, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_DF59E9270F0BD98FCC0EA2DDF325D1A3"
-                    {
-                    "Name" = "8:OSDevGrp.OSIntranet.CommonLibrary.Infrastructure.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:OSDevGrp.OSIntranet.CommonLibrary.Infrastructure.dll"
             "TargetName" = "8:"
@@ -774,11 +729,6 @@
             "AssemblyAsmDisplayName" = "8:AutoMapper, Version=1.1.0.188, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_E5651295322C5BC0DD0FB831F66981D1"
-                    {
-                    "Name" = "8:AutoMapper.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:AutoMapper.dll"
             "TargetName" = "8:"
@@ -805,11 +755,6 @@
             "AssemblyAsmDisplayName" = "8:OSDevGrp.OSIntranet.CommonLibrary.IoC, Version=1.0.1.0, Culture=neutral, PublicKeyToken=1719c289d1070527, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_EE08DE445480347E31ED0437A52909F2"
-                    {
-                    "Name" = "8:OSDevGrp.OSIntranet.CommonLibrary.IoC.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:OSDevGrp.OSIntranet.CommonLibrary.IoC.dll"
             "TargetName" = "8:"
@@ -836,11 +781,6 @@
             "AssemblyAsmDisplayName" = "8:OSDevGrp.OSIntranet.CommonLibrary.Domain, Version=1.0.1.0, Culture=neutral, PublicKeyToken=1719c289d1070527, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_FC2AFB73190CBFE0E4F742D1890317A5"
-                    {
-                    "Name" = "8:OSDevGrp.OSIntranet.CommonLibrary.Domain.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:OSDevGrp.OSIntranet.CommonLibrary.Domain.dll"
             "TargetName" = "8:"

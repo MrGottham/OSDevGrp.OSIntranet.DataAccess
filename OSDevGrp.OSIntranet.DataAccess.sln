@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2005
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C6CB6413-2FAB-4E83-8446-B751E4B1B7B2}"
 	ProjectSection(SolutionItems) = preProject
 		OSDevGrp.OSIntranet.DataAccess.snk = OSDevGrp.OSIntranet.DataAccess.snk
@@ -46,28 +48,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OSDevGrp.OSIntranet.DataAccess.Resources", "OSDevGrp.OSIntranet.DataAccess.Resources\OSDevGrp.OSIntranet.DataAccess.Resources.csproj", "{2F5DACED-F381-4C59-9697-42360C2E7136}"
 EndProject
 Global
-	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 7
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = OSDevGrp.OSIntranet.DataAccess.Contracts\\OSDevGrp.OSIntranet.DataAccess.Contracts.csproj
-		SccLocalPath1 = .
-		SccProjectFilePathRelativizedFromConnection1 = OSDevGrp.OSIntranet.DataAccess.Contracts\\
-		SccProjectUniqueName2 = OSDevGrp.OSIntranet.DataAccess.Services\\OSDevGrp.OSIntranet.DataAccess.Services.csproj
-		SccLocalPath2 = .
-		SccProjectFilePathRelativizedFromConnection2 = OSDevGrp.OSIntranet.DataAccess.Services\\
-		SccProjectUniqueName3 = OSDevGrp.OSIntranet.DataAccess.Setup\\OSDevGrp.OSIntranet.DataAccess.Setup.vdproj
-		SccLocalPath3 = .
-		SccProjectFilePathRelativizedFromConnection3 = OSDevGrp.OSIntranet.DataAccess.Setup\\
-		SccProjectUniqueName4 = OSDevGrp.OSIntranet.DataAccess.Infrastructure.Interfaces\\OSDevGrp.OSIntranet.DataAccess.Infrastructure.Interfaces.csproj
-		SccLocalPath4 = .
-		SccProjectFilePathRelativizedFromConnection4 = OSDevGrp.OSIntranet.DataAccess.Infrastructure.Interfaces\\
-		SccProjectUniqueName5 = OSDevGrp.OSIntranet.DataAccess.Tests\\OSDevGrp.OSIntranet.DataAccess.Tests.csproj
-		SccLocalPath5 = .
-		SccProjectFilePathRelativizedFromConnection5 = OSDevGrp.OSIntranet.DataAccess.Tests\\
-		SccProjectUniqueName6 = OSDevGrp.OSIntranet.DataAccess.Resources\\OSDevGrp.OSIntranet.DataAccess.Resources.csproj
-		SccLocalPath6 = .
-		SccProjectFilePathRelativizedFromConnection6 = OSDevGrp.OSIntranet.DataAccess.Resources\\
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -140,5 +120,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{37DD8544-3CB8-477B-B13F-A8D79194F48F} = {EF9F5033-CE24-4A5F-864E-F7BDCAC510DE}
 		{DB2B825F-433D-4E07-B60C-8B1B40A21140} = {EF9F5033-CE24-4A5F-864E-F7BDCAC510DE}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A552A85D-9DD7-4F88-993D-ACD63951FC1D}
 	EndGlobalSection
 EndGlobal
