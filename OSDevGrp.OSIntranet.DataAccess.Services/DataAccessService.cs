@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.ServiceModel;
 using System.ServiceProcess;
 using OSDevGrp.OSIntranet.CommonLibrary.IoC;
+using OSDevGrp.OSIntranet.CommonLibrary.IoC.Interfaces;
 using OSDevGrp.OSIntranet.CommonLibrary.Wcf;
 using OSDevGrp.OSIntranet.DataAccess.Services.Implementations;
 using OSDevGrp.OSIntranet.DataAccess.Services.Repositories.Interfaces;
@@ -38,11 +38,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
         public DataAccessService()
         {
             InitializeComponent();
-            var container = ContainerFactory.Create();
+
+            IContainer container = ContainerFactory.Create();
             _logRepository = container.Resolve<ILogRepository>();
             _dbAxConfiguration = container.Resolve<IDbAxConfiguration>();
-            _dbAxRepositoryCachers =
-                new List<IDbAxRepositoryCacher>(container.ResolveAll<IRepository>().OfType<IDbAxRepositoryCacher>());
+            _dbAxRepositoryCachers = new List<IDbAxRepositoryCacher>(container.ResolveAll<IDbAxRepositoryCacher>());
             _dbAxRepositoryWatchers = new List<FileSystemWatcher>();
         }
 
@@ -59,9 +59,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
             }
             catch (Exception ex)
             {
-                _logRepository.WriteToLog(string.Format("{0}: {1}", MethodBase.GetCurrentMethod().Name, ex.Message),
-                                          EventLogEntryType.Error,
-                                          int.Parse(Properties.Resources.EventLogOnStartExceptionId));
+                _logRepository.WriteToLog($"{MethodBase.GetCurrentMethod().Name}: {ex.Message}", EventLogEntryType.Error, int.Parse(Properties.Resources.EventLogOnStartExceptionId));
                 try
                 {
                     // Close hosts.
@@ -71,9 +69,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
                 }
                 catch (Exception closeHostException)
                 {
-                    _logRepository.WriteToLog(
-                        string.Format("{0}: {1}", MethodBase.GetCurrentMethod().Name, closeHostException.Message),
-                        EventLogEntryType.Error, int.Parse(Properties.Resources.EventLogOnStartExceptionId));
+                    _logRepository.WriteToLog($"{MethodBase.GetCurrentMethod().Name}: {closeHostException.Message}", EventLogEntryType.Error, int.Parse(Properties.Resources.EventLogOnStartExceptionId));
                 }
                 throw;
             }
@@ -90,9 +86,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
             }
             catch (Exception ex)
             {
-                _logRepository.WriteToLog(string.Format("{0}: {1}", MethodBase.GetCurrentMethod().Name, ex.Message),
-                                          EventLogEntryType.Error,
-                                          int.Parse(Properties.Resources.EventLogOnStopExceptionId));
+                _logRepository.WriteToLog($"{MethodBase.GetCurrentMethod().Name}: {ex.Message}", EventLogEntryType.Error, int.Parse(Properties.Resources.EventLogOnStopExceptionId));
             }
         }
 
@@ -107,9 +101,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
             }
             catch (Exception ex)
             {
-                _logRepository.WriteToLog(string.Format("{0}: {1}", MethodBase.GetCurrentMethod().Name, ex.Message),
-                                          EventLogEntryType.Error,
-                                          int.Parse(Properties.Resources.EventLogOnContinueExceptionId));
+                _logRepository.WriteToLog($"{MethodBase.GetCurrentMethod().Name}: {ex.Message}", EventLogEntryType.Error, int.Parse(Properties.Resources.EventLogOnContinueExceptionId));
                 try
                 {
                     // Close hosts.
@@ -119,9 +111,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
                 }
                 catch (Exception closeHostException)
                 {
-                    _logRepository.WriteToLog(
-                        string.Format("{0}: {1}", MethodBase.GetCurrentMethod().Name, closeHostException.Message),
-                        EventLogEntryType.Error, int.Parse(Properties.Resources.EventLogOnContinueExceptionId));
+                    _logRepository.WriteToLog($"{MethodBase.GetCurrentMethod().Name}: {closeHostException.Message}", EventLogEntryType.Error, int.Parse(Properties.Resources.EventLogOnContinueExceptionId));
                 }
                 throw;
             }
@@ -138,9 +128,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
             }
             catch (Exception ex)
             {
-                _logRepository.WriteToLog(string.Format("{0}: {1}", MethodBase.GetCurrentMethod().Name, ex.Message),
-                                          EventLogEntryType.Error,
-                                          int.Parse(Properties.Resources.EventLogOnPauseExceptionId));
+                _logRepository.WriteToLog($"{MethodBase.GetCurrentMethod().Name}: {ex.Message}", EventLogEntryType.Error, int.Parse(Properties.Resources.EventLogOnPauseExceptionId));
             }
         }
 
@@ -155,9 +143,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
             }
             catch (Exception ex)
             {
-                _logRepository.WriteToLog(string.Format("{0}: {1}", MethodBase.GetCurrentMethod().Name, ex.Message),
-                                          EventLogEntryType.Error,
-                                          int.Parse(Properties.Resources.EventLogOnShutdownExceptionId));
+                _logRepository.WriteToLog($"{MethodBase.GetCurrentMethod().Name}: {ex.Message}", EventLogEntryType.Error, int.Parse(Properties.Resources.EventLogOnShutdownExceptionId));
             }
         }
 
@@ -166,7 +152,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
         /// </summary>
         private void ClearDbAxRepositoryCache()
         {
-            foreach (var dbAxRepositoryCacher in _dbAxRepositoryCachers)
+            foreach (IDbAxRepositoryCacher dbAxRepositoryCacher in _dbAxRepositoryCachers)
             {
                 dbAxRepositoryCacher.ClearCache();
             }
@@ -178,16 +164,18 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
         private void StartDbAxRepositoryWatcher()
         {
             ClearDbAxRepositoryCache();
+
             // Start overvågning af lokationen, hvor DBAX filer er gemt.
-            var dbAxRepositoryWatcher = new FileSystemWatcher(_dbAxConfiguration.DataStoreLocation.FullName, "*.DBD")
-                                            {
-                                                EnableRaisingEvents = false,
-                                                IncludeSubdirectories = false,
-                                                NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size
-                                            };
+            FileSystemWatcher dbAxRepositoryWatcher = new FileSystemWatcher(_dbAxConfiguration.DataStoreLocation.FullName, "*.DBD")
+            {
+                EnableRaisingEvents = false,
+                IncludeSubdirectories = false,
+                NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size
+            };
             dbAxRepositoryWatcher.Changed += DbAxRepositoryChanged;
             dbAxRepositoryWatcher.EnableRaisingEvents = true;
             _dbAxRepositoryWatchers.Add(dbAxRepositoryWatcher);
+
             // Start overvågning af Offline DBAX Files.
             if (_dbAxConfiguration.OfflineDataStoreLocation == null)
             {
@@ -197,12 +185,12 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
             {
                 return;
             }
-            var offlineDbAxRepositoryWatcher = new FileSystemWatcher(_dbAxConfiguration.OfflineDataStoreLocation.FullName, "*.DBD")
-                                                   {
-                                                       EnableRaisingEvents = false,
-                                                       IncludeSubdirectories = true,
-                                                       NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size
-                                                   };
+            FileSystemWatcher offlineDbAxRepositoryWatcher = new FileSystemWatcher(_dbAxConfiguration.OfflineDataStoreLocation.FullName, "*.DBD")
+            {
+                EnableRaisingEvents = false,
+                IncludeSubdirectories = true,
+                NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size
+            };
             offlineDbAxRepositoryWatcher.Changed += DbAxRepositoryChanged;
             offlineDbAxRepositoryWatcher.EnableRaisingEvents = true;
             _dbAxRepositoryWatchers.Add(offlineDbAxRepositoryWatcher);
@@ -215,10 +203,11 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
         {
             while (_dbAxRepositoryWatchers.Count > 0)
             {
-                var dbAxRepositoryWatcher = _dbAxRepositoryWatchers[0];
-                dbAxRepositoryWatcher.EnableRaisingEvents = false;
-                dbAxRepositoryWatcher.Dispose();
-                _dbAxRepositoryWatchers.Remove(dbAxRepositoryWatcher);
+                using (FileSystemWatcher dbAxRepositoryWatcher = _dbAxRepositoryWatchers[0])
+                {
+                    dbAxRepositoryWatcher.EnableRaisingEvents = false;
+                    _dbAxRepositoryWatchers.Remove(dbAxRepositoryWatcher);
+                }
             }
             ClearDbAxRepositoryCache();
         }
@@ -229,7 +218,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
         private void OpenHosts()
         {
             // WCF host til repository for adressekartotek.
-            _adresseRepositoryService = new ServiceHost(typeof (AdresseRepositoryService));
+            _adresseRepositoryService = new ServiceHost(typeof(AdresseRepositoryService));
             try
             {
                 _adresseRepositoryService.Open();
@@ -240,7 +229,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
                 throw;
             }
             // WCF host til repository for finansstyring.
-            _finansstyringRepositoryService = new ServiceHost(typeof (FinansstyringRepositoryService));
+            _finansstyringRepositoryService = new ServiceHost(typeof(FinansstyringRepositoryService));
             try
             {
                 _finansstyringRepositoryService.Open();
@@ -251,7 +240,7 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
                 throw;
             }
             // WCF host til repository for fælles elementer.
-            _fællesRepositoryService = new ServiceHost(typeof (FællesRepositoryService));
+            _fællesRepositoryService = new ServiceHost(typeof(FællesRepositoryService));
             try
             {
                 _fællesRepositoryService.Open();
@@ -311,31 +300,21 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
         /// </summary>
         private void DbAxRepositoryChanged(object sender, FileSystemEventArgs e)
         {
-            if (e == null)
-            {
-                return;
-            }
-            if (e.ChangeType != WatcherChangeTypes.Changed)
-            {
-                return;
-            }
-            if (string.IsNullOrEmpty(e.FullPath))
+            if (e == null || e.ChangeType != WatcherChangeTypes.Changed || string.IsNullOrWhiteSpace(e.FullPath))
             {
                 return;
             }
             try
             {
-                var databaseFileName = Path.GetFileName(e.FullPath);
-                foreach (var dbAxRepositoryCacher in _dbAxRepositoryCachers)
+                string databaseFileName = Path.GetFileName(e.FullPath);
+                foreach (IDbAxRepositoryCacher dbAxRepositoryCacher in _dbAxRepositoryCachers)
                 {
                     dbAxRepositoryCacher.HandleRepositoryChange(databaseFileName);
                 }
             }
             catch (Exception ex)
             {
-                _logRepository.WriteToLog(string.Format("{0}: {1}", MethodBase.GetCurrentMethod().Name, ex.Message),
-                                          EventLogEntryType.Error,
-                                          int.Parse(Properties.Resources.EventLogDbAxRepositoryWatcherId));
+                _logRepository.WriteToLog($"{MethodBase.GetCurrentMethod().Name}: {ex.Message}", EventLogEntryType.Error, int.Parse(Properties.Resources.EventLogDbAxRepositoryWatcherId));
             }
         }
     }

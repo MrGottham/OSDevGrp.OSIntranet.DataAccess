@@ -10,9 +10,9 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
         static void Main()
         {
             var servicesToRun = new ServiceBase[]
-                                    {
-                                        new DataAccessService()
-                                    };
+            {
+                new DataAccessService()
+            };
             ServiceBase.Run(servicesToRun);
         }
     }
