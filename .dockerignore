@@ -1,0 +1,10 @@
+# Directories
+bin/
+obj/
+OSDevGrp.OSIntranet.DataAccess.Tests/
+OSDevGrp.OSIntranet.DataAccess.Setup/
+
+# Files
+Dockerfile
+DbAx\DB-AX.HLP
+DbAx\README.TXT

@@ -1,0 +1,14 @@
+;This help file was created with HelpScribble 7.2.1
+;Registered to: Richard Mangione
+
+:BASE DB-AX.hlp
+:TITLE DB-AX: DSI Database ActiveX Component
+:LINK D7VCL.HLP
+1 DB-AX: DSI Database ActiveX Component
+2 Om DB-AX=Scribble10
+2 DB-AX Terminology=Scribble60
+2 DB-AX Properties=Scribble20
+2 DB-AX Methods (Alphabetically)=Scribble30
+2 DB-AX Methods (By Function)=Scribble40
+2 DB-AX Q&A=Scribble70
+2 DB-AX History=Scribble50

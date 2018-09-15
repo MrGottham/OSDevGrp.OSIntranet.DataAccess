@@ -5,6 +5,7 @@ using System.IO;
 using System.Reflection;
 using System.ServiceModel;
 using System.ServiceProcess;
+using Castle.MicroKernel.ComponentActivator;
 using OSDevGrp.OSIntranet.CommonLibrary.IoC;
 using OSDevGrp.OSIntranet.CommonLibrary.IoC.Interfaces;
 using OSDevGrp.OSIntranet.CommonLibrary.Wcf;
@@ -37,13 +38,27 @@ namespace OSDevGrp.OSIntranet.DataAccess.Services
         /// </summary>
         public DataAccessService()
         {
-            InitializeComponent();
+            try
+            {
+                InitializeComponent();
 
-            IContainer container = ContainerFactory.Create();
-            _logRepository = container.Resolve<ILogRepository>();
-            _dbAxConfiguration = container.Resolve<IDbAxConfiguration>();
-            _dbAxRepositoryCachers = new List<IDbAxRepositoryCacher>(container.ResolveAll<IDbAxRepositoryCacher>());
-            _dbAxRepositoryWatchers = new List<FileSystemWatcher>();
+                IContainer container = ContainerFactory.Create();
+                _logRepository = container.Resolve<ILogRepository>();
+                _dbAxConfiguration = container.Resolve<IDbAxConfiguration>();
+                _dbAxRepositoryCachers = new List<IDbAxRepositoryCacher>(container.ResolveAll<IDbAxRepositoryCacher>());
+                _dbAxRepositoryWatchers = new List<FileSystemWatcher>();
+            }
+            catch (ComponentActivatorException ex)
+            {
+                Exception rootException = ex.GetBaseException();
+                _logRepository.WriteToLog($"{MethodBase.GetCurrentMethod().Name}: {rootException.Message}", EventLogEntryType.Error, int.Parse(Properties.Resources.EventLogOnConstructionExceptionId));
+                throw rootException;
+            }
+            catch (Exception ex)
+            {
+                _logRepository.WriteToLog($"{MethodBase.GetCurrentMethod().Name}: {ex.Message}", EventLogEntryType.Error, int.Parse(Properties.Resources.EventLogOnConstructionExceptionId));
+                throw;
+            }
         }
 
         #endregion

@@ -1,0 +1,12 @@
+version: '3'
+services:
+  dataaccess-osdevgrp:
+    build: .
+    image: dataaccess-osdevgrp:latest
+    container_name: dataaccess-osdevgrp
+    domainname: osdevgrp.local
+    hostname: dataaccess
+    ports:
+      - "7000:7000"
+    volumes:
+      - C:\Temp\Data:C:\Data

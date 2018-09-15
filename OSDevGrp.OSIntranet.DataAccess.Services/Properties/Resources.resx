@@ -132,6 +132,9 @@
   <data name="EventLogName" xml:space="preserve">
     <value>OS Intranet - Data Access</value>
   </data>
+  <data name="EventLogOnConstructionExceptionId" xml:space="preserve">
+    <value>110</value>
+  </data>
   <data name="EventLogOnContinueExceptionId" xml:space="preserve">
     <value>104</value>
   </data>
